@@ -1,0 +1,20 @@
+<?php
+declare(strict_types=1);
+
+/**
+ * Production config template.
+ * Copy to `admin-config.php` and fill in your real DB credentials.
+ */
+
+return [
+    'session_name' => 'kgc_admin_session',
+    'db' => [
+        'host' => 'YOUR_DB_HOST',
+        'port' => 3306,
+        'database' => 'YOUR_DB_NAME',
+        'username' => 'YOUR_DB_USER',
+        'password' => 'YOUR_DB_PASSWORD',
+        'charset' => 'utf8mb4',
+    ],
+];
+

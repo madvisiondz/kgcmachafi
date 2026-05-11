@@ -1,0 +1,15 @@
+## KGC Machafi (Production) — API hardening
+
+Options -Indexes
+
+<IfModule mod_headers.c>
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set X-Frame-Options "SAMEORIGIN"
+  Header always set Cache-Control "no-store, no-cache, must-revalidate, max-age=0"
+</IfModule>
+
+# Prevent direct access to config files if placed in web root (recommended: keep config above web root)
+<FilesMatch "^(admin-config\.php|\.env|composer\.(json|lock)|package(-lock)?\.json)$">
+  Require all denied
+</FilesMatch>
+

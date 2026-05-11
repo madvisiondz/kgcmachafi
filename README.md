@@ -1,0 +1,56 @@
+# MACHAFI (kgcmachafi)
+
+MACHAFI is a **directory-first health platform**. This repo is in **UI-first rebuild mode**: we build pixel-perfect pages with **i18n (AR/FR/EN) + mock data** first, then wire APIs later via a thin `services/` boundary.
+
+## Where the “project memory” lives
+
+These markdown files are the source of truth for decisions, progress, and page mapping:
+
+- `project-explainer.md` — product intent + directory philosophy
+- `PROJECT_STATUS.md` — done vs remaining (keep current)
+- `PROMPT_LOG.md` — one entry per prompt (keep current)
+- `LEGACY_SYSTEM_PROBLEMS_AND_REBUILD_RULES.md` — why the legacy system blocked UI work + rebuild rules
+- `HEADER_SCROLL_ANIMATION.md` — sticky header collapse spec + QA checklist
+- `HOMEPAGE_MAP.md` — home page section map + rebuild tracking
+- `LIBRARY_PAGE_MAP.md` — library page map + rebuild tracking
+- `HOW_DOES_A_PRO_AI_WEB_DEVELOPER_DO_THAT.md` — phased execution plan
+
+## How to run (frontend)
+
+The active app is in `frontend/` (Vite + React + Tailwind).
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+Build:
+
+```bash
+cd frontend
+npm run build
+```
+
+## Workflow canvas (open beside chat)
+
+Cursor canvases must live in Cursor’s managed canvases directory to render.
+
+- Managed canvas (opens in Canvas preview): `C:\Users\Oasis-Mall\.cursor\projects\d-komas-kgcmachafiprodhome1-kgcmachafi\canvases\project-workflow.canvas.tsx`
+- Versioned copy (kept in repo): `canvases/project-workflow.canvas.tsx`
+
+## Repo layout (high-level)
+
+- `frontend/`: new UI rebuild (current work)
+- `legacy/`: archived old frontend (kept intact for reference)
+- `deploy/`, `ready-to-deploy/`: deployment-related assets (review before using)
+- `uploads/`: media/assets used by the app
+
+## “Sync this chat to written content” rule
+
+After every prompt/work session, update:
+
+- `PROMPT_LOG.md` (what changed)
+- `PROJECT_STATUS.md` (done/in progress/remaining)
+- any relevant `*_MAP.md` or spec docs
+

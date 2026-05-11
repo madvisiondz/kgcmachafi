@@ -1,0 +1,131 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  font-family: 'DM Sans', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-gradient-to-br from-slate-50 to-gray-100 text-gray-900;
+  margin: 0;
+}
+
+/* Respect accessibility: only disable our decorative home animations */
+@media (prefers-reduced-motion: reduce) {
+  .animate-kgc-pop,
+  .animate-kgc-float-soft,
+  .animate-kgc-wiggle,
+  .animate-kgc-blob,
+  .animate-kgc-heart-soft {
+    animation: none !important;
+  }
+}
+
+@keyframes kgc-marquee-ltr {
+  0% {
+    transform: translateX(-35%);
+  }
+  100% {
+    transform: translateX(35%);
+  }
+}
+
+@keyframes kgc-marquee-rtl {
+  0% {
+    transform: translateX(35%);
+  }
+  100% {
+    transform: translateX(-35%);
+  }
+}
+
+.kgc-marquee-ltr {
+  animation: kgc-marquee-ltr 28s linear infinite;
+}
+
+.kgc-marquee-rtl {
+  animation: kgc-marquee-rtl 28s linear infinite;
+}
+
+@keyframes kgc-glow {
+  0%,
+  100% {
+    box-shadow: 0 0 0 rgba(250, 204, 21, 0), 0 10px 22px -14px rgba(0, 0, 0, 0.35);
+  }
+  50% {
+    box-shadow: 0 0 22px rgba(250, 204, 21, 0.35), 0 10px 22px -14px rgba(0, 0, 0, 0.35);
+  }
+}
+
+.kgc-glow {
+  animation: kgc-glow 2.2s ease-in-out infinite;
+}
+
+@keyframes kgc-nav-shimmer {
+  0% {
+    transform: translateX(-120%);
+    opacity: 0;
+  }
+  15% {
+    opacity: 0.55;
+  }
+  55% {
+    opacity: 0.35;
+  }
+  100% {
+    transform: translateX(120%);
+    opacity: 0;
+  }
+}
+
+.kgc-nav-shimmer {
+  animation: kgc-nav-shimmer 2.8s ease-in-out infinite;
+}
+
+/**
+ * Main desktop nav — multi-stop gradient aligned with Machafi logo greens
+ * (deep forest → teal → emerald highlight → teal → deep pine). Tune --kgc-nav-* to match final brand hex.
+ */
+:root {
+  --kgc-nav-a: #031910;
+  --kgc-nav-b: #064e3b;
+  --kgc-nav-c: #0d9488;
+  --kgc-nav-d: #10b981;
+  --kgc-nav-e: #047857;
+  --kgc-nav-f: #022c22;
+}
+
+.kgc-main-nav-gradient {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(
+    105deg,
+    var(--kgc-nav-a) 0%,
+    var(--kgc-nav-b) 20%,
+    var(--kgc-nav-c) 44%,
+    var(--kgc-nav-d) 52%,
+    var(--kgc-nav-e) 72%,
+    var(--kgc-nav-f) 100%
+  );
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.14),
+    0 6px 24px -8px rgba(2, 44, 34, 0.55),
+    0 2px 8px -4px rgba(4, 120, 87, 0.35);
+}
+
+.kgc-main-nav-gradient::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.07) 0%, transparent 45%);
+}
+
