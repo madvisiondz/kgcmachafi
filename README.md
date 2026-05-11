@@ -48,6 +48,8 @@ Cursor canvases must live in Cursor’s managed canvases directory to render.
 
 ## GitHub backup (push this folder to GitHub)
 
+**Published repo:** [github.com/madvisiondz/kgcmachafi](https://github.com/madvisiondz/kgcmachafi)
+
 This directory is a Git repo (`main` branch) with an initial commit. **GitHub CLI** (`gh`) is the fastest path.
 
 1. **Sign in once** (browser flow):
