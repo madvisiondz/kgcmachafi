@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useI18n } from '../i18n/I18nProvider';
+import { servicesPath } from '../routes/paths';
 
 function Icon({ children, className = '' }) {
   return (
@@ -100,13 +101,13 @@ export default function AboutContactPage() {
 
         <div className="mt-14 flex flex-wrap gap-3">
           <Link
-            to="/live"
+            to={servicesPath('/live')}
             className="inline-flex items-center justify-center rounded-full bg-emerald-700 px-5 py-2.5 text-sm font-black text-white hover:bg-emerald-800"
           >
             {t('common.watchLive')}
           </Link>
           <Link
-            to="/news"
+            to={servicesPath('/news')}
             className="inline-flex items-center justify-center rounded-full border border-slate-300 bg-white px-5 py-2.5 text-sm font-black text-slate-900 hover:bg-slate-50"
           >
             {t('nav.news')}

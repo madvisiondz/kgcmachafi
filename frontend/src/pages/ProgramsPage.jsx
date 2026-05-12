@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useI18n } from '../i18n/I18nProvider';
+import { servicesPath } from '../routes/paths';
 import { programScheduleMock } from '../data/programs';
 
 function Icon({ children, className = '' }) {
@@ -324,7 +325,7 @@ export default function ProgramsPage() {
                 <div className="mt-1 text-sm text-slate-600">{t('programs.ctaDesc')}</div>
               </div>
               <Link
-                to="/live"
+                to={servicesPath('/live')}
                 className="inline-flex items-center justify-center gap-2 rounded-xl bg-amber-600 px-5 py-3 text-sm font-extrabold text-white hover:bg-amber-700"
               >
                 {Icons.play({ className: 'h-4 w-4' })}
@@ -404,7 +405,7 @@ function ProgramRow({ row, t }) {
           <span className="text-xs font-bold text-slate-500">
             {t('programs.durationLabel').replace('{min}', String(row.durationMin))}
           </span>
-          <Link to="/live" className="inline-flex items-center justify-center gap-2 rounded-full bg-orange-600 px-4 py-2 text-xs font-extrabold text-white hover:bg-orange-700">
+          <Link to={servicesPath('/live')} className="inline-flex items-center justify-center gap-2 rounded-full bg-orange-600 px-4 py-2 text-xs font-extrabold text-white hover:bg-orange-700">
             {Icons.play({ className: 'h-4 w-4' })}
             {t('programs.watch')}
           </Link>
@@ -436,7 +437,7 @@ function FeaturedCard({ kind, row, t }) {
           </div>
 
           <Link
-            to="/live"
+            to={servicesPath('/live')}
             className={`inline-flex shrink-0 items-center justify-center gap-2 rounded-full px-4 py-2 text-xs font-extrabold ${
               isNow ? 'bg-orange-600 text-white hover:bg-orange-700' : 'bg-slate-900 text-white hover:bg-slate-800'
             }`}

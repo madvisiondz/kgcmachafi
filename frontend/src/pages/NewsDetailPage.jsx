@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useI18n } from '../i18n/I18nProvider';
+import { servicesPath } from '../routes/paths';
 import { getNewsArticleById } from '../data/news';
 
 function pickText(text, language) {
@@ -71,7 +72,7 @@ export default function NewsDetailPage() {
   const article = useMemo(() => getNewsArticleById(id), [id]);
   const url = useMemo(() => {
     if (typeof window === 'undefined') return '';
-    return `${window.location.origin}/news/${id}`;
+    return `${window.location.origin}${servicesPath('/news')}/${id}`;
   }, [id]);
 
   async function onShare() {
@@ -111,7 +112,7 @@ export default function NewsDetailPage() {
           <div className="text-2xl font-black text-slate-900">{t('newsroom.detail.notFoundTitle')}</div>
           <div className="text-sm text-slate-600 mt-3">{t('newsroom.detail.notFoundDesc')}</div>
           <Link
-            to="/news"
+            to={servicesPath('/news')}
             className="inline-flex items-center justify-center mt-6 rounded-2xl bg-emerald-700 text-white px-5 py-3 text-sm font-black hover:bg-emerald-800"
           >
             {t('newsroom.detail.backToNews')}
@@ -127,7 +128,7 @@ export default function NewsDetailPage() {
     <div className="container mx-auto px-4 py-10" dir={dir}>
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-6">
         <Link
-          to="/news"
+          to={servicesPath('/news')}
           className="inline-flex items-center gap-2 text-sm font-black text-emerald-800 hover:text-emerald-900"
         >
           <Icons.back className={`w-4 h-4 ${dir === 'rtl' ? 'rotate-180' : ''}`} />

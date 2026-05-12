@@ -8,18 +8,26 @@ Public site: **[https://kgc-machafi.net/](https://kgc-machafi.net/)**
 
 ## Where the “project memory” lives
 
-These markdown files are the source of truth for decisions, progress, and page mapping:
+Product specs, status, routing maps, and logs live under **`PROJECT-EXPLAINER/`** (only **`README.md`** stays at the repo root for GitHub).
 
-- `project-explainer.md` — product intent + directory philosophy
-- `PROJECT_STATUS.md` — done vs remaining (keep current)
-- `PROMPT_LOG.md` — one entry per prompt (keep current)
-- `PLATFORM_SHELL_LAYOUT.md` — domain → gateway → Machafi Services vs Machafi TV (planned editions, live TV, newsroom)
-- `WEBAPP_PAGES_OVERVIEW.md` — Services SPA routes only (`frontend/src/App.tsx`)
-- `LEGACY_SYSTEM_PROBLEMS_AND_REBUILD_RULES.md` — why the legacy system blocked UI work + rebuild rules
-- `HEADER_SCROLL_ANIMATION.md` — sticky header collapse spec + QA checklist
-- `HOMEPAGE_MAP.md` — home page section map + rebuild tracking
-- `LIBRARY_PAGE_MAP.md` — library page map + rebuild tracking
-- `HOW_DOES_A_PRO_AI_WEB_DEVELOPER_DO_THAT.md` — phased execution plan
+- **`PROJECT-EXPLAINER/project-explainer.md`** — product intent + directory philosophy
+- **`PROJECT-EXPLAINER/PROJECT_STATUS.md`** — done vs remaining (keep current)
+- **`PROJECT-EXPLAINER/PROMPT_LOG.md`** — one entry per prompt (keep current)
+- **`PROJECT-EXPLAINER/PLATFORM_SHELL_LAYOUT.md`** — domain → gateway → Machafi Services vs Machafi TV (planned editions, live TV, newsroom)
+- **`PROJECT-EXPLAINER/ROUTING_SWITCH_BRIEFING.md`** — handoff: gateway + `/healthservices` + `/tv` routing switch (what was done)
+- **`PROJECT-EXPLAINER/WEBAPP_PAGES_OVERVIEW.md`** — routes in `frontend/src/App.tsx` (gateway, services, TV, admin placeholders)
+- **`PROJECT-EXPLAINER/LEGACY_SYSTEM_PROBLEMS_AND_REBUILD_RULES.md`** — why the legacy system blocked UI work + rebuild rules
+- **`PROJECT-EXPLAINER/HEADER_SCROLL_ANIMATION.md`** — sticky header collapse spec + QA checklist
+- **`PROJECT-EXPLAINER/HOW_DOES_A_PRO_AI_WEB_DEVELOPER_DO_THAT.md`** — phased execution plan
+- **`PROJECT-EXPLAINER/RULE_1_LANGUAGE_SWITCHING.md`** — AR/FR/EN + RTL/LTR strategy
+- **`PROJECT-EXPLAINER/PAGE_DATASET_REFERENCE.md`** — route → dataset column handoff
+- **`PROJECT-EXPLAINER/FRONTEND_BLOCK_DIAGRAM.md`** — Mermaid diagrams (runtime stack + future `services/` boundary)
+- **`PROJECT-EXPLAINER/general-animation.md`** — animation notes
+- **`TRACKERS/`** — page trackers by product branch (see below).
+- **Machafi Services** (`/healthservices/*`): `TRACKERS/machafi-services/HOMEPAGE_MAP.md`, `TRACKERS/machafi-services/LIBRARY_PAGE_MAP.md`, and other `*_PAGE_MAP.md` files in that folder.
+- **Machafi Services admin** (`/healthservices/admin/*`): `TRACKERS/machafi-services-admin/HEALTHSERVICES_ADMIN_PANEL_MAP.md`
+- **Machafi TV** (`/tv/:edition/*`): `TRACKERS/machafi-tv/TV_SHELL_PAGE_MAP.md`, `TRACKERS/machafi-tv/TV_HOME_PAGE_MAP.md`, `TRACKERS/machafi-tv/TV_LIVE_PAGE_MAP.md`, `TRACKERS/machafi-tv/TV_SCHEDULE_PAGE_MAP.md`, `TRACKERS/machafi-tv/TV_ARTICLE_PAGE_MAP.md`, `TRACKERS/machafi-tv/TV_DESK_PAGE_MAP.md`, `TRACKERS/machafi-tv/TV_ACTIVITY_PAGE_MAP.md`, `TRACKERS/machafi-tv/TV_TOPIC_PAGE_MAP.md`, `TRACKERS/machafi-tv/TV_SEARCH_PAGE_MAP.md`
+- **Machafi TV admin** (`/machafitv/admin/*`): `TRACKERS/machafi-tv-admin/MACHAFITV_ADMIN_PANEL_MAP.md`
 
 ## How to run (frontend)
 
@@ -48,6 +56,8 @@ Cursor canvases must live in Cursor’s managed canvases directory to render.
 ## Repo layout (high-level)
 
 - `frontend/`: new UI rebuild (current work)
+- `PROJECT-EXPLAINER/`: project memory markdown (status, prompts, rules, routing maps, diagrams)
+- `TRACKERS/`: per-surface tracker maps — **`machafi-services/`**, **`machafi-tv/`** (public apps), **`machafi-services-admin/`**, **`machafi-tv-admin/`** (admin panels)
 - `legacy/`: archived old frontend (kept intact for reference)
 - `deploy/`, `ready-to-deploy/`: deployment-related assets (review before using)
 - `uploads/`: media/assets used by the app
@@ -94,7 +104,6 @@ Advanced: you can set a personal access token in the `GH_TOKEN` environment vari
 
 After every prompt/work session, update:
 
-- `PROMPT_LOG.md` (what changed)
-- `PROJECT_STATUS.md` (done/in progress/remaining)
-- any relevant `*_MAP.md` or spec docs
-
+- **`PROJECT-EXPLAINER/PROMPT_LOG.md`** (what changed)
+- **`PROJECT-EXPLAINER/PROJECT_STATUS.md`** (done/in progress/remaining)
+- any relevant tracker under **`TRACKERS/`** or spec docs under **`PROJECT-EXPLAINER/`**

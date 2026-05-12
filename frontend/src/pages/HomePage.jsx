@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { useI18n } from '../i18n/I18nProvider';
+import { servicesPath } from '../routes/paths';
 
 function SectionTitle({ title, subtitle }) {
   return (
@@ -88,7 +89,7 @@ function NewsCard({ tag, date, title, desc, cta, enterDelay = 0 }) {
       <h3 className="text-xl font-bold text-slate-800 mb-3 line-clamp-2 min-h-[3.5rem]">{title}</h3>
       <p className="text-gray-600 mb-4 line-clamp-3 text-sm leading-relaxed flex-grow">{desc}</p>
 
-      <Link to="/news" className="mt-auto inline-flex items-center gap-2 text-blue-600 font-semibold hover:text-blue-800">
+      <Link to={servicesPath('/news')} className="mt-auto inline-flex items-center gap-2 text-blue-600 font-semibold hover:text-blue-800">
         {cta}
         <span aria-hidden="true">&rarr;</span>
       </Link>
@@ -105,70 +106,70 @@ export default function HomePage() {
       {
         title: t('common.watchLive'),
         desc: t('home.platform.liveDesc'),
-        href: '/live',
+        href: servicesPath('/live'),
         icon: '/nav-icons/live-red.png',
         color: 'from-red-500 to-rose-600',
       },
       {
         title: t('nav.programs'),
         desc: t('home.platform.programsDesc'),
-        href: '/programs',
+        href: servicesPath('/programs'),
         icon: '/nav-icons/programs-blue.png',
         color: 'from-blue-500 to-cyan-600',
       },
       {
         title: t('nav.services'),
         desc: t('home.platform.servicesDesc'),
-        href: '/service',
+        href: servicesPath('/service'),
         icon: '/nav-icons/services.png',
         color: 'from-emerald-500 to-green-600',
       },
       {
         title: t('nav.library'),
         desc: t('home.platform.libraryDesc'),
-        href: '/library',
+        href: servicesPath('/library'),
         icon: '/nav-icons/library.png',
         color: 'from-indigo-500 to-violet-600',
       },
       {
         title: t('nav.pharmacies'),
         desc: t('home.platform.pharmaciesDesc'),
-        href: '/pharmacies',
+        href: servicesPath('/pharmacies'),
         icon: '/nav-icons/pharmacies.png',
         color: 'from-amber-500 to-orange-600',
       },
       {
         title: t('nav.ambulances'),
         desc: t('home.platform.ambulancesDesc'),
-        href: '/ambulances',
+        href: servicesPath('/ambulances'),
         icon: '/nav-icons/ambulances.png',
         color: 'from-rose-500 to-red-600',
       },
       {
         title: t('nav.accommodation'),
         desc: t('home.platform.accommodationDesc'),
-        href: '/accommodations',
+        href: servicesPath('/accommodations'),
         icon: '/nav-icons/accommodation.png',
         color: 'from-sky-500 to-blue-600',
       },
       {
         title: t('nav.hospitals'),
         desc: t('home.platform.hospitalsDesc'),
-        href: '/hospitals',
+        href: servicesPath('/hospitals'),
         icon: '/nav-icons/hospitals.png',
         color: 'from-slate-600 to-slate-800',
       },
       {
         title: t('nav.consultations'),
         desc: t('home.platform.consultationsDesc'),
-        href: '/consultations',
+        href: servicesPath('/consultations'),
         icon: '/nav-icons/consultations.png',
         color: 'from-lime-500 to-emerald-600',
       },
       {
         title: t('nav.donations'),
         desc: t('home.platform.donationsDesc'),
-        href: '/donations',
+        href: servicesPath('/donations'),
         icon: '/nav-icons/donations.png',
         color: 'from-pink-500 to-rose-600',
       },
@@ -253,7 +254,7 @@ export default function HomePage() {
                 style={{ animationDelay: '230ms' }}
               >
                 <Link
-                  to="/live"
+                  to={servicesPath('/live')}
                   className="group inline-flex h-12 items-center gap-2 rounded-md bg-gradient-to-r from-green-600 to-emerald-600 px-8 text-lg text-white shadow-lg transition-all duration-300 hover:from-green-700 hover:to-emerald-700 hover:shadow-xl motion-safe:hover:scale-[1.03] active:scale-[0.98]"
                 >
                   <img
@@ -266,7 +267,7 @@ export default function HomePage() {
                   <span className="font-bold">{t('common.watchLive')}</span>
                 </Link>
                 <Link
-                  to="/service"
+                  to={servicesPath('/service')}
                   className="inline-flex h-12 items-center gap-2 rounded-md border-2 border-green-600 px-8 text-lg text-green-700 transition-all duration-300 hover:bg-green-50 hover:shadow-md motion-safe:hover:scale-[1.02] active:scale-[0.98]"
                 >
                   <span className="font-bold">{t('home.hero.discoverServices')}</span>
@@ -399,7 +400,7 @@ export default function HomePage() {
               <p className="text-gray-600 text-lg">{t('home.news.subtitle')}</p>
             </div>
             <Link
-              to="/news"
+              to={servicesPath('/news')}
               className="inline-flex items-center gap-2 rounded-md border border-blue-200 text-blue-600 hover:text-blue-700 hover:bg-blue-50 px-4 h-10 font-semibold"
             >
               {t('common.readMore')}

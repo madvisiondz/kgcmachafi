@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { useI18n } from '../../i18n/I18nProvider';
+import { servicesPath } from '../../routes/paths';
 
 function Icon({ children, className = '' }) {
   return (
@@ -81,27 +82,27 @@ export default function Footer() {
       {
         title: t('footer.sections.main'),
         items: [
-          { label: t('footer.brandName'), href: '/' },
-          { label: t('nav.programs'), href: '/programs' },
-          { label: t('nav.services'), href: '/service' },
-          { label: t('nav.live'), href: '/live' },
+          { label: t('footer.brandName'), href: servicesPath('/') },
+          { label: t('nav.programs'), href: servicesPath('/programs') },
+          { label: t('nav.services'), href: servicesPath('/service') },
+          { label: t('nav.live'), href: servicesPath('/live') },
         ],
       },
       {
         title: t('footer.sections.services'),
         items: [
-          { label: t('nav.consultations'), href: '/consultations' },
-          { label: t('nav.donations'), href: '/donations' },
-          { label: t('nav.hospitals'), href: '/hospitals' },
-          { label: t('nav.library'), href: '/library' },
+          { label: t('nav.consultations'), href: servicesPath('/consultations') },
+          { label: t('nav.donations'), href: servicesPath('/donations') },
+          { label: t('nav.hospitals'), href: servicesPath('/hospitals') },
+          { label: t('nav.library'), href: servicesPath('/library') },
         ],
       },
       {
         title: t('footer.sections.readMore'),
         items: [
-          { label: t('common.privacyPolicy'), href: '/privacy' },
-          { label: t('common.terms'), href: '/terms' },
-          { label: t('nav.pharmacies'), href: '/pharmacies' },
+          { label: t('common.privacyPolicy'), href: servicesPath('/privacy') },
+          { label: t('common.terms'), href: servicesPath('/terms') },
+          { label: t('nav.pharmacies'), href: servicesPath('/pharmacies') },
         ],
       },
     ],

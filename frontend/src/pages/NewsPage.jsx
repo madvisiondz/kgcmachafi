@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useI18n } from '../i18n/I18nProvider';
+import { servicesPath } from '../routes/paths';
 import { newsArticlesMock, newsDeskPrinciplesMock } from '../data/news';
 
 function pickText(text, language) {
@@ -151,13 +152,13 @@ export default function NewsPage() {
               <p className="text-slate-700 text-base md:text-lg leading-relaxed">{t('newsroom.hero.subtitle')}</p>
               <div className="flex flex-wrap gap-2 pt-1">
                 <Link
-                  to="/programs"
+                  to={servicesPath('/programs')}
                   className="inline-flex items-center gap-2 rounded-full bg-emerald-700 text-white px-4 py-2 text-sm font-bold shadow hover:bg-emerald-800 transition-colors"
                 >
                   {t('newsroom.hero.ctaPrograms')}
                 </Link>
                 <Link
-                  to="/library"
+                  to={servicesPath('/library')}
                   className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-bold text-slate-800 hover:bg-slate-50 transition-colors"
                 >
                   {t('newsroom.hero.ctaLibrary')}
@@ -314,7 +315,7 @@ export default function NewsPage() {
 
                 <div className="mt-6 flex flex-wrap items-center gap-3">
                   <Link
-                    to={`/news/${featured.id}`}
+                    to={`${servicesPath('/news')}/${featured.id}`}
                     className="inline-flex items-center justify-center rounded-2xl bg-white text-emerald-900 px-5 py-3 text-sm font-black hover:bg-emerald-50 transition-colors"
                   >
                     {t('newsroom.card.open')}
@@ -381,7 +382,7 @@ export default function NewsPage() {
                           {formatTpl(t('newsroom.card.readingMinutes'), { minutes: String(a.readingMinutes) })}
                         </div>
                         <Link
-                          to={`/news/${a.id}`}
+                          to={`${servicesPath('/news')}/${a.id}`}
                           className="inline-flex items-center justify-center rounded-xl bg-emerald-700 text-white px-3 py-2 text-xs font-black hover:bg-emerald-800 transition-colors"
                         >
                           {t('newsroom.card.open')}
@@ -416,13 +417,13 @@ export default function NewsPage() {
             <h2 className="text-lg font-extrabold text-slate-900">{t('newsroom.routes.title')}</h2>
             <p className="text-sm text-slate-600 mt-2 leading-relaxed">{t('newsroom.routes.subtitle')}</p>
             <div className="mt-4 grid grid-cols-1 gap-2">
-              <Link className="rounded-2xl border border-slate-200 px-4 py-3 text-sm font-bold text-slate-900 hover:bg-slate-50" to="/pharmacies">
+              <Link className="rounded-2xl border border-slate-200 px-4 py-3 text-sm font-bold text-slate-900 hover:bg-slate-50" to={servicesPath('/pharmacies')}>
                 {t('newsroom.routes.pharmacies')}
               </Link>
-              <Link className="rounded-2xl border border-slate-200 px-4 py-3 text-sm font-bold text-slate-900 hover:bg-slate-50" to="/ambulances">
+              <Link className="rounded-2xl border border-slate-200 px-4 py-3 text-sm font-bold text-slate-900 hover:bg-slate-50" to={servicesPath('/ambulances')}>
                 {t('newsroom.routes.ambulances')}
               </Link>
-              <Link className="rounded-2xl border border-slate-200 px-4 py-3 text-sm font-bold text-slate-900 hover:bg-slate-50" to="/consultations">
+              <Link className="rounded-2xl border border-slate-200 px-4 py-3 text-sm font-bold text-slate-900 hover:bg-slate-50" to={servicesPath('/consultations')}>
                 {t('newsroom.routes.consultations')}
               </Link>
             </div>

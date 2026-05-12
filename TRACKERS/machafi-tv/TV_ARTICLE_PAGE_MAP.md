@@ -1,0 +1,69 @@
+# Machafi TV — article / story detail (`/tv/:edition/article/:slug`)
+
+Single source of truth for **`TvArticlePage`**: long-form story view with share/print/correction row and disclaimer.
+
+## 1) Purpose
+
+- **Read experience**: kicker, headline, byline, date, reading time, multi-paragraph body.
+- **Accountability**: medical disclaimer, link to **Desk** for tools/corrections workflow narrative.
+
+## 2) Route
+
+- **`/tv/:edition/article/:slug`**
+- Unknown `slug` → friendly empty state + link home (uses `tvApp.searchEmpty` copy for “not found” line).
+
+## 3) UX flow
+
+1. Resolve story via `getTvStoryBySlug(slug)`.
+2. Render localized fields with `pick(..., edition)`.
+3. **Body**: if `story.body` exists, split paragraphs on `\n\n`; else repeat lead (`dek`) as placeholder paragraphs (demo only).
+4. Actions: Share / Print / Request a correction (buttons UI-only until wired).
+
+## 4) Data contracts
+
+### UI-first
+
+- **`frontend/src/data/tvMock.ts`** — `getTvStoryBySlug`, `TvStory`, optional `body: TvLocalized`.
+
+### Target production
+
+- CMS blocks (paragraph, embed, pull quote), revision history, correction notes, canonical URL per edition.
+
+## 5) Endpoint proposals
+
+### Public
+
+- `GET /api/public/tv/editions/{edition}/articles/{slug}` — full article with SEO fields.
+- `GET /api/public/tv/editions/{edition}/articles` — list (for sitemap/feeds).
+
+### Admin
+
+- Full editorial CRUD, embargo, breaking flag, byline, reviewer, legal hold.
+- Align with **`../machafi-services/NEWS_PAGE_MAP.md`** patterns (`news_articles` or parallel `tv_articles` namespace).
+
+## 6) i18n
+
+- **`tvApp.*`** — article actions, disclaimer, tools title.
+- **`newsroom.detail.disclaimerTitle`** — reused for disclaimer box heading.
+
+## 7) File map
+
+- `frontend/src/pages/tv/TvArticlePage.jsx`
+- `frontend/src/data/tvMock.ts`
+- `frontend/src/components/DocumentTitle.jsx` — `tvApp.articlePlaceholder` (refine to story title later)
+
+## 8) Safeguards
+
+- **Not medical advice** — disclaimer visible on every article.
+- **Corrections** — production workflow should append visible correction blocks, not silent edits.
+
+## 9) Changelog
+
+- **2026-05-12**: Tracker added; body vs dek fallback documented.
+
+---
+
+## Documentation sync (2026-05-12)
+
+- **`../machafi-services/NEWS_PAGE_MAP.md`** — Services newsroom (related editorial patterns).
+- **`../../PROJECT-EXPLAINER/PROMPT_LOG.md`**.

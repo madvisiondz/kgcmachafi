@@ -1,6 +1,7 @@
 import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useI18n } from '../../i18n/I18nProvider';
+import { SERVICES_BASE, servicesPath } from '../../routes/paths';
 import NewsTicker from './NewsTicker.jsx';
 
 function Icon({ children, className = '' }) {
@@ -150,18 +151,18 @@ export default function Header() {
 
   const nav = useMemo(
     () => [
-      // Matches legacy order + routes
-      { key: 'nav.home', href: '/', icon: 'home' },
-      { key: 'nav.consultations', href: '/consultations', icon: 'consultations' },
-      { key: 'nav.hospitals', href: '/hospitals', icon: 'hospitals' },
-      { key: 'nav.pharmacies', href: '/pharmacies', icon: 'pharmacies' },
-      { key: 'nav.ambulances', href: '/ambulances', icon: 'ambulances' },
-      { key: 'nav.accommodation', href: '/accommodations', icon: 'accommodation' },
-      { key: 'nav.library', href: '/library', icon: 'library' },
-      { key: 'nav.programs', href: '/programs', icon: 'programs' },
-      { key: 'nav.services', href: '/service', icon: 'services' },
-      { key: 'nav.donations', href: '/donations', icon: 'donations' },
-      { key: 'nav.news', href: '/news', icon: 'news' },
+      // Matches legacy order + routes (Machafi Services base path)
+      { key: 'nav.home', href: servicesPath('/'), icon: 'home' },
+      { key: 'nav.consultations', href: servicesPath('/consultations'), icon: 'consultations' },
+      { key: 'nav.hospitals', href: servicesPath('/hospitals'), icon: 'hospitals' },
+      { key: 'nav.pharmacies', href: servicesPath('/pharmacies'), icon: 'pharmacies' },
+      { key: 'nav.ambulances', href: servicesPath('/ambulances'), icon: 'ambulances' },
+      { key: 'nav.accommodation', href: servicesPath('/accommodations'), icon: 'accommodation' },
+      { key: 'nav.library', href: servicesPath('/library'), icon: 'library' },
+      { key: 'nav.programs', href: servicesPath('/programs'), icon: 'programs' },
+      { key: 'nav.services', href: servicesPath('/service'), icon: 'services' },
+      { key: 'nav.donations', href: servicesPath('/donations'), icon: 'donations' },
+      { key: 'nav.news', href: servicesPath('/news'), icon: 'news' },
     ],
     [],
   );
@@ -197,10 +198,10 @@ export default function Header() {
 
             <div className="hidden md:block w-px h-4 bg-gray-700" />
 
-            <Link to="/about#about" className="hover:text-green-400 transition-colors hidden md:block">
+            <Link to={`${servicesPath('/about')}#about`} className="hover:text-green-400 transition-colors hidden md:block">
               {t('header.whoWeAre')}
             </Link>
-            <Link to="/about#contact" className="hover:text-green-400 transition-colors hidden md:block">
+            <Link to={`${servicesPath('/about')}#contact`} className="hover:text-green-400 transition-colors hidden md:block">
               {t('header.contactUs')}
             </Link>
           </div>
@@ -246,7 +247,7 @@ export default function Header() {
                   isCompact ? 'w-12 md:w-14 lg:w-16' : 'w-24 md:w-32 lg:w-40'
                 }`}
               >
-                <Link to="/">
+                <Link to={servicesPath('/')}>
                   <img
                     src="/machafi-logo.svg"
                     alt={t('header.brandAlt')}
@@ -284,7 +285,7 @@ export default function Header() {
               <div className="flex items-center gap-2 lg:hidden">
                 {/* Mobile: icon-only key actions (matches legacy) */}
                 <Link
-                  to="/live"
+                  to={servicesPath('/live')}
                   className={`rounded-md border border-red-100 text-red-600 hover:bg-red-50 hover:text-red-700 shadow-sm grid place-items-center transition-[width,height,padding] duration-200 ${
                     isCompact ? 'h-8 w-8' : 'h-9 w-9'
                   }`}
@@ -295,7 +296,7 @@ export default function Header() {
                 </Link>
 
                 <Link
-                  to="/programs"
+                  to={servicesPath('/programs')}
                   className={`rounded-md border border-blue-100 text-blue-600 hover:bg-blue-50 hover:text-blue-700 shadow-sm grid place-items-center transition-[width,height,padding] duration-200 ${
                     isCompact ? 'h-8 w-8' : 'h-9 w-9'
                   }`}
@@ -321,7 +322,7 @@ export default function Header() {
             {/* Desktop: key actions (matches legacy) */}
             <div className="hidden lg:flex items-center gap-3">
               <Link
-                to="/live"
+                to={servicesPath('/live')}
                 className={`inline-flex items-center justify-center rounded-md border border-red-100 text-red-600 hover:bg-red-50 hover:text-red-700 shadow-sm transition-[width,height,padding] duration-200 ${
                   isCompact ? 'h-8 w-8 p-0 min-w-0' : 'gap-2 animate-pulse px-4 h-9'
                 }`}
@@ -333,7 +334,7 @@ export default function Header() {
               </Link>
 
               <Link
-                to="/programs"
+                to={servicesPath('/programs')}
                 className={`inline-flex items-center justify-center rounded-md border border-blue-100 text-blue-600 hover:bg-blue-50 hover:text-blue-700 shadow-sm transition-[width,height,padding] duration-200 ${
                   isCompact ? 'h-8 w-8 p-0 min-w-0' : 'gap-2 px-4 h-9'
                 }`}
@@ -356,10 +357,12 @@ export default function Header() {
               {nav.map((item) => (
                 <li key={item.key}>
                   {(() => {
-                    const isNews = item.href === '/news';
+                    const isNews = item.href === servicesPath('/news');
+                    const isHomePath =
+                      location.pathname === SERVICES_BASE || location.pathname === `${SERVICES_BASE}/`;
                     const selected =
-                      item.href === '/'
-                        ? location.pathname === '/'
+                      item.href === servicesPath('/')
+                        ? isHomePath
                         : location.pathname === item.href || location.pathname.startsWith(`${item.href}/`);
 
                     const base =
@@ -427,7 +430,7 @@ export default function Header() {
                 to={item.href}
                 onClick={() => setIsMenuOpen(false)}
                 className={`flex items-center justify-between gap-3 py-3 px-4 rounded-xl transition-colors font-semibold ${
-                  item.href === '/news'
+                  item.href === servicesPath('/news')
                     ? 'text-emerald-950 bg-gradient-to-r from-yellow-200 via-white to-emerald-100 ring-1 ring-yellow-300/70 shadow-sm'
                     : 'text-gray-700 hover:bg-green-50 hover:text-green-700'
                 }`}
@@ -442,7 +445,7 @@ export default function Header() {
                   />
                   <span>{t(item.key)}</span>
                 </span>
-                {item.href === '/news' ? (
+                {item.href === servicesPath('/news') ? (
                   <span className="text-[10px] font-black tracking-wide rounded-full px-2 py-0.5 bg-emerald-800 text-white">
                     {t('nav.newsBadge')}
                   </span>

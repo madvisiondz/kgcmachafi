@@ -1,0 +1,62 @@
+# Machafi TV — program schedule (`/tv/:edition/schedule`)
+
+Single source of truth for **`TvSchedulePage`**: linear grid for the day (time, program title, live vs tape).
+
+## 1) Purpose
+
+- **EPG-style clarity**: visitors see when live bulletins vs taped programs air.
+- **Cross-link** from **Live** page “today on channel” peek.
+
+## 2) Route
+
+- **`/tv/:edition/schedule`**
+
+## 3) UX flow
+
+1. Page title + subtitle (syncs with EPG when API exists).
+2. **Table**: start–end time, localized program name, badge **Live** or **Tape**.
+
+## 4) Data contracts
+
+### UI-first
+
+- **`frontend/src/data/tvMock.ts`** — `tvScheduleDay[]`: `id`, `start`, `end`, `title` (`TvLocalized`), `isLive?`.
+
+### Target production
+
+- Multi-day grid, timezone (`Africa/Algiers`), exceptions/holidays, last-minute overrides.
+
+## 5) Endpoint proposals
+
+### Public
+
+- `GET /api/public/tv/editions/{edition}/schedule?from=YYYY-MM-DD&days=7`
+  - Returns slots with `live`, `title`, `description`, `thumbnail`.
+
+### Admin
+
+- `GET/POST/PUT/DELETE /api/admin/tv/schedule` — CRUD slots, recurrence, override flags.
+- Optional import from traffic **ICS** or playout system.
+
+## 6) i18n
+
+- **`tvApp.*`** — `scheduleHeadline`, `scheduleSub`, table headers, live/tape badges.
+
+## 7) File map
+
+- `frontend/src/pages/tv/TvSchedulePage.jsx`
+- `frontend/src/data/tvMock.ts` — `tvScheduleDay`, `pick`
+
+## 8) Safeguards
+
+- Times must be explicit about **timezone** in production to avoid cross-border confusion.
+
+## 9) Changelog
+
+- **2026-05-12**: Tracker added for schedule table + mock slots.
+
+---
+
+## Documentation sync (2026-05-12)
+
+- **`TV_LIVE_PAGE_MAP.md`** (schedule peek), **`../../PROJECT-EXPLAINER/PROMPT_LOG.md`**.

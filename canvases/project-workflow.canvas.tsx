@@ -58,9 +58,9 @@ export default function MachafiProjectWorkflow() {
       </Grid>
 
       <Callout tone="info" title="Tracking rule">
-        Keep these updated after every prompt: <Codeish>PROJECT_STATUS.md</Codeish> and{' '}
-        <Codeish>PROMPT_LOG.md</Codeish>. When a new page is created, add a dedicated <Codeish>*_MAP.md</Codeish>{' '}
-        tracker and keep it current.
+        Keep these updated after every prompt: <Codeish>PROJECT-EXPLAINER/PROJECT_STATUS.md</Codeish> and{' '}
+        <Codeish>PROJECT-EXPLAINER/PROMPT_LOG.md</Codeish>. When a new page is created, add a dedicated tracker under{' '}
+        <Codeish>TRACKERS/machafi-services/</Codeish> or <Codeish>TRACKERS/machafi-tv/</Codeish> and keep it current.
       </Callout>
 
       <Divider />
@@ -69,14 +69,19 @@ export default function MachafiProjectWorkflow() {
       <Table
         headers={['Doc', 'Purpose']}
         rows={[
-          ['project-explainer.md', 'Product intent + directory-first philosophy'],
-          ['PROJECT_STATUS.md', 'Done / in progress / remaining'],
-          ['PROMPT_LOG.md', 'One entry per prompt (what changed)'],
-          ['HOMEPAGE_MAP.md', 'Home sections map + rebuild notes'],
-          ['LIBRARY_PAGE_MAP.md', 'Library page map + wiring plan'],
-          ['HEADER_SCROLL_ANIMATION.md', 'Sticky header collapse spec + QA checklist'],
-          ['LEGACY_SYSTEM_PROBLEMS_AND_REBUILD_RULES.md', 'Legacy blockers + rebuild rules'],
-          ['HOW_DOES_A_PRO_AI_WEB_DEVELOPER_DO_THAT.md', 'Phased delivery plan'],
+          ['PROJECT-EXPLAINER/', 'Project memory: status, prompts, rules, routing maps, diagrams'],
+          ['PROJECT-EXPLAINER/project-explainer.md', 'Product intent + directory-first philosophy'],
+          ['PROJECT-EXPLAINER/PROJECT_STATUS.md', 'Done / in progress / remaining'],
+          ['PROJECT-EXPLAINER/PROMPT_LOG.md', 'One entry per prompt (what changed)'],
+          ['TRACKERS/machafi-services-admin/', 'Health Services admin panel (`/healthservices/admin/*`)'],
+          ['TRACKERS/machafi-tv-admin/', 'Machafi TV admin panel (`/machafitv/admin/*`)'],
+          ['TRACKERS/machafi-services/', 'Machafi Services page trackers (*_PAGE_MAP.md + HOMEPAGE_MAP.md)'],
+          ['TRACKERS/machafi-tv/', 'Machafi TV page trackers (TV_*_PAGE_MAP.md)'],
+          ['TRACKERS/machafi-services/HOMEPAGE_MAP.md', 'Home sections map + rebuild notes'],
+          ['TRACKERS/machafi-services/LIBRARY_PAGE_MAP.md', 'Library page map + wiring plan'],
+          ['PROJECT-EXPLAINER/HEADER_SCROLL_ANIMATION.md', 'Sticky header collapse spec + QA checklist'],
+          ['PROJECT-EXPLAINER/LEGACY_SYSTEM_PROBLEMS_AND_REBUILD_RULES.md', 'Legacy blockers + rebuild rules'],
+          ['PROJECT-EXPLAINER/HOW_DOES_A_PRO_AI_WEB_DEVELOPER_DO_THAT.md', 'Phased delivery plan'],
         ]}
       />
 

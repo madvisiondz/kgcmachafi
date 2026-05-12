@@ -1,6 +1,7 @@
 import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useI18n } from '../i18n/I18nProvider';
+import { servicesPath } from '../routes/paths';
 import { livePlayerSettingsMock, liveRecordedMock, liveUpNextMock } from '../data/live';
 
 function formatTpl(template, vars) {
@@ -230,7 +231,7 @@ export default function LivePage() {
                         <p className="text-lg font-black text-white">{t('live.offline.title')}</p>
                         <p className="max-w-md text-sm text-slate-300">{t('live.offline.body')}</p>
                         <Link
-                          to="/programs"
+                          to={servicesPath('/programs')}
                           className="inline-flex rounded-full bg-emerald-500 px-5 py-2.5 text-sm font-black text-slate-950 hover:bg-emerald-400"
                         >
                           {t('live.scheduleCta')}
@@ -283,7 +284,7 @@ export default function LivePage() {
                       </button>
                     ) : null}
                     <Link
-                      to="/programs"
+                      to={servicesPath('/programs')}
                       className="inline-flex items-center justify-center rounded-xl bg-emerald-500 px-3 py-2 text-xs font-black text-slate-950 hover:bg-emerald-400"
                     >
                       {t('live.scheduleCta')}
@@ -379,7 +380,7 @@ export default function LivePage() {
                 ))}
               </ul>
               <Link
-                to="/programs"
+                to={servicesPath('/programs')}
                 className="mt-4 block text-center rounded-xl border border-emerald-500/40 bg-emerald-500/10 py-2.5 text-xs font-black text-emerald-200 hover:bg-emerald-500/20"
               >
                 {t('live.scheduleCta')}
@@ -397,7 +398,7 @@ export default function LivePage() {
             </div>
 
             <Link
-              to="/library"
+              to={servicesPath('/library')}
               className="block rounded-2xl border border-white/10 bg-gradient-to-br from-emerald-900/40 to-slate-900 p-5 text-center text-sm font-black text-white hover:from-emerald-800/50"
             >
               {t('live.libraryCta')}
