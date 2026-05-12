@@ -82,6 +82,7 @@ These are drawn from `legacy/PRODUCTION_GRADE_AUDIT_AND_NEXT_STEPS.md`, legacy `
 
 | Date | Note |
 | --- | --- |
+| 2026-05-12 | Cross-reference: planned **gateway + Machafi TV** (separate product surface, edition routes, live simulcast) documented in `PLATFORM_SHELL_LAYOUT.md`; Services rebuild rules unchanged. |
 | 2026-04-29 | Initial document: captured user-reported “hard backend + no hospital datasets” blocker and consolidated legacy audit themes into rebuild rules. |
 
 ---

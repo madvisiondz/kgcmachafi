@@ -2,6 +2,20 @@
 
 This file is updated after every user prompt.
 
+## 2026-05-12
+
+### Platform architecture — gateway, Machafi TV, editions, live broadcast (mapping)
+- **Prompt**: Explain product update — domain entry chooses Services vs TV; TV = news-style site + journalist panel; three **routes per language** (separate editorial desks, not only translation); broadcast channel going live → web live stack.
+- **What I did**: Captured maps in chat; created / consolidated **`PLATFORM_SHELL_LAYOUT.md`** (master tree: `https://kgc-machafi.net/` → gateway → Services SPA + TV shell with `/tv/ar|fr|en`, live player slice, newsroom panel); set **production domain** in that doc.
+
+### Git push policy
+- **Prompt**: Does the agent push automatically to the repo?
+- **What I did**: Clarified — **no automatic push**; user asks when they want `commit` / `push`.
+
+### Rule #0 — sync project memory after rules question
+- **Prompt**: Did you read the project rules? If yes, update everything.
+- **What I did**: Updated **`README.md`** (production domain + links to `PLATFORM_SHELL_LAYOUT.md`, `WEBAPP_PAGES_OVERVIEW.md`), **`PROJECT_STATUS.md`** (2026-05-12 done block, remaining gateway/TV items, Machafi TV vs Rule #1 note, memory list), **`project-explainer.md`**, **`RULE_1_LANGUAGE_SWITCHING.md`** (Machafi TV edition exception), **`HOW_DOES_A_PRO_AI_WEB_DEVELOPER_DO_THAT.md`** (Rule #0 file list), **`LEGACY_SYSTEM_PROBLEMS_AND_REBUILD_RULES.md`** (changelog), **`WEBAPP_PAGES_OVERVIEW.md`** (scope note); appended this **`PROMPT_LOG.md`** section.
+
 ## 2026-04-30
 
 ### Canvas TypeScript: `frontend-block-diagram.canvas.tsx` (+IDE errors)

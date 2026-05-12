@@ -2,6 +2,10 @@
 
 MACHAFI is a **directory-first health platform**. This repo is in **UI-first rebuild mode**: we build pixel-perfect pages with **i18n (AR/FR/EN) + mock data** first, then wire APIs later via a thin `services/` boundary.
 
+## Production domain
+
+Public site: **[https://kgc-machafi.net/](https://kgc-machafi.net/)**
+
 ## Where the “project memory” lives
 
 These markdown files are the source of truth for decisions, progress, and page mapping:
@@ -9,6 +13,8 @@ These markdown files are the source of truth for decisions, progress, and page m
 - `project-explainer.md` — product intent + directory philosophy
 - `PROJECT_STATUS.md` — done vs remaining (keep current)
 - `PROMPT_LOG.md` — one entry per prompt (keep current)
+- `PLATFORM_SHELL_LAYOUT.md` — domain → gateway → Machafi Services vs Machafi TV (planned editions, live TV, newsroom)
+- `WEBAPP_PAGES_OVERVIEW.md` — Services SPA routes only (`frontend/src/App.tsx`)
 - `LEGACY_SYSTEM_PROBLEMS_AND_REBUILD_RULES.md` — why the legacy system blocked UI work + rebuild rules
 - `HEADER_SCROLL_ANIMATION.md` — sticky header collapse spec + QA checklist
 - `HOMEPAGE_MAP.md` — home page section map + rebuild tracking

@@ -194,6 +194,20 @@ These are not page-specific; they support consistent multilingual content across
 
 ---
 
+## Machafi TV (planned) — edition routes (does not replace Rule #1 on Services)
+
+The **Machafi Services** app (`frontend/`) keeps Rule #1 as documented: **AR/FR/EN** toggle on the **same routes**, all strings via **`t()`** (and multilingual shapes for data).
+
+**Machafi TV** (see `PLATFORM_SHELL_LAYOUT.md`) adds a **different** pattern:
+
+- Public URLs are **edition-prefixed**: e.g. `/tv/ar/...`, `/tv/fr/...`, `/tv/en/...`.
+- Each edition has its **own editorial queue** (Arabic desk vs French desk vs English desk — **not** automatic translation of one article).
+- Switching “language” **navigates** to the sibling edition route tree; within **each** edition page, Rule #1 still applies **for that edition’s UI language** (no mixed-language chrome inside `/tv/ar`, etc.).
+
+Until TV ships in code, Services pages remain the reference implementation for Rule #1.
+
+---
+
 ## Definition of done (Rule #1)
 
 Rule #1 is satisfied when:

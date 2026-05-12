@@ -128,6 +128,11 @@ This file is kept current throughout the rebuild.
   - **Header nav (desktop)**: green bar uses **custom gradient** in `frontend/src/index.css` (`--kgc-nav-a`…`--kgc-nav-f` tunable to final brand hex). **Partner logos** in branding bar: **`hidden lg:block`** only (desktop **≥1024px**); **mobile + tablet** hide partners — see `HEADER_SCROLL_ANIMATION.md` (“Branding bar — partner logos”) for tablet regression note.
   - **Page trackers**: each `*_PAGE_MAP.md` gets a short “Documentation sync (2026-04-30)” footer pointing to `PAGE_DATASET_REFERENCE.md` + `PROMPT_LOG.md`.
 
+- **2026-05-12 — platform architecture (documentation, Rule #0)**:
+  - **`PLATFORM_SHELL_LAYOUT.md`**: single master map for **[https://kgc-machafi.net/](https://kgc-machafi.net/)** — planned **gateway** (Services vs Machafi TV), current **Machafi Services** tree (`frontend/` + all `App.tsx` routes), planned **Machafi TV** shell with **edition routes** `/tv/ar`, `/tv/fr`, `/tv/en` (separate editorial worlds, not only translation), **live simulcast** slice (encoder → HLS → player), **journalist / newsroom panel** (desk-scoped), cross-links.
+  - **Product split (planned)**: Services news (`/news`) stays the **development-track** newsroom for the directory app; **Machafi TV** is the **broadcast-style** news product with its own queues and routes.
+  - **Code**: gateway and TV app **not implemented yet** — docs only until development starts.
+
 ## In progress
 - **Pixel-perfect alignment tuning**:
   - Final micro-adjustments for icon baseline, spacing, and button sizing to match legacy screenshots exactly (if you provide a screenshot/target URL, we can match 1:1 faster).
@@ -137,6 +142,8 @@ This file is kept current throughout the rebuild.
 
 ## Remaining (planned)
 - **Rebuild remaining UI pages** (UI only, no backend): (none — primary directory pages + Services + Donations + News are now scaffolded in the new frontend).
+- **Domain gateway (product)**: first visit at `kgc-machafi.net` → user chooses **Machafi Services** vs **Machafi TV** (then optional “remember shell”).
+- **Machafi TV (new shell, not started in code)**: BBC/CNN-style healthcare media UX; routes under **`/tv/ar`**, **`/tv/fr`**, **`/tv/en`**; web **live TV** (simulcast) + streaming pipeline; **journalist submit/review** panel per desk/edition; APIs/admin contracts TBD when implementation starts (add `TV_*` trackers then).
 - **Reusable UI kit**: Card, buttons, inputs, selects, filter panels (clean separation UI vs data).
 - **Layouts**: page shells, containers, responsive grid patterns.
 
@@ -157,7 +164,7 @@ This file is kept current throughout the rebuild.
 
 - **Backup / “sync” advice**:
   - Put the whole repo under **git** and push to a remote (GitHub/GitLab) so your progress is safely synced.
-  - Treat these as the project’s memory: `PROMPT_LOG.md`, `PROJECT_STATUS.md`, `HOMEPAGE_MAP.md`, `LIBRARY_PAGE_MAP.md`, `HEADER_SCROLL_ANIMATION.md`, `LEGACY_SYSTEM_PROBLEMS_AND_REBUILD_RULES.md`, and the workflow canvas.
+  - Treat these as the project’s memory: `PROMPT_LOG.md`, `PROJECT_STATUS.md`, `PLATFORM_SHELL_LAYOUT.md`, `HOMEPAGE_MAP.md`, `LIBRARY_PAGE_MAP.md`, `HEADER_SCROLL_ANIMATION.md`, `LEGACY_SYSTEM_PROBLEMS_AND_REBUILD_RULES.md`, and the workflow canvas.
 
 ## How to view the workflow canvas
 - Managed canvas (renders in Canvas preview):
@@ -175,7 +182,7 @@ This file is kept current throughout the rebuild.
 - After every user prompt:
   - Update `PROMPT_LOG.md` with a brief “what I did”.
   - Update `PROJECT_STATUS.md` with “done / in progress / remaining”.
-  - Update the active markdown memory set whenever relevant: `HOMEPAGE_MAP.md`, `HEADER_SCROLL_ANIMATION.md`, `LEGACY_SYSTEM_PROBLEMS_AND_REBUILD_RULES.md`, `HOW_DOES_A_PRO_AI_WEB_DEVELOPER_DO_THAT.md`, `project-explainer.md`, and future page-specific docs.
+  - Update the active markdown memory set whenever relevant: `PLATFORM_SHELL_LAYOUT.md` (gateway / Machafi TV), `HOMEPAGE_MAP.md`, `HEADER_SCROLL_ANIMATION.md`, `LEGACY_SYSTEM_PROBLEMS_AND_REBUILD_RULES.md`, `HOW_DOES_A_PRO_AI_WEB_DEVELOPER_DO_THAT.md`, `project-explainer.md`, and future page-specific docs.
   - Update `HOMEPAGE_MAP.md` when homepage structure or section ownership changes.
   - Update `HEADER_SCROLL_ANIMATION.md` when sticky header collapse thresholds, layout, or behavior changes.
   - Update `LEGACY_SYSTEM_PROBLEMS_AND_REBUILD_RULES.md` when we confirm a new legacy constraint or change a rebuild principle.
@@ -187,4 +194,9 @@ This file is kept current throughout the rebuild.
 ## Rule #1 (non-negotiable): language switching completeness
 - When language switches (AR/FR/EN), **every single visible text must switch** (no mixed-language UI).
 - Strategy + enforcement notes live in `RULE_1_LANGUAGE_SWITCHING.md`.
+
+### Machafi TV (planned) — edition routes vs Services i18n
+
+- **Machafi Services** (`frontend/`): one route set; language toggle updates **`t()`** and content fields — Rule #1 as today.
+- **Machafi TV** (planned): **three editorial editions** as **URL prefixes** (`/tv/ar`, `/tv/fr`, `/tv/en`). “Changing language” **navigates** to another edition’s pages and **content set** (pros per language), not only string swaps on the same URL. Within each edition, **all** visible text still follows Rule #1 for that edition’s UI language.
 

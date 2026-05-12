@@ -221,11 +221,16 @@ If the answer is no, it should probably be simplified.
 
 These files complement this explainer for day-to-day execution:
 
+- **Production domain**: **[https://kgc-machafi.net/](https://kgc-machafi.net/)**
+- `PLATFORM_SHELL_LAYOUT.md` — planned **gateway** (Machafi Services vs **Machafi TV**), Services SPA route tree, TV shell with **edition paths** `/tv/ar`, `/tv/fr`, `/tv/en`, live simulcast + journalist desk (logical map; implementation follows).
+- `WEBAPP_PAGES_OVERVIEW.md` — current **Machafi Services** SPA routes in `frontend/src/App.tsx` only.
 - `HOW_DOES_A_PRO_AI_WEB_DEVELOPER_DO_THAT.md` — phased delivery plan (UI first, then contracts, then admin/API).
 - `LEGACY_SYSTEM_PROBLEMS_AND_REBUILD_RULES.md` — why the old stack blocked UI iteration and what we avoid repeating.
 - `PROJECT_STATUS.md` and `PROMPT_LOG.md` — current status and per-prompt actions.
 - `PAGE_DATASET_REFERENCE.md` — all routes: brief purpose + recommended dataset columns (handoff to backend/CMS).
 - `HOMEPAGE_MAP.md` — Home page section map (template for future per-page `*_PAGE_MAP.md` files).
+
+**Machafi TV (planned)** is a **second product surface** on the same domain: broadcast-style news + web live + per-edition editorial pipelines. It does **not** replace the directory-first mission of **Machafi Services** in `frontend/`; cross-links between shells are optional product decisions.
 - **Rule #0**: after every prompt, update the relevant page tracker `.md` *and* the core project memory docs listed above so decisions never drift from the implementation.
   - Rule detail: each page tracker must include the **proposed public endpoints** and the **admin panel controls** needed to keep that page accurate.
 - **Rule #1**: language switching must switch **all text** (AR/FR/EN). Strategy doc: `RULE_1_LANGUAGE_SWITCHING.md`.

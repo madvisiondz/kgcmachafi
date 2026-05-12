@@ -1,6 +1,6 @@
 # Webapp pages overview
 
-This document describes the **active React frontend** at `frontend/` (Vite + React Router). Older copies under `legacy/` and `backupp/` are **not** counted here.
+This document describes the **Machafi Services** React frontend at `frontend/` (Vite + React Router) — **only** the directory platform SPA. A future **domain gateway** and **Machafi TV** shell are mapped in **`PLATFORM_SHELL_LAYOUT.md`** (production domain: **https://kgc-machafi.net/**). Older copies under `legacy/` and `backupp/` are **not** counted here.
 
 ## Summary
 

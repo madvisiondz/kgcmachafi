@@ -39,6 +39,7 @@ For all pages, prefer **lightweight public endpoints**:
 After **every user prompt**, update the project memory so the repo stays synced to the chat:
 
 - **Page-specific tracker** for any page touched (e.g. `HOMEPAGE_MAP.md`, `LIBRARY_PAGE_MAP.md`, `PHARMACIES_PAGE_MAP.md`, and future `*_PAGE_MAP.md` docs)
+- **`PLATFORM_SHELL_LAYOUT.md`** when gateway, Machafi TV, editions, live TV, or newsroom scope changes
 - `HOW_DOES_A_PRO_AI_WEB_DEVELOPER_DO_THAT.md` (this plan)
 - `LEGACY_SYSTEM_PROBLEMS_AND_REBUILD_RULES.md` (constraints + rules)
 - `PROJECT_STATUS.md` (done / in progress / remaining)
@@ -255,6 +256,7 @@ You are done with the integration program when:
 
 | Date | Note |
 | --- | --- |
+| 2026-05-12 | Rule #0: include `PLATFORM_SHELL_LAYOUT.md` when domain gateway or Machafi TV scope changes. |
 | 2026-04-29 | Initial version: phased UI → contracts → admin/backend plan; emphasizes i18n legibility gates. |
 | 2026-04-29 | Reminder: Cursor canvases are JSX — never put raw `<Component>`-looking snippets inside `<Text>` children without escaping (use string expressions or `Code`). |
 | 2026-04-29 | Library page added in `frontend/` (legacy `HealthLibrary` UI clone, mock data, `/library`); tracker `LIBRARY_PAGE_MAP.md`. |
