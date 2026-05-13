@@ -2,6 +2,19 @@
 
 This file is updated after every user prompt.
 
+## 2026-05-14
+
+### Git push policy + chat log before push (standing)
+- **Prompt**: Do not ask about size issues anymore; always push everything so another PC can clone and work immediately; before every push, update the chat-tracking **`.md`** then push.
+- **Standing rule (recorded for assistants)**:
+  - **Never** prompt the user about repository size, whether to omit **`frontend/dist`**, or slimming commits—the user wants **full Git history and tracked artifacts** so any machine can **`git clone`** and continue without rebuilding assets first unless they choose to.
+  - **Before `git push`**: append this **`PROJECT-EXPLAINER/PROMPT_LOG.md`** with the **latest user prompt + what changed** (this file is the chat/work transcript).
+  - **Then** `git add -A`, `git commit`, `git push` as requested—no optional “skip dist” branches unless the user explicitly reverses this policy.
+
+### Chat log before push (this prompt)
+- **Prompt**: Stop asking about size; always push everything; before push update the **`.md`** that tracks chats—then push.
+- **What I did**: Appended **`PROJECT-EXPLAINER/PROMPT_LOG.md`** (this file) with **2026-05-14** standing rules + this entry; updated **`README.md`** sync/push policy; **`PROJECT_STATUS.md`** Done bullet; refreshed footers on those files; committing and pushing **`main`** → **`origin`**. (Large **`legacy/`** / **`backupp/`** removal + services work was already pushed on **`main`** in the previous session.)
+
 ## 2026-05-11 (continued)
 
 ### News detail — optional live article fetch
@@ -578,4 +591,4 @@ This file is updated after every user prompt.
 
 ---
 
-*Last updated: **2026-05-13** — evening session close (project-wide doc sync).*
+*Last updated: **2026-05-14** — push policy + PROMPT_LOG entry; pushed to `origin/main`.*

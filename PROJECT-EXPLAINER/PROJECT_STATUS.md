@@ -8,6 +8,7 @@ This file is kept current throughout the rebuild.
 - **Tailwind added**: minimal Tailwind setup for pixel-aligned UI work.
 - **Root repo README**: `README.md` links the canonical docs + run steps.
 - **Onboarding (2026-05-13):** **`MACHAFI_DATABASE_AND_API_PLAYBOOK.md`** — beginner-oriented guide (MySQL/phpMyAdmin, endpoints, env flags, “ready?” checklist); all project **`.md`** files stamped with same **last updated** footer for this session.
+- **Git / clone policy (2026-05-14):** Owner wants **full pushes** (including **`frontend/dist`** when tracked)—no “size” opt-out prompts. **`PROMPT_LOG.md`** is updated **before each push** with the latest chat/work summary for cross-PC continuity.
 - **Production execution — Phase A (expanded) + CI + API client (2026-05-11)**:
   - **GitHub Actions**: **`.github/workflows/frontend-ci.yml`** runs `npm ci`, `npm run lint`, and `npm run build` in **`frontend/`** when `frontend/**` or the workflow file changes.
   - **`frontend/src/services/`** — `http.ts`, `news.ts` (news list + detail), **`pharmacies.ts`** (`loadPharmaciesForList`, PHP → `Pharmacy` mapper), `index.ts` re-exports (Phase **C1** / **D1** slice per **`NEXT_STEPS_PRODUCTION.md`**).
@@ -224,4 +225,4 @@ This file is kept current throughout the rebuild.
 
 ---
 
-*Last updated: **2026-05-13** — evening session close (project-wide doc sync).*
+*Last updated: **2026-05-14** — clone parity / push policy noted in Done.*

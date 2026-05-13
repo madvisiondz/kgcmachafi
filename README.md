@@ -116,11 +116,13 @@ Advanced: you can set a personal access token in the `GH_TOKEN` environment vari
 
 After every prompt/work session, update:
 
-- **`PROJECT-EXPLAINER/PROMPT_LOG.md`** (what changed)
+- **`PROJECT-EXPLAINER/PROMPT_LOG.md`** (what changed) — **append before every `git push`** so clones on other PCs include the latest chat/context.
 - **`PROJECT-EXPLAINER/PROJECT_STATUS.md`** (done/in progress/remaining)
 - any relevant tracker under **`TRACKERS/`** or spec docs under **`PROJECT-EXPLAINER/`**
+
+**Push policy (owner preference):** commit and push **all tracked files** you rely on (including **`frontend/dist`** when it changes). Do **not** ask to omit large paths for “smaller” commits—the goal is **clone-and-work** on any machine.
 
 
 ---
 
-*Last updated: **2026-05-13** — evening session close (project-wide doc sync).*
+*Last updated: **2026-05-14** — PROMPT_LOG + README push policy; then push.*
