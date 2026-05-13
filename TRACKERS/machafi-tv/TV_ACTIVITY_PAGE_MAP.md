@@ -61,6 +61,44 @@ Single source of truth for **`TvActivityPage`**: public-safe **newswire-style** 
 
 ---
 
+## Full endpoint design — GoDaddy + MySQL (SQL)
+
+**References:** **`../../PROJECT-EXPLAINER/HOSTING_AND_DATABASE.md`**, **`../../PROJECT-EXPLAINER/API_STANDARD_GODADDY_MYSQL.md`**.
+
+### MySQL
+
+```sql
+CREATE TABLE tv_wire_items (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  edition CHAR(2) NOT NULL,
+  created_at DATETIME NOT NULL,
+  body VARCHAR(1024) NOT NULL,
+  urgent TINYINT(1) NOT NULL DEFAULT 0,
+  retracted_at DATETIME NULL,
+  status ENUM('approved','hidden') NOT NULL DEFAULT 'approved',
+  KEY idx_ed_time (edition, created_at)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+```
+
+### HTTP — public
+
+| Method | Path | PHP | SQL |
+|--------|------|-----|-----|
+| GET | `/api/public/tv/editions/{edition}/wire` | **`api/public/tv-wire.php`** | `WHERE edition=? AND status='approved' AND retracted_at IS NULL ORDER BY created_at DESC LIMIT` |
+
+### HTTP — admin
+
+| Method | Path | PHP |
+|--------|------|-----|
+| GET/POST/PUT | `/api/admin/machafitv/editions/{edition}/wire` | **`api/admin/tv-wire.php`** — retract = set `retracted_at` |
+
+---
+
 ## Documentation sync (2026-05-12)
 
 - **`TV_DESK_PAGE_MAP.md`**, **`TV_HOME_PAGE_MAP.md`** (“See wire” link), **`../../PROJECT-EXPLAINER/PROMPT_LOG.md`**.
+
+
+---
+
+*Last updated: **2026-05-13** — evening session close (project-wide doc sync).*

@@ -78,3 +78,8 @@ Admin/API later: sanitized stream URL, schedule row, “on air” flag — align
 ---
 
 *Routing scaffold implemented in `frontend/src/App.tsx`; TV/CMS/admin wiring continues in later milestones.*
+
+
+---
+
+*Last updated: **2026-05-13** — evening session close (project-wide doc sync).*

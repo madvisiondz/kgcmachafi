@@ -159,8 +159,60 @@ When this page changes:
 
 ---
 
+## Full endpoint design — GoDaddy + MySQL (SQL)
+
+**References:** **`../../PROJECT-EXPLAINER/HOSTING_AND_DATABASE.md`**, **`../../PROJECT-EXPLAINER/API_STANDARD_GODADDY_MYSQL.md`**.
+
+### MySQL
+
+Reuse or align with existing **`services`** (or equivalent) table used by `api/public/site-content.php` / admin services endpoints. Typical shape:
+
+```sql
+CREATE TABLE services (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  sort_order INT NOT NULL DEFAULT 0,
+  is_active TINYINT(1) NOT NULL DEFAULT 1,
+  icon_key VARCHAR(64) NULL,
+  color_class VARCHAR(64) NULL,
+  bg_class VARCHAR(64) NULL,
+  updated_at DATETIME NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE service_i18n (
+  service_id BIGINT NOT NULL,
+  lang CHAR(2) NOT NULL,
+  title VARCHAR(255) NOT NULL,
+  description TEXT NULL,
+  features_json JSON NULL,
+  PRIMARY KEY (service_id, lang),
+  FOREIGN KEY (service_id) REFERENCES services(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+```
+
+Section hero copy may live in **`site_settings`** JSON (`services_content`) keyed by locale.
+
+### HTTP — public
+
+| Method | Path | PHP | SQL |
+|--------|------|-----|-----|
+| GET | `/api/public/services` | **`api/public/services.php`** (or bundle via **`api/public/site-content.php`**) | `SELECT` active services + `service_i18n` for `?lang=` |
+
+### HTTP — admin
+
+| Method | Path | PHP |
+|--------|------|-----|
+| GET/POST/PUT/DELETE | `/api/admin/services` | **`api/admin/services-content.php`** (existing) |
+| GET/PUT | `/api/admin/site-settings` | **`api/admin/site-settings.php`** — section titles |
+
+---
+
 ## Documentation sync (2026-04-30)
 
 - Cross-route **dataset handoff**: see `../../PROJECT-EXPLAINER/PAGE_DATASET_REFERENCE.md` (purpose + suggested columns per route).
 - **Site chrome** (header, desktop nav gradient `.kgc-main-nav-gradient`, partner logo rules) is global; details in `../../PROJECT-EXPLAINER/PROMPT_LOG.md` under **2026-04-30**.
-- This page’s **API / admin contracts** below are unchanged unless product scope changes.
+- Endpoint contracts in this tracker stay aligned with **`../../PROJECT-EXPLAINER/API_STANDARD_GODADDY_MYSQL.md`** unless product scope changes.
+
+
+---
+
+*Last updated: **2026-05-13** — evening session close (project-wide doc sync).*

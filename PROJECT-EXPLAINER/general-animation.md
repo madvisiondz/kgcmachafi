@@ -72,3 +72,8 @@ Defined in `frontend/src/index.css` and used elsewhere—listed here so “gener
 ---
 
 *Last updated to match the home “adorable” motion pass and deploy bundle (Tailwind `kgc-*` set + `HomePage.jsx` wiring).*
+
+
+---
+
+*Last updated: **2026-05-13** — evening session close (project-wide doc sync).*

@@ -1,1 +1,6 @@
 # Full mirror backup: dependencies and build output are tracked from repo root policy.
+
+# Local env overrides (never commit secrets). Template: `.env.example`
+.env
+.env.local
+.env.*.local

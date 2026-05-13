@@ -14,22 +14,22 @@ If we do this correctly, News becomes a **trust surface** for the whole platform
 
 ---
 
-## 2) Legacy source (what we cloned / improved)
+## 2) Former monolith source (tree removed 2026-05-13)
 
-### Legacy list page
+### List page
 
-- `legacy/src/pages/NewsPage.jsx`
+- Old `NewsPage.jsx`
   - Source filters modeled as “wire agencies”
   - Client search across title + description
   - Grid cards with source pill + date + tag + “read more”
 
-### Legacy supporting UI
+### Supporting UI
 
-- `legacy/src/components/HealthNews.jsx` (home section teaser → `/news`)
+- Old `HealthNews.jsx` (home section teaser → `/news`)
 
-### Legacy data access pattern
+### Data access pattern
 
-- `legacy/src/lib/news-service.js` maps DB fields (`description`) to UI fields (`desc`) via `contentApi`.
+- Old `news-service.js` maps DB fields (`description`) to UI fields (`desc`) via `contentApi`.
 
 ### Rebuild differences (new frontend)
 
@@ -307,8 +307,40 @@ Article `title/lead/body` remain multilingual objects in mocks until the API ret
 
 ---
 
+## 11) Full endpoint design — GoDaddy + MySQL (SQL)
+
+**Platform:** GoDaddy (Linux, Apache, PHP) + **MySQL/MariaDB**. JSON envelope, pagination, `lang`: **`../../PROJECT-EXPLAINER/API_STANDARD_GODADDY_MYSQL.md`**. Deploy layout: **`../../PROJECT-EXPLAINER/HOSTING_AND_DATABASE.md`**.
+
+The **logical REST contract** is **§6 Endpoint proposals** above. Implement as PHP under `api/public/` and `api/admin/` with the standard `{ ok, data, error }` shape.
+
+### MySQL (logical — extend or replace legacy `news_articles`)
+
+| Table | Purpose |
+|-------|---------|
+| `news_articles` | `id`, `slug`, `status`, `published_at`, `embargo_until`, `featured`, `breaking`, `source_key`, `is_archived`, legacy `title` / `description` / `content` / `tag` / `source` / `date` |
+| `news_article_i18n` | `(article_id, lang)` → `title`, `lead`, `body_md`, optional `seo_title`, `seo_description` |
+| `news_article_topics` | `(article_id, topic_key)` |
+| `news_article_versions` | Optional audit: `article_id`, `version`, `editor_id`, `payload_json`, `created_at` |
+
+**Indexes:** `(status, published_at DESC)`, `(featured)`, `(breaking)`, `(source_key)`; optional `FULLTEXT` on `title`+`lead` per language table.
+
+### PHP ↔ HTTP (map to repo files)
+
+| Logical | PHP (extend in repo) |
+|---------|----------------------|
+| `GET /api/public/news` | `api/public/news.php` — query `lang`, `q`, `tag`, `source`, `featured`, `breaking`, `archived`, `limit`, `cursor` |
+| `GET /api/public/news/{id}` | `api/public/news.php?id=` (or split `news-item.php`) |
+| `GET/POST/PATCH/DELETE /api/admin/news` | `api/admin/news.php` — desk list, drafts, publish transitions per §6 |
+
+---
+
 ## Documentation sync (2026-04-30)
 
 - Cross-route **dataset handoff**: see `../../PROJECT-EXPLAINER/PAGE_DATASET_REFERENCE.md` (purpose + suggested columns per route).
 - **Site chrome** (header, desktop nav gradient `.kgc-main-nav-gradient`, partner logo rules) is global; details in `../../PROJECT-EXPLAINER/PROMPT_LOG.md` under **2026-04-30**.
-- This page’s **API / admin contracts** below are unchanged unless product scope changes.
+- Endpoint contracts in this tracker stay aligned with **`../../PROJECT-EXPLAINER/API_STANDARD_GODADDY_MYSQL.md`** unless product scope changes.
+
+
+---
+
+*Last updated: **2026-05-13** — evening session close (project-wide doc sync).*

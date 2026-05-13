@@ -284,8 +284,67 @@ Whenever we touch this page, we also update:
 
 ---
 
+## Full endpoint design — GoDaddy + MySQL (SQL)
+
+**References:** **`../../PROJECT-EXPLAINER/HOSTING_AND_DATABASE.md`**, **`../../PROJECT-EXPLAINER/API_STANDARD_GODADDY_MYSQL.md`**.
+
+### MySQL
+
+```sql
+CREATE TABLE pharmacies (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  wilaya_code VARCHAR(8) NOT NULL,
+  commune_id VARCHAR(32) NOT NULL,
+  name VARCHAR(255) NOT NULL,
+  phone VARCHAR(64) NOT NULL,
+  address VARCHAR(512) NULL,
+  lat DECIMAL(10,7) NULL,
+  lng DECIMAL(10,7) NULL,
+  verified TINYINT(1) NOT NULL DEFAULT 0,
+  status ENUM('active','hidden') NOT NULL DEFAULT 'active',
+  updated_at DATETIME NOT NULL,
+  KEY idx_loc (wilaya_code, commune_id, status)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE pharmacy_night_weeks (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  week_start DATE NOT NULL,
+  UNIQUE KEY uq_week (week_start)
+);
+
+CREATE TABLE pharmacy_night_assignments (
+  week_id BIGINT NOT NULL,
+  pharmacy_id BIGINT NOT NULL,
+  sort_order INT NOT NULL DEFAULT 0,
+  PRIMARY KEY (week_id, pharmacy_id),
+  FOREIGN KEY (week_id) REFERENCES pharmacy_night_weeks(id),
+  FOREIGN KEY (pharmacy_id) REFERENCES pharmacies(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+```
+
+### HTTP — public
+
+| Method | Path | PHP | SQL |
+|--------|------|-----|-----|
+| GET | `/api/public/pharmacies` | **`api/public/pharmacies.php`** (new) | Filter `pharmacies` by `wilaya_code`, `commune_id`, `q`, `nightOnly` (join assignments for active week) |
+| GET | `/api/public/pharmacies/night-shift` | **`api/public/pharmacy-night-shift.php`** (new) | `week_start` → rows via `pharmacy_night_weeks` + `pharmacy_night_assignments` |
+
+### HTTP — admin
+
+| Method | Path | PHP | SQL |
+|--------|------|-----|-----|
+| GET/POST/PUT/DELETE | `/api/admin/pharmacies` | **`api/admin/pharmacies.php`** | CRUD `pharmacies` |
+| PUT | `/api/admin/pharmacies/night-shift` | **`api/admin/pharmacy-night-shift.php`** | Upsert week + replace assignment rows |
+
+---
+
 ## Documentation sync (2026-04-30)
 
 - Cross-route **dataset handoff**: see `../../PROJECT-EXPLAINER/PAGE_DATASET_REFERENCE.md` (purpose + suggested columns per route).
 - **Site chrome** (header, desktop nav gradient `.kgc-main-nav-gradient`, partner logo rules) is global; details in `../../PROJECT-EXPLAINER/PROMPT_LOG.md` under **2026-04-30**.
-- This page’s **API / admin contracts** below are unchanged unless product scope changes.
+- Endpoint contracts in this tracker stay aligned with **`../../PROJECT-EXPLAINER/API_STANDARD_GODADDY_MYSQL.md`** unless product scope changes.
+
+
+---
+
+*Last updated: **2026-05-13** — evening session close (project-wide doc sync).*

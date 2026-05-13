@@ -175,8 +175,53 @@ Whenever we touch this page, we also update:
 
 ---
 
+## Full endpoint design — GoDaddy + MySQL (SQL)
+
+**References:** **`../../PROJECT-EXPLAINER/HOSTING_AND_DATABASE.md`**, **`../../PROJECT-EXPLAINER/API_STANDARD_GODADDY_MYSQL.md`**.
+
+### MySQL
+
+```sql
+CREATE TABLE ambulance_providers (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  wilaya_code VARCHAR(8) NOT NULL,
+  commune_id VARCHAR(32) NOT NULL,
+  provider_name VARCHAR(255) NOT NULL,
+  phone VARCHAR(64) NOT NULL,
+  vehicle_type ENUM('standard','icu','medical_transport','other') NOT NULL,
+  free_service TINYINT(1) NOT NULL DEFAULT 0,
+  pricing_note VARCHAR(255) NULL,
+  icu_capable TINYINT(1) NOT NULL DEFAULT 0,
+  lat DECIMAL(10,7) NULL,
+  lng DECIMAL(10,7) NULL,
+  verified TINYINT(1) NOT NULL DEFAULT 0,
+  status ENUM('active','hidden') NOT NULL DEFAULT 'active',
+  updated_at DATETIME NOT NULL,
+  KEY idx_filters (wilaya_code, commune_id, vehicle_type, status)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+```
+
+### HTTP — public
+
+| Method | Path | PHP | SQL |
+|--------|------|-----|-----|
+| GET | `/api/public/ambulances` | **`api/public/ambulances.php`** | Filters: wilaya, commune, `vehicle_type`, `free_only`, `q` |
+
+### HTTP — admin
+
+| Method | Path | PHP |
+|--------|------|-----|
+| GET/POST/PUT/DELETE | `/api/admin/ambulances` | **`api/admin/ambulances.php`** |
+
+---
+
 ## Documentation sync (2026-04-30)
 
 - Cross-route **dataset handoff**: see `../../PROJECT-EXPLAINER/PAGE_DATASET_REFERENCE.md` (purpose + suggested columns per route).
 - **Site chrome** (header, desktop nav gradient `.kgc-main-nav-gradient`, partner logo rules) is global; details in `../../PROJECT-EXPLAINER/PROMPT_LOG.md` under **2026-04-30**.
-- This page’s **API / admin contracts** below are unchanged unless product scope changes.
+- Endpoint contracts in this tracker stay aligned with **`../../PROJECT-EXPLAINER/API_STANDARD_GODADDY_MYSQL.md`** unless product scope changes.
+
+
+---
+
+*Last updated: **2026-05-13** — evening session close (project-wide doc sync).*

@@ -78,3 +78,8 @@ flowchart LR
 ---
 
 _Changelog: 2026-04-29 — initial diagram for current frontend._
+
+
+---
+
+*Last updated: **2026-05-13** — evening session close (project-wide doc sync).*

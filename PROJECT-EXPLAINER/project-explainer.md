@@ -241,3 +241,8 @@ These files complement this explainer for day-to-day execution:
   - **Managed (renders in Canvas preview)**: `C:\Users\Oasis-Mall\.cursor\projects\d-komas-kgcmachafiprodhome1-kgcmachafi\canvases\project-workflow.canvas.tsx`
   - **Repo copy (versioned)**: `canvases/project-workflow.canvas.tsx`
   - Purpose: visual workflow and “what to update after every prompt” checklist.
+
+
+---
+
+*Last updated: **2026-05-13** — evening session close (project-wide doc sync).*

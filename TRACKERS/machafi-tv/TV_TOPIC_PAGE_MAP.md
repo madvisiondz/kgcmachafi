@@ -60,6 +60,29 @@ Single source of truth for **`TvTopicPage`**: filtered story grid for **health**
 
 ---
 
+## Full endpoint design — GoDaddy + MySQL (SQL)
+
+**References:** **`../../PROJECT-EXPLAINER/HOSTING_AND_DATABASE.md`**, **`../../PROJECT-EXPLAINER/API_STANDARD_GODADDY_MYSQL.md`**. Uses **`tv_articles.topic_key`** (+ **`TV_HOME_PAGE_MAP.md`** table DDL).
+
+### HTTP — public
+
+| Method | Path | PHP | SQL |
+|--------|------|-----|-----|
+| GET | `/api/public/tv/editions/{edition}/topics/{topicId}/articles` | **`api/public/tv-topic-articles.php`** | `WHERE edition=? AND topic_key=? AND status='published' ORDER BY published_at DESC LIMIT` |
+
+### HTTP — admin
+
+| Method | Path | PHP |
+|--------|------|-----|
+| GET/PUT | `/api/admin/machafitv/taxonomy/topics` | **`api/admin/tv-topics.php`** — order, featured slug per topic |
+
+---
+
 ## Documentation sync (2026-05-12)
 
 - **`TV_HOME_PAGE_MAP.md`**, **`TV_SHELL_PAGE_MAP.md`**, **`../../PROJECT-EXPLAINER/PROMPT_LOG.md`**.
+
+
+---
+
+*Last updated: **2026-05-13** — evening session close (project-wide doc sync).*

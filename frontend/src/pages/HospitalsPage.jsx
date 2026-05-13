@@ -1,5 +1,8 @@
 import React, { useMemo, useState } from 'react';
 import { useI18n } from '../i18n/I18nProvider';
+import { useBootstrapList } from '../hooks/useBootstrapList';
+import ListGridSkeleton from '../components/ListGridSkeleton';
+import ListFetchErrorBanner from '../components/ListFetchErrorBanner';
 import { getCommunes, wilayas } from '../data/algeria-data';
 import { hospitalsAlgeriaMock, hospitalsInternationalMock } from '../data/hospitals';
 
@@ -87,9 +90,21 @@ const LOCAL_TYPES = ['all', 'public', 'private', 'clinic', 'specialized'];
 const ABROAD_COUNTRIES = ['all', 'turkey', 'tunisia', 'france', 'germany', 'jordan', 'egypt'];
 const ABROAD_SPECIALTIES = ['all', 'oncology', 'cardiology', 'neurology', 'transplants', 'fertility', 'orthopedics'];
 
+async function loadHospitalDatasets() {
+  return {
+    local: hospitalsAlgeriaMock,
+    abroad: hospitalsInternationalMock,
+  };
+}
+
 export default function HospitalsPage() {
   const { t, dir } = useI18n();
   const isRTL = dir === 'rtl';
+
+  const { status, data, error, reload } = useBootstrapList(loadHospitalDatasets);
+  const localSource = data?.local ?? hospitalsAlgeriaMock;
+  const abroadSource = data?.abroad ?? hospitalsInternationalMock;
+  const showSkeleton = status === 'loading';
 
   const [tab, setTab] = useState('algeria'); // algeria|abroad
 
@@ -115,7 +130,7 @@ export default function HospitalsPage() {
 
   const filteredLocal = useMemo(() => {
     const q = normalize(query);
-    return hospitalsAlgeriaMock.filter((h) => {
+    return localSource.filter((h) => {
       if (!h.isActive) return false;
       if (wilaya && h.wilayaCode !== wilaya) return false;
       if (communeId && h.communeId !== communeId) return false;
@@ -125,11 +140,11 @@ export default function HospitalsPage() {
       const hay = normalize([h.name, h.phone ?? '', h.address ?? '', h.wilayaCode].join(' '));
       return hay.includes(q);
     });
-  }, [communeId, query, type, verifiedOnly, wilaya]);
+  }, [communeId, localSource, query, type, verifiedOnly, wilaya]);
 
   const filteredAbroad = useMemo(() => {
     const q = normalize(queryAbroad);
-    return hospitalsInternationalMock.filter((h) => {
+    return abroadSource.filter((h) => {
       if (!h.isActive) return false;
       if (country !== 'all' && h.countryKey !== country) return false;
       if (specialty !== 'all' && h.specialtyKey !== specialty) return false;
@@ -138,7 +153,7 @@ export default function HospitalsPage() {
       const hay = normalize([h.name, h.city ?? '', h.phone ?? '', h.countryKey, h.specialtyKey].join(' '));
       return hay.includes(q);
     });
-  }, [country, queryAbroad, specialty, verifiedOnlyAbroad]);
+  }, [abroadSource, country, queryAbroad, specialty, verifiedOnlyAbroad]);
 
   const stats = useMemo(() => {
     const list = tab === 'algeria' ? filteredLocal : filteredAbroad;
@@ -151,6 +166,11 @@ export default function HospitalsPage() {
     <div className="space-y-12" dir={dir}>
       <section className="border-y border-slate-200 bg-gradient-to-b from-slate-50/70 via-white to-white py-14">
         <div className="container mx-auto px-4">
+          {status === 'error' ? (
+            <div className="mb-6">
+              <ListFetchErrorBanner message={error?.message} onRetry={reload} />
+            </div>
+          ) : null}
           {/* Hero */}
           <div className="mb-10">
             <div className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-extrabold text-slate-700">
@@ -395,7 +415,16 @@ export default function HospitalsPage() {
 
           {/* Results */}
           <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-            {tab === 'algeria' ? (
+            {showSkeleton ? (
+              <div className="md:col-span-2 xl:col-span-3 space-y-6">
+                <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+                  <p className="text-sm font-extrabold text-slate-700">{t('common.listLoadingTitle')}</p>
+                  <p className="text-xs text-slate-500 mt-2">{t('common.listLoadingHint')}</p>
+                  <div className="mt-6 h-32 rounded-2xl bg-slate-100 animate-pulse" />
+                </div>
+                <ListGridSkeleton columnsClass="md:grid-cols-2 xl:grid-cols-3" count={6} />
+              </div>
+            ) : tab === 'algeria' ? (
               filteredLocal.length === 0 ? (
                 <EmptyState title={t('hospitals.emptyTitle')} desc={t('hospitals.emptyDesc')} />
               ) : (

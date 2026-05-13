@@ -1,15 +1,17 @@
-# Home Page Map (Legacy → Rebuild)
+# Home Page Map (former monolith → rebuild)
 
 Purpose: keep a **precise, engineer-friendly map** of the homepage sections and their corresponding components so we can rebuild and iterate without losing structure.
 
 **File location (repo):** `TRACKERS/machafi-services/HOMEPAGE_MAP.md`
 
-Legacy file: `legacy/src/pages/HomePage.jsx`
+> **Note (2026-05-13):** The old `legacy/` tree was removed from the repository. Paths below that look like `…/src/components/Foo.jsx` refer to **former monolith filenames** for section parity only. The live homepage is **`frontend/src/pages/HomePage.jsx`**.
+
+Reference order (former monolith): `HomePage.jsx`
 
 Section order (top → bottom):
 
 1. **Hero**
-   - **Legacy component**: `legacy/src/components/Hero.jsx`
+   - **Former monolith component**: `Hero.jsx`
    - **Role**: primary value prop + CTA buttons + hero image + hero stats (3 mini stats)
    - **Key UI traits**:
      - Light green gradient background
@@ -22,26 +24,26 @@ Section order (top → bottom):
      - Row of 3 icon stats chips under CTAs
 
 2. **Ad banner (slot 1234567890)**
-   - **Legacy component**: `legacy/src/components/AdBanner.jsx`
+   - **Former monolith component**: `AdBanner.jsx`
    - **Role**: AdSense placeholder block (728×90 look)
 
 3. **Stats counter**
-   - **Legacy component**: `legacy/src/components/StatsCounter.jsx`
+   - **Former monolith component**: `StatsCounter.jsx`
    - **Role**: animated counters + “staff roles” strip
    - **Note**: legacy pulls data via `fetchSiteStats()` (backend logic) → **must be mocked/static in rebuild**
 
 4. **Health in Drama**
-   - **Legacy component**: `legacy/src/components/HealthInDrama.jsx`
+   - **Former monolith component**: `HealthInDrama.jsx`
    - **Role**: dark highlight section with YouTube embed + bullets
    - **Legacy video URL**: `https://www.youtube.com/embed/SbDeMQ26RM8`
 
 5. **Health News (recent)**
-   - **Legacy component**: `legacy/src/components/HealthNews.jsx`
+   - **Former monolith component**: `HealthNews.jsx`
    - **Role**: recent news cards (3) + “Read more”
    - **Note**: legacy fetches via `fetchAllNews()` → **mock/static in rebuild**
 
 6. **Platform Sections grid (cards linking to pages)**
-   - **Legacy inline section** inside `legacy/src/pages/HomePage.jsx`
+   - **Former monolith inline section** in the old `HomePage.jsx`
    - **Role**: grid of feature cards with gradient icon box + title + description
    - **Cards (legacy order)**:
      - Live (`/live`)
@@ -56,11 +58,11 @@ Section order (top → bottom):
      - Donations (`/donations`)
 
 7. **Ad banner (slot 0987654321)**
-   - **Legacy component**: `legacy/src/components/AdBanner.jsx`
+   - **Former monolith component**: `AdBanner.jsx`
 
 Cross-cutting wrappers:
 - **Reveal** animation wrapper around most sections
-  - **Legacy component**: `legacy/src/components/Reveal.jsx` (Framer Motion + in-view)
+  - **Former monolith component**: `Reveal.jsx` (Framer Motion + in-view)
 
 ---
 
@@ -196,9 +198,71 @@ Even if most of the UI is static early, the real Home page should eventually rea
 
 ---
 
+## 10) Full endpoint design — GoDaddy + MySQL (SQL)
+
+**Hosting:** **GoDaddy** (Linux, Apache, PHP). **Database:** **MySQL/MariaDB**. Cross-cutting rules: **`../../PROJECT-EXPLAINER/HOSTING_AND_DATABASE.md`**, **`../../PROJECT-EXPLAINER/API_STANDARD_GODADDY_MYSQL.md`**. SPA calls same-origin **`/api`** (`frontend/src/config.ts`).
+
+### MySQL (logical DDL — adjust names to your existing prefix)
+
+```sql
+CREATE TABLE site_stats (
+  id TINYINT PRIMARY KEY DEFAULT 1,
+  visitors BIGINT NOT NULL DEFAULT 0,
+  subscribers BIGINT NOT NULL DEFAULT 0,
+  registered_users BIGINT NOT NULL DEFAULT 0,
+  staff_count INT NOT NULL DEFAULT 0,
+  updated_at DATETIME NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE site_home_config (
+  id TINYINT PRIMARY KEY DEFAULT 1,
+  hero_badge_json JSON NULL,
+  drama_video_url VARCHAR(512) NULL,
+  updated_at DATETIME NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE home_feed_items (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  feed_type ENUM('news','program','library','service','directory_notice') NOT NULL,
+  ref_id BIGINT NOT NULL,
+  published_at DATETIME NOT NULL,
+  title_json JSON NOT NULL,
+  excerpt_json JSON NULL,
+  href VARCHAR(512) NOT NULL,
+  badge VARCHAR(64) NULL,
+  KEY idx_published (published_at)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+```
+
+### HTTP — public (`api/public/`)
+
+| Method | Path | PHP (on GoDaddy) | SQL |
+|--------|------|------------------|-----|
+| GET | `/api/public/site/stats` | **`api/public/site-stats.php`** (new) | `SELECT * FROM site_stats WHERE id=1` |
+| GET | `/api/public/site/home-feed` | **`api/public/home-feed.php`** (new) | `SELECT * FROM home_feed_items ORDER BY published_at DESC LIMIT :limit` (+ optional `cursor`) |
+| GET | `/api/public/site/home-featured` | **`api/public/home-featured.php`** (optional) | `site_home_config` + pinned joins |
+| GET | `/api/public/site/featured` | **`api/public/home-featured-section.php`** (optional) | `?key=home.news&limit=3&lang=ar` |
+
+**Query params:** `lang`, `limit` (max 100), `cursor` per API standard doc.
+
+### HTTP — admin (`api/admin/`)
+
+| Method | Path | Purpose |
+|--------|------|---------|
+| GET/PUT | `/api/admin/site/stats` | maintain hero counters |
+| GET/PUT | `/api/admin/site/home-config` | hero / drama URL |
+| POST | `/api/admin/site/home-feed/rebuild` | cron or manual refresh of `home_feed_items` |
+
+---
+
 ## Documentation sync (2026-04-30)
 
 - Cross-route **dataset handoff**: see `../../PROJECT-EXPLAINER/PAGE_DATASET_REFERENCE.md` (purpose + suggested columns per route).
 - **Site chrome** (header, desktop nav gradient `.kgc-main-nav-gradient`, partner logo rules) is global; details in `../../PROJECT-EXPLAINER/PROMPT_LOG.md` under **2026-04-30**.
-- This page’s **API / admin contracts** above are unchanged unless product scope changes.
+- Endpoint contracts in this tracker stay aligned with **`../../PROJECT-EXPLAINER/API_STANDARD_GODADDY_MYSQL.md`** unless product scope changes.
 
+
+
+---
+
+*Last updated: **2026-05-13** — evening session close (project-wide doc sync).*

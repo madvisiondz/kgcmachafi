@@ -108,7 +108,7 @@ export default function Header() {
     };
   }, [dir, language]);
 
-  // Ported from legacy `legacy/src/components/Header.jsx`: direction-aware hysteresis + rAF throttle.
+  // Ported from the pre-rebuild monolith header: direction-aware hysteresis + rAF throttle.
   useEffect(() => {
     const isMobile = typeof window !== 'undefined' && window.matchMedia?.('(max-width: 768px)')?.matches;
     const ENTER_AT = isMobile ? 220 : 140;

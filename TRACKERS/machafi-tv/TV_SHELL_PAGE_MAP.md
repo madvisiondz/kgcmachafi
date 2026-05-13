@@ -68,7 +68,46 @@ Shell strings under **`tvApp.*`** (nav, footer, utility, masthead). Ticker **bod
 
 ---
 
+## Full endpoint design — GoDaddy + MySQL (SQL)
+
+**References:** **`../../PROJECT-EXPLAINER/HOSTING_AND_DATABASE.md`**, **`../../PROJECT-EXPLAINER/API_STANDARD_GODADDY_MYSQL.md`**.
+
+### MySQL
+
+```sql
+CREATE TABLE tv_ticker_lines (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  edition CHAR(2) NOT NULL,
+  body VARCHAR(512) NOT NULL,
+  sort_order INT NOT NULL DEFAULT 0,
+  active TINYINT(1) NOT NULL DEFAULT 1,
+  emergency TINYINT(1) NOT NULL DEFAULT 0,
+  KEY idx_ed (edition, active, sort_order)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+```
+
+Optional: **`tv_shell_copy`** table for rare non-i18n strings; prefer **`tvApp.*`** keys + DB only for ticker.
+
+### HTTP — public
+
+| Method | Path | PHP | SQL |
+|--------|------|-----|-----|
+| GET | `/api/public/tv/editions/{edition}/ticker` | **`api/public/tv-ticker.php`** | `SELECT * FROM tv_ticker_lines WHERE edition=? AND active=1` |
+
+### HTTP — admin
+
+| Method | Path | PHP |
+|--------|------|-----|
+| GET/PUT | `/api/admin/machafitv/editions/{edition}/ticker` | **`api/admin/tv-ticker.php`** |
+
+---
+
 ## Documentation sync (2026-05-12)
 
 - Cross-route dataset handoff: **`../../PROJECT-EXPLAINER/PAGE_DATASET_REFERENCE.md`** (when extended for TV).
 - **`../../PROJECT-EXPLAINER/PROMPT_LOG.md`** — Machafi TV desk/activity/topics/search + shell work.
+
+
+---
+
+*Last updated: **2026-05-13** — evening session close (project-wide doc sync).*

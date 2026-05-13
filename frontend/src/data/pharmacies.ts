@@ -16,6 +16,8 @@ export type Pharmacy = {
    * "dynamic" = promoted through schedules/rotation (20%).
    */
   source: 'static' | 'dynamic';
+  /** When set (e.g. from PHP `is_night_duty`), overrides mock-only night schedule for chips / filter. */
+  isNightDuty?: boolean;
 };
 
 export const pharmaciesDirectoryMock: Pharmacy[] = [

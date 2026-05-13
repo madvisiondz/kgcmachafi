@@ -71,3 +71,8 @@ export default defineConfig([
   },
 ])
 ```
+
+
+---
+
+*Last updated: **2026-05-13** — evening session close (project-wide doc sync).*

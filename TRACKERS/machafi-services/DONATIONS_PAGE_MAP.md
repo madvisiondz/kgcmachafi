@@ -22,15 +22,15 @@ The page must optimize for **trust, transparency, and a safe donation journey**.
 
 ---
 
-## 2) Legacy source (what we cloned / improved)
+## 2) Former monolith source (tree removed 2026-05-13)
 
-### Legacy page shell
+### Page shell
 
-- `legacy/src/pages/DonationsPage.jsx` → renders `Donations` only.
+- Old `DonationsPage.jsx` → rendered `Donations` only.
 
-### Legacy UI + behavior
+### UI + behavior
 
-- `legacy/src/components/Donations.jsx`
+- Old `Donations.jsx`
   - Currency selector (EUR/DZD/USD)
   - Impact stats grid
   - Campaign cards with progress bars
@@ -392,8 +392,69 @@ Whenever donations changes:
 
 ---
 
+## Full endpoint design — GoDaddy + MySQL (SQL)
+
+**References:** **`../../PROJECT-EXPLAINER/HOSTING_AND_DATABASE.md`**, **`../../PROJECT-EXPLAINER/API_STANDARD_GODADDY_MYSQL.md`**. Public paths in **§7** above are the contract; below maps them to **MySQL** on GoDaddy.
+
+### MySQL
+
+```sql
+CREATE TABLE donation_campaigns (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  slug VARCHAR(128) NOT NULL UNIQUE,
+  goal_amount_eur DECIMAL(12,2) NOT NULL,
+  raised_amount_eur DECIMAL(12,2) NOT NULL DEFAULT 0,
+  donors_count INT NOT NULL DEFAULT 0,
+  is_active TINYINT(1) NOT NULL DEFAULT 1,
+  sort_order INT NOT NULL DEFAULT 0,
+  updated_at DATETIME NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE donation_campaign_i18n (
+  campaign_id BIGINT NOT NULL,
+  lang CHAR(2) NOT NULL,
+  title VARCHAR(255) NOT NULL,
+  description_md TEXT NULL,
+  PRIMARY KEY (campaign_id, lang),
+  FOREIGN KEY (campaign_id) REFERENCES donation_campaigns(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE donation_intents (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  created_at DATETIME NOT NULL,
+  campaign_id BIGINT NULL,
+  type ENUM('one_time','monthly') NOT NULL,
+  amount DECIMAL(12,2) NOT NULL,
+  currency CHAR(3) NOT NULL,
+  status ENUM('created','confirmed','paid','cancelled') NOT NULL DEFAULT 'created',
+  full_name VARCHAR(160) NULL,
+  phone VARCHAR(64) NULL,
+  email VARCHAR(255) NULL,
+  message TEXT NULL,
+  KEY idx_status (status, created_at),
+  FOREIGN KEY (campaign_id) REFERENCES donation_campaigns(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+```
+
+Headline stats (early rollout): JSON blob on **`site_settings`** key `donations_stats` (see §8.3 above).
+
+### HTTP — public / admin (PHP file names align with §7)
+
+| §7 logical | PHP on GoDaddy | SQL |
+|------------|----------------|-----|
+| `GET /api/public/donations` | **`api/public/donations.php`** | Read campaigns + i18n + optional `site_settings.donations_stats` |
+| `POST /api/public/donations/intents` | **`api/public/donation-intent.php`** | `INSERT donation_intents` |
+| Admin campaigns / intents | **`api/admin/donations-campaigns.php`**, **`api/admin/donations-intents.php`** | CRUD + export |
+
+---
+
 ## Documentation sync (2026-04-30)
 
 - Cross-route **dataset handoff**: see `../../PROJECT-EXPLAINER/PAGE_DATASET_REFERENCE.md` (purpose + suggested columns per route).
 - **Site chrome** (header, desktop nav gradient `.kgc-main-nav-gradient`, partner logo rules) is global; details in `../../PROJECT-EXPLAINER/PROMPT_LOG.md` under **2026-04-30**.
-- This page’s **API / admin contracts** below are unchanged unless product scope changes.
+- Endpoint contracts in this tracker stay aligned with **`../../PROJECT-EXPLAINER/API_STANDARD_GODADDY_MYSQL.md`** unless product scope changes.
+
+
+---
+
+*Last updated: **2026-05-13** — evening session close (project-wide doc sync).*

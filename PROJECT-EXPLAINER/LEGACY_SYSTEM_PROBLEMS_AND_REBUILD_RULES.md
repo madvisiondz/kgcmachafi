@@ -26,7 +26,7 @@ This file records **what went wrong with the old (legacy) stack** and why the **
 
 ## 2) Other major problems observed in the legacy system (from codebase + audit)
 
-These are drawn from `legacy/PRODUCTION_GRADE_AUDIT_AND_NEXT_STEPS.md`, legacy `src/` patterns, and known architecture — not guesswork about unrelated products.
+These are drawn from **`ARCHIVE_LEGACY_PRODUCTION_GRADE_AUDIT_AND_NEXT_STEPS.md`** (archived copy of the old audit), former monolith patterns, and known architecture — not guesswork about unrelated products.
 
 ### 2.1 Frontend ↔ API coupling
 
@@ -82,6 +82,7 @@ These are drawn from `legacy/PRODUCTION_GRADE_AUDIT_AND_NEXT_STEPS.md`, legacy `
 
 | Date | Note |
 | --- | --- |
+| 2026-05-13 | Repo cleanup: **`legacy/`** and **`backupp/`** removed; audit + deployment notes archived under **`ARCHIVE_LEGACY_*.md`** in this folder. |
 | 2026-05-12 | Cross-reference: planned **gateway + Machafi TV** (separate product surface, edition routes, live simulcast) documented in `PLATFORM_SHELL_LAYOUT.md`; Services rebuild rules unchanged. |
 | 2026-04-29 | Initial document: captured user-reported “hard backend + no hospital datasets” blocker and consolidated legacy audit themes into rebuild rules. |
 
@@ -89,7 +90,7 @@ These are drawn from `legacy/PRODUCTION_GRADE_AUDIT_AND_NEXT_STEPS.md`, legacy `
 
 ## 5) Related project docs
 
-- Technical audit (legacy copy): `legacy/PRODUCTION_GRADE_AUDIT_AND_NEXT_STEPS.md`
+- Technical audit (archived): `ARCHIVE_LEGACY_PRODUCTION_GRADE_AUDIT_AND_NEXT_STEPS.md`
 - Homepage structure: `../TRACKERS/machafi-services/HOMEPAGE_MAP.md`
 - Library page rebuild: `../TRACKERS/machafi-services/LIBRARY_PAGE_MAP.md`
 - Sticky header collapse spec: `HEADER_SCROLL_ANIMATION.md`
@@ -110,3 +111,8 @@ To avoid repeating legacy drift and forgetting important context:
 When language switches (AR/FR/EN), **every single visible text** must switch (no mixed-language UI).
 
 See `RULE_1_LANGUAGE_SWITCHING.md` for the full strategy (UI + UX + DB + admin panel + enforcement).
+
+
+---
+
+*Last updated: **2026-05-13** — evening session close (project-wide doc sync).*

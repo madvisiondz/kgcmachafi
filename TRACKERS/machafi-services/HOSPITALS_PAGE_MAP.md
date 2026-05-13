@@ -145,8 +145,64 @@ Primary actions:
 
 ---
 
+## Full endpoint design — GoDaddy + MySQL (SQL)
+
+**References:** **`../../PROJECT-EXPLAINER/HOSTING_AND_DATABASE.md`**, **`../../PROJECT-EXPLAINER/API_STANDARD_GODADDY_MYSQL.md`**.
+
+### MySQL
+
+```sql
+CREATE TABLE hospitals (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  scope ENUM('dz','intl') NOT NULL,
+  country_code CHAR(2) NULL,
+  wilaya_code VARCHAR(8) NULL,
+  commune_id VARCHAR(32) NULL,
+  hospital_type VARCHAR(64) NULL,
+  phone VARCHAR(64) NOT NULL,
+  lat DECIMAL(10,7) NULL,
+  lng DECIMAL(10,7) NULL,
+  verified TINYINT(1) NOT NULL DEFAULT 0,
+  status ENUM('active','hidden') NOT NULL DEFAULT 'active',
+  updated_at DATETIME NOT NULL,
+  KEY idx_dz (scope, wilaya_code, commune_id),
+  KEY idx_intl (scope, country_code)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE hospital_i18n (
+  hospital_id BIGINT NOT NULL,
+  lang CHAR(2) NOT NULL,
+  name VARCHAR(255) NOT NULL,
+  address VARCHAR(512) NULL,
+  hours_note VARCHAR(255) NULL,
+  features_json JSON NULL,
+  PRIMARY KEY (hospital_id, lang),
+  FOREIGN KEY (hospital_id) REFERENCES hospitals(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+```
+
+### HTTP — public
+
+| Method | Path | PHP | SQL |
+|--------|------|-----|-----|
+| GET | `/api/public/hospitals` | **`api/public/hospitals.php`** | `scope=dz` filters + `?lang=` |
+| GET | `/api/public/international-hospitals` | **`api/public/hospitals-intl.php`** | `scope=intl` + `country`, `specialty`, `q` |
+
+### HTTP — admin
+
+| Method | Path | PHP |
+|--------|------|-----|
+| GET/POST/PUT/DELETE | `/api/admin/hospitals` | **`api/admin/hospitals.php`** |
+
+---
+
 ## Documentation sync (2026-04-30)
 
 - Cross-route **dataset handoff**: see `../../PROJECT-EXPLAINER/PAGE_DATASET_REFERENCE.md` (purpose + suggested columns per route).
 - **Site chrome** (header, desktop nav gradient `.kgc-main-nav-gradient`, partner logo rules) is global; details in `../../PROJECT-EXPLAINER/PROMPT_LOG.md` under **2026-04-30**.
-- This page’s **API / admin contracts** below are unchanged unless product scope changes.
+- Endpoint contracts in this tracker stay aligned with **`../../PROJECT-EXPLAINER/API_STANDARD_GODADDY_MYSQL.md`** unless product scope changes.
+
+
+---
+
+*Last updated: **2026-05-13** — evening session close (project-wide doc sync).*

@@ -1,8 +1,12 @@
 import React, { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useI18n } from '../i18n/I18nProvider';
+import { useBootstrapList } from '../hooks/useBootstrapList';
+import ListGridSkeleton from '../components/ListGridSkeleton';
+import ListFetchErrorBanner from '../components/ListFetchErrorBanner';
 import { servicesPath } from '../routes/paths';
 import { newsArticlesMock, newsDeskPrinciplesMock } from '../data/news';
+import { loadNewsArticlesForList } from '../services/news';
 
 function pickText(text, language) {
   if (!text) return '';
@@ -104,30 +108,39 @@ function articleMatchesQuery(a, q, language) {
 
 export default function NewsPage() {
   const { t, language, dir } = useI18n();
+  const { status, data, error, reload } = useBootstrapList(loadNewsArticlesForList);
   const [query, setQuery] = useState('');
   const [source, setSource] = useState('all');
   const [tag, setTag] = useState('all');
 
+  const displayArticles = useMemo(() => {
+    if (status === 'ready') return data ?? [];
+    if (status === 'error') return newsArticlesMock;
+    return newsArticlesMock;
+  }, [data, status]);
+
+  const showSkeleton = status === 'loading';
+
   const active = useMemo(() => {
-    return newsArticlesMock
+    return displayArticles
       .filter((a) => !a.isArchived)
       .filter((a) => (source === 'all' ? true : a.sourceKey === source))
       .filter((a) => (tag === 'all' ? true : a.tagKey === tag))
       .filter((a) => articleMatchesQuery(a, query, language))
       .sort((a, b) => (a.date < b.date ? 1 : a.date > b.date ? -1 : b.id - a.id));
-  }, [language, query, source, tag]);
+  }, [displayArticles, language, query, source, tag]);
 
   const featured = useMemo(() => active.find((a) => a.featured) ?? active[0], [active]);
   const wire = useMemo(() => active.filter((a) => a.breaking || a.featured).slice(0, 3), [active]);
 
   const stats = useMemo(() => {
-    const pool = newsArticlesMock.filter((a) => !a.isArchived);
+    const pool = displayArticles.filter((a) => !a.isArchived);
     return {
       stories: pool.length,
       breaking: pool.filter((a) => a.breaking).length,
       wires: new Set(pool.map((a) => a.sourceKey)).size,
     };
-  }, []);
+  }, [displayArticles]);
 
   return (
     <div className="container mx-auto px-4 py-10" dir={dir}>
@@ -203,8 +216,25 @@ export default function NewsPage() {
         </div>
       </div>
 
+      {status === 'error' ? (
+        <div className="mt-4">
+          <ListFetchErrorBanner message={error?.message} onRetry={reload} />
+        </div>
+      ) : null}
+
       <div className="mt-10 grid grid-cols-1 lg:grid-cols-12 gap-8">
         <div className="lg:col-span-8 space-y-8">
+          {showSkeleton ? (
+            <>
+              <div className="rounded-3xl border border-slate-200 bg-white shadow-sm p-6 md:p-8">
+                <p className="text-sm font-extrabold text-slate-700">{t('common.listLoadingTitle')}</p>
+                <p className="text-xs text-slate-500 mt-2 leading-relaxed">{t('common.listLoadingHint')}</p>
+                <div className="mt-6 h-24 rounded-2xl bg-slate-100 animate-pulse" />
+              </div>
+              <ListGridSkeleton columnsClass="md:grid-cols-2" count={4} />
+            </>
+          ) : (
+            <>
           <section className="rounded-3xl border border-slate-200 bg-white shadow-sm p-6 md:p-8">
             <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
               <div>
@@ -394,6 +424,8 @@ export default function NewsPage() {
               </div>
             )}
           </section>
+            </>
+          )}
         </div>
 
         <aside className="lg:col-span-4 space-y-6">

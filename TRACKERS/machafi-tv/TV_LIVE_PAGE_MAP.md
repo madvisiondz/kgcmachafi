@@ -61,7 +61,46 @@ Single source of truth for **`TvLivePage`** inside the **Machafi TV** shell (not
 
 ---
 
+## Full endpoint design — GoDaddy + MySQL (SQL)
+
+**References:** **`../../PROJECT-EXPLAINER/HOSTING_AND_DATABASE.md`**, **`../../PROJECT-EXPLAINER/API_STANDARD_GODADDY_MYSQL.md`**.
+
+### MySQL
+
+```sql
+CREATE TABLE tv_live_settings (
+  edition CHAR(2) NOT NULL PRIMARY KEY,
+  stream_url VARCHAR(1024) NULL,
+  poster_url VARCHAR(512) NULL,
+  status ENUM('off','live','scheduled') NOT NULL DEFAULT 'off',
+  title VARCHAR(255) NULL,
+  description TEXT NULL,
+  updated_at DATETIME NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+```
+
+Never return signing keys or raw CDN secrets in public JSON.
+
+### HTTP — public
+
+| Method | Path | PHP | SQL |
+|--------|------|-----|-----|
+| GET | `/api/public/tv/editions/{edition}/live` | **`api/public/tv-live.php`** | `SELECT` from `tv_live_settings` + sanitized player config |
+
+### HTTP — admin
+
+| Method | Path | PHP |
+|--------|------|-----|
+| GET/PUT | `/api/admin/machafitv/editions/{edition}/live` | **`api/admin/tv-live.php`** |
+
+---
+
 ## Documentation sync (2026-05-12)
 
 - **`../machafi-services/LIVE_PAGE_MAP.md`** — Services live (separate product surface).
 - **`TV_SHELL_PAGE_MAP.md`**, **`../../PROJECT-EXPLAINER/PROMPT_LOG.md`**.
+
+
+---
+
+*Last updated: **2026-05-13** — evening session close (project-wide doc sync).*

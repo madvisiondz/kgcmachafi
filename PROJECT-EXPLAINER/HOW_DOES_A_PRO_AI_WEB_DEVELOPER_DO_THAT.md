@@ -260,3 +260,8 @@ You are done with the integration program when:
 | 2026-04-29 | Initial version: phased UI → contracts → admin/backend plan; emphasizes i18n legibility gates. |
 | 2026-04-29 | Reminder: Cursor canvases are JSX — never put raw `<Component>`-looking snippets inside `<Text>` children without escaping (use string expressions or `Code`). |
 | 2026-04-29 | Library page added in `frontend/` (legacy `HealthLibrary` UI clone, mock data, `/library`); tracker `../TRACKERS/machafi-services/LIBRARY_PAGE_MAP.md`. |
+
+
+---
+
+*Last updated: **2026-05-13** — evening session close (project-wide doc sync).*

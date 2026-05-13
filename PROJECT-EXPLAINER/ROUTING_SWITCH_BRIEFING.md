@@ -88,3 +88,8 @@ This note summarizes **what was implemented** when Machafi moved from a **single
 ---
 
 *This briefing reflects the routing work completed in the session that introduced gateway + `/healthservices` + `/tv/:edition` + admin placeholder paths.*
+
+
+---
+
+*Last updated: **2026-05-13** — evening session close (project-wide doc sync).*

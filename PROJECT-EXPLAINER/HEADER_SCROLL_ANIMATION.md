@@ -6,33 +6,35 @@ This document is the **single source of truth** for the sticky header’s **scro
 
 The header has **four bars** (news ticker, utility bar, branding bar, nav bar). The **branding bar is intentionally tall** for identity. On scroll, the chrome must **compact** so content gets vertical space back:
 
-1. **News ticker** — collapses away with scroll (same visual intent as legacy: “gone”, not a broken clip).
+1. **News ticker** — collapses away with scroll (same visual intent as the old monolith: “gone”, not a broken clip).
 2. **Utility bar** (dark bar: social, links, language) — collapses away with scroll.
-3. **Branding bar** — **shrinks**: smaller main logo, partner logos hidden, Live/Programs become **icon-only** on desktop where applicable; vertical padding tightens so the **combined branding + nav** reads as one slim sticky strip (aligned with legacy behavior).
+3. **Branding bar** — **shrinks**: smaller main logo, partner logos hidden, Live/Programs become **icon-only** on desktop where applicable; vertical padding tightens so the **combined branding + nav** reads as one slim sticky strip (aligned with the old monolith behavior).
 
-## Legacy reference (authoritative behavior)
+## Legacy behavior (monolith files removed 2026-05-13)
 
-- **File**: `legacy/src/components/Header.jsx`
+The original React tree under `legacy/` was deleted from this repo. The bullets below describe **observed behavior** that was ported into the rebuild; the live implementation is **`frontend/src/components/layout/Header.jsx`** + **`NewsTicker.jsx`**.
+
+- **Former monolith**: `Header.jsx` (scroll-driven compact strip).
 - **State**: `isCompact` (boolean)
 - **Mechanism**:
   - `window` `scroll` listener, **`requestAnimationFrame` throttling** (one update per frame max).
   - **Direction-aware hysteresis** (prevents mobile jitter / oscillation):
     - Enter compact when **scrolling down** and `scrollY > ENTER_AT`
     - Exit compact when **scrolling up** and `scrollY < EXIT_AT`
-  - Thresholds (legacy):
+  - Thresholds (carried forward):
     - **Mobile** (`max-width: 768px`): `ENTER_AT = 220`, `EXIT_AT = 120`
     - **Desktop**: `ENTER_AT = 140`, `EXIT_AT = 90`
-  - **Ticker**: `legacy/src/components/UrgentNewsBanner.jsx` uses `collapsed` + CSS grid `grid-rows-[0fr]` / `[1fr]` for **true zero height** (reliable vs `max-height` hacks).
+  - **Ticker**: the old `UrgentNewsBanner.jsx` used `collapsed` + CSS grid `grid-rows-[0fr]` / `[1fr]` for **true zero height** (reliable vs `max-height` hacks). **`NewsTicker.jsx`** mirrors that pattern.
   - **Utility bar**: wrapped in the same **grid `0fr` / `1fr`** pattern as the ticker row in `Header.jsx`.
   - **Branding**: transitions on **logo width**, **partner logo opacity/width**, **button sizes** (`h-8 w-8` compact vs larger expanded).
 
 ## Rebuild implementation (new frontend)
 
 - **Header shell**: `frontend/src/components/layout/Header.jsx`
-  - Owns `isCompact` + scroll effect (ported from legacy).
+  - Owns `isCompact` + scroll effect (ported from the old monolith header).
   - Passes `collapsed={isCompact}` into the ticker.
 - **Ticker**: `frontend/src/components/layout/NewsTicker.jsx`
-  - Accepts optional `collapsed` prop; outer wrapper uses **grid `0fr` / `1fr`** + `overflow-hidden` + `pointer-events-none` when collapsed (matches legacy `UrgentNewsBanner` pattern).
+  - Accepts optional `collapsed` prop; outer wrapper uses **grid `0fr` / `1fr`** + `overflow-hidden` + `pointer-events-none` when collapsed (matches old `UrgentNewsBanner` pattern).
 
 ## UX / accessibility notes
 
@@ -89,3 +91,8 @@ Result: the page content never scrolls underneath the collapsing header.
 
 - Optional: mirror legacy **exact** branding vertical rhythm (pixel diff) using a screenshot overlay.
 - Optional: add `prefers-reduced-motion` to shorten or disable `transition-[grid-template-rows]` (accessibility polish).
+
+
+---
+
+*Last updated: **2026-05-13** — evening session close (project-wide doc sync).*

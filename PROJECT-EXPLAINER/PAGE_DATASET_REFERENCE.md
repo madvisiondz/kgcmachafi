@@ -174,3 +174,8 @@ Reference for the **frontend routes** in this repo (`frontend/src/App.tsx`). **B
 ---
 
 *Generated as a handoff reference for Machafi frontend routes and intended data models. Adjust column names to match your SQL or NoSQL conventions.*
+
+
+---
+
+*Last updated: **2026-05-13** — evening session close (project-wide doc sync).*

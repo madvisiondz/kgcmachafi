@@ -1,8 +1,9 @@
-import React, { useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useI18n } from '../i18n/I18nProvider';
+import ListFetchErrorBanner from '../components/ListFetchErrorBanner';
 import { servicesPath } from '../routes/paths';
-import { getNewsArticleById } from '../data/news';
+import { loadNewsArticleForDetail } from '../services/news';
 
 function pickText(text, language) {
   if (!text) return '';
@@ -68,8 +69,46 @@ export default function NewsDetailPage() {
   const { id } = useParams();
   const { t, language, dir } = useI18n();
   const [toast, setToast] = useState('');
+  const [reloadKey, setReloadKey] = useState(0);
+  const [status, setStatus] = useState('loading');
+  const [article, setArticle] = useState(null);
+  const [error, setError] = useState(null);
 
-  const article = useMemo(() => getNewsArticleById(id), [id]);
+  const reload = useCallback(() => {
+    setReloadKey((k) => k + 1);
+  }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+    const delayMs = Number(import.meta.env.VITE_LIST_BOOTSTRAP_MS ?? 0) || 0;
+
+    async function run() {
+      setStatus('loading');
+      setError(null);
+      try {
+        if (delayMs > 0) {
+          await new Promise((r) => window.setTimeout(r, delayMs));
+        }
+        const a = await loadNewsArticleForDetail(id);
+        if (!cancelled) {
+          setArticle(a ?? null);
+          setStatus('ready');
+        }
+      } catch (e) {
+        if (!cancelled) {
+          setArticle(null);
+          setError(e instanceof Error ? e : new Error(String(e)));
+          setStatus('error');
+        }
+      }
+    }
+
+    void run();
+    return () => {
+      cancelled = true;
+    };
+  }, [id, reloadKey]);
+
   const url = useMemo(() => {
     if (typeof window === 'undefined') return '';
     return `${window.location.origin}${servicesPath('/news')}/${id}`;
@@ -103,6 +142,45 @@ export default function NewsDetailPage() {
 
   function onPrint() {
     window.print();
+  }
+
+  if (status === 'loading') {
+    return (
+      <div className="container mx-auto px-4 py-14" dir={dir}>
+        <Link
+          to={servicesPath('/news')}
+          className="inline-flex items-center gap-2 text-sm font-black text-emerald-800 hover:text-emerald-900"
+        >
+          <Icons.back className={`w-4 h-4 ${dir === 'rtl' ? 'rotate-180' : ''}`} />
+          {t('newsroom.detail.back')}
+        </Link>
+        <p className="mt-6 text-sm font-extrabold text-slate-700">{t('common.listLoadingTitle')}</p>
+        <p className="mt-2 text-xs text-slate-500">{t('common.listLoadingHint')}</p>
+        <div className="mt-8 max-w-3xl space-y-4 animate-pulse">
+          <div className="h-10 rounded-xl bg-slate-100 w-3/4" />
+          <div className="h-6 rounded-lg bg-slate-100 w-full" />
+          <div className="h-6 rounded-lg bg-slate-100 w-5/6" />
+          <div className="h-40 rounded-2xl bg-slate-100 w-full" />
+        </div>
+      </div>
+    );
+  }
+
+  if (status === 'error') {
+    return (
+      <div className="container mx-auto px-4 py-14" dir={dir}>
+        <Link
+          to={servicesPath('/news')}
+          className="inline-flex items-center gap-2 text-sm font-black text-emerald-800 hover:text-emerald-900"
+        >
+          <Icons.back className={`w-4 h-4 ${dir === 'rtl' ? 'rotate-180' : ''}`} />
+          {t('newsroom.detail.back')}
+        </Link>
+        <div className="mt-6 max-w-2xl">
+          <ListFetchErrorBanner message={error?.message} onRetry={reload} />
+        </div>
+      </div>
+    );
   }
 
   if (!article) {

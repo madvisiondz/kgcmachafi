@@ -18,10 +18,12 @@ function getDir(lang: Language): 'rtl' | 'ltr' {
 
 function lookup(key: string, lang: Language): string | undefined {
   const parts = key.split('.');
-  let node: any = translations[lang];
+  let node: unknown = translations[lang];
   for (const p of parts) {
-    if (!node || typeof node !== 'object' || !(p in node)) return undefined;
-    node = node[p];
+    if (!node || typeof node !== 'object') return undefined;
+    const rec = node as Record<string, unknown>;
+    if (!(p in rec)) return undefined;
+    node = rec[p];
   }
   return typeof node === 'string' ? node : undefined;
 }
@@ -68,6 +70,8 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
   return <I18nContext.Provider value={value}>{children}</I18nContext.Provider>;
 }
 
+/** @see https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports */
+// eslint-disable-next-line react-refresh/only-export-components -- hook colocated with provider for this codebase
 export function useI18n(): I18nContextValue {
   const ctx = useContext(I18nContext);
   if (!ctx) throw new Error('useI18n must be used within I18nProvider');

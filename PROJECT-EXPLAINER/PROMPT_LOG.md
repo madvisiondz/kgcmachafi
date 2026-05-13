@@ -2,6 +2,44 @@
 
 This file is updated after every user prompt.
 
+## 2026-05-11 (continued)
+
+### News detail — optional live article fetch
+- **Prompt**: Keep going on the roadmap; plain-language “what changed”; clarify why **GitHub** was listed earlier (automated **checks** after push, not hosting the site).
+- **What I did**: **`loadNewsArticleForDetail`** in **`frontend/src/services/news.ts`** (same **`VITE_NEWS_API`** switch as the list → `GET /public/news.php?id=`); **`NewsDetailPage.jsx`** loads asynchronously with loading skeleton, error banner + retry, optional bootstrap delay. **`npm run lint`** + **`npm run build`** pass.
+
+## 2026-05-11
+
+### Roadmap execution — CI, `services/`, list UX, GoDaddy/MySQL alignment
+- **Prompt**: Treat **`NEXT_MOVES.md`** + **`NEXT_STEPS_PRODUCTION.md`** as roadmap; update everything; execute all steps within agent capacity.
+- **What I did**: Added **`.github/workflows/frontend-ci.yml`** (push/PR on `frontend/**` → `npm ci`, `npm run lint`, `npm run build`). Implemented **`frontend/src/services/http.ts`** (`apiUrl`, `getJson`, `ApiError`), **`frontend/src/services/news.ts`** (`loadNewsArticlesForList`, PHP row → `NewsArticleMock` mapper; **`VITE_NEWS_API=true`** hits `/public/news.php`), **`frontend/src/services/index.ts`**, **`frontend/src/hooks/useBootstrapList.ts`**, **`frontend/src/components/ListGridSkeleton.jsx`**, **`ListFetchErrorBanner.jsx`**. Wired **News**, **Pharmacies**, **Hospitals** with bootstrap loading skeletons + error/retry + `common.list*` i18n (AR/FR/EN); **`frontend/.env.example`** + **`vite-env.d.ts`** for **`VITE_NEWS_API`**, **`VITE_LIST_BOOTSTRAP_MS`**. Fixed ESLint issues (**`declarations.d.ts`**, **`I18nProvider` lookup typing**, **`react-refresh`** suppression for **`useI18n`**). Updated **`NEXT_STEPS_PRODUCTION.md`** Sprint 1 table + Phase A/I/C rows, **`WORKING_PLAN.md`** §10 checkboxes, **`NEXT_MOVES.md`** companion table, **`PROJECT_STATUS.md`** Done block, **`README.md`** CI + services pointers.
+
+## 2026-05-13
+
+### Session end — beginner playbook + doc “last updated” sweep
+- **Prompt**: Teach like an amateur in **`MACHAFI_DATABASE_AND_API_PLAYBOOK.md`** so reader feels ready after reading; apply a **last update** pass on every project markdown for end of day.
+- **What I did**: Rewrote **`MACHAFI_DATABASE_AND_API_PLAYBOOK.md`** (plain glossary, “three sentences” overview, readiness checklist, same real paths). Appended identical footer `*Last updated: **2026-05-13** — evening session close (project-wide doc sync).*` to all repo **`.md`** files outside **`node_modules`** that did not already contain it (root + **`PROJECT-EXPLAINER/`** + **`TRACKERS/`** + **`frontend/README.md`**). Playbook already carried the marker and was not double-stamped.
+
+### Docs — root playbook (DB + API)
+- **Prompt**: New webapp version; step-by-step guide at repo root: endpoints, phpMyAdmin DB create/update, map project with real examples.
+- **What I did**: Added **`MACHAFI_DATABASE_AND_API_PLAYBOOK.md`** (frontend vs `api/` vs MySQL, `admin-config.php`, full **`api/public/`** inventory table, phpMyAdmin steps, schema evolution, wiring pattern for new endpoints, **`VITE_NEWS_API`** / **`VITE_PHARMACIES_API`**, minimal **`news_articles`** + **`pharmacies`** `CREATE TABLE` aligned with existing PHP, pointers to **`PROJECT-EXPLAINER/`** + **`TRACKERS/`**). Linked from **`README.md`**.
+
+### D1 — Pharmacies optional `GET /public/pharmacies.php`
+- **Prompt**: Proceed with the next roadmap session.
+- **What I did**: Added **`frontend/src/services/pharmacies.ts`** (`mapPhpPharmacyRow`, `loadPharmaciesForList` behind **`VITE_PHARMACIES_API=true`**); extended **`Pharmacy`** with optional **`isNightDuty`** (from PHP `is_night_duty`; when any row sets it, night-duty chips / filter use DB flags instead of **`nightShiftScheduleMock`** only). Wired **`PharmaciesPage.jsx`** to **`loadPharmaciesForList`**. **`frontend/.env.example`**, **`vite-env.d.ts`**, **`algeria-data.d.ts`** (types for **`algeria-data.js`**). Updated **`NEXT_STEPS_PRODUCTION.md`**, **`PROJECT_STATUS.md`**. **`npm run lint`** + **`npm run build`** OK.
+
+### Repo cleanup — delete `legacy/` + `backupp/`
+- **Prompt**: User no longer wants **`backupp/`** or **`legacy/`**; keep trackers, explainers, and project memory.
+- **What I did**: **`git rm -rf backupp legacy`** (removed tracked files). Then **`Remove-Item -Recurse -Force backupp, legacy`** to delete any **untracked** leftovers still on disk. Copied **`legacy/PRODUCTION_GRADE_AUDIT_AND_NEXT_STEPS.md`** → **`PROJECT-EXPLAINER/ARCHIVE_LEGACY_PRODUCTION_GRADE_AUDIT_AND_NEXT_STEPS.md`** and **`legacy/DEPLOYMENT.md`** → **`PROJECT-EXPLAINER/ARCHIVE_LEGACY_DEPLOYMENT.md`** (with archive banners). Replaced root **`.gitignore`** with a normal ignore list (`.env`, `.env.local`, etc.). Updated **`README.md`**, **`PROJECT_STATUS.md`**, **`WEBAPP_PAGES_OVERVIEW.md`**, **`WORKING_PLAN.md`**, **`LEGACY_SYSTEM_PROBLEMS_AND_REBUILD_RULES.md`**, **`HEADER_SCROLL_ANIMATION.md`**, **`HOMEPAGE_MAP.md`**, **`DONATIONS_PAGE_MAP.md`**, **`LIVE_PAGE_MAP.md`**, **`LIBRARY_PAGE_MAP.md`**, **`NEWS_PAGE_MAP.md`**, **`Header.jsx`** comment so nothing points at removed paths as if they still exist.
+
+### NEXT_STEPS ↔ architecture + Phase A execution (config, boundary, smoke)
+- **Prompt**: Update `NEXT_STEPS_PRODUCTION.md` from `ARCHITECTURE_PRODUCTION_READINESS.md` and start executing recommendations.
+- **What I did**: Rewrote **`NEXT_STEPS_PRODUCTION.md`** (readiness snapshot table L1–L13 ↔ phases, Sprint 1 execution status, quick-reference links). Added **`frontend/.env.example`**, **`frontend/src/config.ts`**, **`frontend/src/vite-env.d.ts`**, **`frontend/src/components/RootErrorBoundary.tsx`** (+ i18n `common.error*` AR/FR/EN), wired boundary in **`frontend/src/main.tsx`**; extended **`frontend/.gitignore`** for `.env*`. Added **`PROJECT-EXPLAINER/SMOKE_CHECKLIST_PRODUCTION.md`**. Updated **`WORKING_PLAN.md`** Phase A checkboxes, **`README.md`** root doc list, **`ARCHITECTURE_PRODUCTION_READINESS.md`** related-files table, **`PROJECT_STATUS.md`** Done block.
+
+### NEXT_MOVES — strategy map (trackers + memory synthesis)
+- **Prompt**: High-end strategy; study project value/readiness; use trackers and memory files; calculate best next moves; map in **`NEXT_MOVES.md`**.
+- **What I did**: Added repo-root **`NEXT_MOVES.md`** — value pillars, readiness table, full **TRACKERS/** cluster rationale, strategic forks (Services-first vs TV-first), **Move 0–7** dependency narrative, impact×effort matrix, risk register tied to **`LEGACY_SYSTEM_PROBLEMS_AND_REBUILD_RULES.md`**, document cross-reference; linked from **`README.md`**; appended this entry.
+
 ## 2026-05-12
 
 ### Admin panel trackers (`TRACKERS/*-admin/`)
@@ -399,7 +437,7 @@ This file is updated after every user prompt.
 ### Header rebuild (clean)
 - **Prompt**: Rebuild the legacy header cleanly with i18n (AR/FR/EN) and RTL/LTR.
 - **What I did**:
-  - Archived legacy frontend under `legacy/` (no deletion).
+  - At the time, copied the old frontend into `legacy/` for reference (**that folder was deleted on 2026-05-13**; audit text lives in **`ARCHIVE_LEGACY_*.md`**).
   - Created new Vite + React app under `frontend/`.
   - Implemented a clean header component and a centralized i18n provider that drives `dir`/`lang`.
 
@@ -489,7 +527,7 @@ This file is updated after every user prompt.
 ### Home page (legacy map + new UI scaffold)
 - **Prompt**: Bring the first page (Home) from legacy and map its sections in a separate `.md` file to track components/design.
 - **What I did**:
-  - Analyzed `legacy/src/pages/HomePage.jsx` and identified the full section order and dependencies (Hero, Ads, Stats, Drama, News, Platform grid).
+  - Analyzed the former monolith `HomePage.jsx` (paths lived under `legacy/` until **2026-05-13 removal**) and identified the full section order and dependencies (Hero, Ads, Stats, Drama, News, Platform grid).
   - Created `HOMEPAGE_MAP.md` to document the legacy structure and the planned rebuild component breakdown.
   - Added a new UI-only scaffold page at `frontend/src/pages/HomePage.jsx` using i18n keys only (AR/FR/EN), and mounted it in `frontend/src/App.tsx`.
 
@@ -536,3 +574,8 @@ This file is updated after every user prompt.
   - Clarified the intended behavior as: update the **project memory markdown set** every prompt, and create/maintain a **page-specific `.md` tracker** for each page we build.
   - This means Home keeps `HOMEPAGE_MAP.md`, and future pages will get their own equivalent mapping/tracking files when created.
 
+
+
+---
+
+*Last updated: **2026-05-13** — evening session close (project-wide doc sync).*

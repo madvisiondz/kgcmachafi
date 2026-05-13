@@ -60,6 +60,43 @@ Single source of truth for **`TvDeskPage`**: production/journalism “services�
 
 ---
 
+## Full endpoint design — GoDaddy + MySQL (SQL)
+
+**References:** **`../../PROJECT-EXPLAINER/HOSTING_AND_DATABASE.md`**, **`../../PROJECT-EXPLAINER/API_STANDARD_GODADDY_MYSQL.md`**. The public **`/tv/:edition/desk`** page is mostly **static UX + links**; operational data lives under **Machafi TV admin** (wire, rights, playbook).
+
+### MySQL (admin-heavy; optional public read)
+
+```sql
+CREATE TABLE tv_style_guides (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  edition CHAR(2) NOT NULL,
+  body_md MEDIUMTEXT NOT NULL,
+  updated_at DATETIME NOT NULL,
+  UNIQUE KEY uq_ed (edition)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+```
+
+Wire + rights tables: align with **`TV_ACTIVITY_PAGE_MAP.md`** and **`../machafi-tv-admin/MACHAFITV_ADMIN_PANEL_MAP.md`**.
+
+### HTTP — public (optional)
+
+| Method | Path | PHP |
+|--------|------|-----|
+| GET | `/api/public/tv/editions/{edition}/desk/playbook` | **`api/public/tv-desk-playbook.php`** — public-safe excerpt only |
+
+### HTTP — admin
+
+| Method | Path | PHP |
+|--------|------|-----|
+| GET/PUT | `/api/admin/machafitv/editions/{edition}/style-guide` | **`api/admin/tv-style-guide.php`** |
+
+---
+
 ## Documentation sync (2026-05-12)
 
 - **`TV_ACTIVITY_PAGE_MAP.md`**, **`../machafi-services/NEWS_PAGE_MAP.md`**, **`../../PROJECT-EXPLAINER/PROMPT_LOG.md`**.
+
+
+---
+
+*Last updated: **2026-05-13** — evening session close (project-wide doc sync).*

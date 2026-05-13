@@ -10,7 +10,7 @@ The Live page is the **primary attention surface** for the channel:
 - **Quality**: theater layout, fullscreen, share, and metadata row (viewers, latency, quality) like professional apps (YouTube Live, Twitch, Vimeo Live).
 - **Continuity**: bridges to **Programs** (schedule) and **Library** (long-form education).
 
-Legacy parity: `legacy/src/pages/LivePage.jsx` + `legacy/src/components/VideoPlayer.jsx` (live vs recorded tabs, poster + play, recorded grid).
+Former monolith parity (files removed 2026-05-13): `LivePage.jsx` + `VideoPlayer.jsx` (live vs recorded tabs, poster + play, recorded grid).
 
 ---
 
@@ -106,8 +106,49 @@ Document title uses `common.watchLive` in `DocumentTitle.jsx` for `/live`.
 
 ---
 
+## Full endpoint design — GoDaddy + MySQL (SQL)
+
+**References:** **`../../PROJECT-EXPLAINER/HOSTING_AND_DATABASE.md`**, **`../../PROJECT-EXPLAINER/API_STANDARD_GODADDY_MYSQL.md`**.
+
+### MySQL
+
+```sql
+CREATE TABLE live_settings (
+  id TINYINT PRIMARY KEY DEFAULT 1,
+  stream_url VARCHAR(1024) NULL,
+  poster_url VARCHAR(512) NULL,
+  status ENUM('off','live','scheduled') NOT NULL DEFAULT 'off',
+  title_json JSON NULL,
+  description_json JSON NULL,
+  up_next_json JSON NULL,
+  disclaimer_html_json JSON NULL,
+  updated_at DATETIME NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+```
+
+(Alternatively store JSON in **`site_settings`** until split.)
+
+### HTTP — public
+
+| Method | Path | PHP | SQL |
+|--------|------|-----|-----|
+| GET | `/api/public/live` | **`api/public/live.php`** (new or extend) | `SELECT * FROM live_settings WHERE id=1` — **strip secrets** (no signing keys in JSON) |
+
+### HTTP — admin
+
+| Method | Path | PHP | SQL |
+|--------|------|-----|-----|
+| GET/PUT | `/api/admin/live-settings` | **`api/admin/live-settings.php`** | `UPDATE live_settings` — validate HTTPS URLs |
+
+---
+
 ## Documentation sync (2026-04-30)
 
 - Cross-route **dataset handoff**: see `../../PROJECT-EXPLAINER/PAGE_DATASET_REFERENCE.md` (purpose + suggested columns per route).
 - **Site chrome** (header, desktop nav gradient `.kgc-main-nav-gradient`, partner logo rules) is global; details in `../../PROJECT-EXPLAINER/PROMPT_LOG.md` under **2026-04-30**.
-- This page’s **API / admin contracts** below are unchanged unless product scope changes.
+- Endpoint contracts in this tracker stay aligned with **`../../PROJECT-EXPLAINER/API_STANDARD_GODADDY_MYSQL.md`** unless product scope changes.
+
+
+---
+
+*Last updated: **2026-05-13** — evening session close (project-wide doc sync).*

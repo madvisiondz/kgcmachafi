@@ -3,10 +3,22 @@
 This file is kept current throughout the rebuild.
 
 ## Done
-- **Legacy archived**: previous frontend moved under `legacy/` (kept intact).
+- **Legacy tree removed (2026-05-13):** the old `legacy/` and `backupp/` directories were deleted from the repo. High-value markdown from legacy was copied into **`PROJECT-EXPLAINER/ARCHIVE_LEGACY_*.md`**.
 - **New app scaffolded**: `frontend/` (Vite + React).
 - **Tailwind added**: minimal Tailwind setup for pixel-aligned UI work.
 - **Root repo README**: `README.md` links the canonical docs + run steps.
+- **Onboarding (2026-05-13):** **`MACHAFI_DATABASE_AND_API_PLAYBOOK.md`** — beginner-oriented guide (MySQL/phpMyAdmin, endpoints, env flags, “ready?” checklist); all project **`.md`** files stamped with same **last updated** footer for this session.
+- **Production execution — Phase A (expanded) + CI + API client (2026-05-11)**:
+  - **GitHub Actions**: **`.github/workflows/frontend-ci.yml`** runs `npm ci`, `npm run lint`, and `npm run build` in **`frontend/`** when `frontend/**` or the workflow file changes.
+  - **`frontend/src/services/`** — `http.ts`, `news.ts` (news list + detail), **`pharmacies.ts`** (`loadPharmaciesForList`, PHP → `Pharmacy` mapper), `index.ts` re-exports (Phase **C1** / **D1** slice per **`NEXT_STEPS_PRODUCTION.md`**).
+  - **List UX (Phase A4 slice)**: **News**, **Pharmacies**, **Hospitals** use **`useBootstrapList`**, **`ListGridSkeleton`**, **`ListFetchErrorBanner`**, and **`common.list*`** i18n keys for loading/error + retry.
+  - **Optional env**: **`VITE_NEWS_API=true`** → **`/public/news.php`** (list + detail); **`VITE_PHARMACIES_API=true`** → **`/public/pharmacies.php`** (directory + map); **`VITE_LIST_BOOTSTRAP_MS`** can delay loaders in dev (`frontend/.env.example`).
+  - **`frontend/.env.example`** — documents `VITE_*` variables for dev/staging/prod lanes.
+  - **`frontend/src/config.ts`** + **`frontend/src/vite-env.d.ts`** — single import for public site URL, API base, optional TV stream URL, HLS feature flag.
+  - **`frontend/src/components/RootErrorBoundary.tsx`** — shell error UI with AR/FR/EN copy (`common.error*` keys); wired in **`frontend/src/main.tsx`** inside **`BrowserRouter`** so `Link` works.
+  - **`frontend/.gitignore`** — ignores `.env` / `.env.local` (no secrets in Git).
+  - **`PROJECT-EXPLAINER/SMOKE_CHECKLIST_PRODUCTION.md`** — release smoke matrix (fill per deploy).
+  - **`NEXT_STEPS_PRODUCTION.md`** — aligned with **`ARCHITECTURE_PRODUCTION_READINESS.md`** (layer % table + Sprint execution status).
 - **Central i18n**:
   - Languages: **AR / FR / EN**
   - Direction switching: **RTL/LTR** updates `document.documentElement.dir` and `lang`
@@ -112,7 +124,8 @@ This file is kept current throughout the rebuild.
 
 - **News (“newsroom”) page (UI-first, journalist/CMS-ready)**:
   - Tracker: `../TRACKERS/machafi-services/NEWS_PAGE_MAP.md`.
-  - Pages: `frontend/src/pages/NewsPage.jsx`, `frontend/src/pages/NewsDetailPage.jsx`; mock data: `frontend/src/data/news.ts`; routes **`/news`** + **`/news/:id`**.
+  - Pages: `frontend/src/pages/NewsPage.jsx`, `frontend/src/pages/NewsDetailPage.jsx`; mock data: `frontend/src/data/news.ts`; routes **`/news`** + **`/news/:id`** (under **`/healthservices/...`** in the Services shell).
+  - Optional live reads: **`VITE_NEWS_API=true`** → list + detail call **`/public/news.php`** (same env as **`NEXT_STEPS_PRODUCTION.md`** D1).
   - UX: featured/breaking module, wire/source + topic filters, search, desk standards sidebar, “routes to action”, detail page with share/print + disclaimer.
   - Backend readiness: aligns with existing `api/public/news.php` + `api/admin/news.php` and proposes expanded public/admin contracts for multilingual + moderation workflows.
   - i18n: `newsroom.*` + `nav.newsBadge` keys (AR/FR/EN) in `frontend/src/i18n/translations.ts` (Rule #1).
@@ -207,3 +220,8 @@ This file is kept current throughout the rebuild.
 - **Machafi Services** (`frontend/`): one route set; language toggle updates **`t()`** and content fields — Rule #1 as today.
 - **Machafi TV** (planned): **three editorial editions** as **URL prefixes** (`/tv/ar`, `/tv/fr`, `/tv/en`). “Changing language” **navigates** to another edition’s pages and **content set** (pros per language), not only string swaps on the same URL. Within each edition, **all** visible text still follows Rule #1 for that edition’s UI language.
 
+
+
+---
+
+*Last updated: **2026-05-13** — evening session close (project-wide doc sync).*

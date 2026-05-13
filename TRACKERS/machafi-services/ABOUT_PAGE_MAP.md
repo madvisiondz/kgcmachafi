@@ -41,8 +41,56 @@ Document title uses `header.whoWeAre` for `/about` (`DocumentTitle.jsx`).
 
 ---
 
+## Full endpoint design — GoDaddy + MySQL (SQL)
+
+**Hosting:** GoDaddy Linux + Apache + PHP + **MySQL**. See **`../../PROJECT-EXPLAINER/HOSTING_AND_DATABASE.md`**, **`../../PROJECT-EXPLAINER/API_STANDARD_GODADDY_MYSQL.md`**.
+
+### MySQL
+
+```sql
+CREATE TABLE contact_messages (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  created_at DATETIME NOT NULL,
+  name VARCHAR(160) NOT NULL,
+  email VARCHAR(255) NOT NULL,
+  phone VARCHAR(64) NULL,
+  subject VARCHAR(255) NOT NULL,
+  body TEXT NOT NULL,
+  lang CHAR(2) NOT NULL DEFAULT 'ar',
+  ip_hash CHAR(64) NULL,
+  spam_score TINYINT NULL,
+  status ENUM('new','reviewed','archived') NOT NULL DEFAULT 'new',
+  KEY idx_created (created_at),
+  KEY idx_status (status)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+```
+
+### HTTP — public
+
+| Method | Path | PHP | SQL |
+|--------|------|-----|-----|
+| POST | `/api/public/contact` | **`api/public/contact.php`** (new) | `INSERT INTO contact_messages (...)` |
+
+**Request JSON:** `{ "name","email","phone?","subject","body","lang" }` — validate length server-side; **rate limit** by IP on GoDaddy (file-based or DB counter).
+
+### HTTP — admin
+
+| Method | Path | PHP | SQL |
+|--------|------|-----|-----|
+| GET | `/api/admin/contact-messages` | **`api/admin/contact-messages.php`** (new) | `SELECT ... WHERE status=? ORDER BY id DESC LIMIT ?` |
+| PATCH | `/api/admin/contact-messages/:id` | same | `UPDATE contact_messages SET status=?` |
+
+**Auth:** reuse **`api/admin/auth/session.php`** pattern — never expose list publicly.
+
+---
+
 ## Documentation sync (2026-04-30)
 
 - Cross-route **dataset handoff**: see `../../PROJECT-EXPLAINER/PAGE_DATASET_REFERENCE.md` (purpose + suggested columns per route).
 - **Site chrome** (header, desktop nav gradient `.kgc-main-nav-gradient`, partner logo rules) is global; details in `../../PROJECT-EXPLAINER/PROMPT_LOG.md` under **2026-04-30**.
-- This page’s **API / admin contracts** below are unchanged unless product scope changes.
+- Endpoint contracts in this tracker stay aligned with **`../../PROJECT-EXPLAINER/API_STANDARD_GODADDY_MYSQL.md`** unless product scope changes.
+
+
+---
+
+*Last updated: **2026-05-13** — evening session close (project-wide doc sync).*

@@ -81,8 +81,39 @@ Single source of truth for **`HealthServicesAdminPage`** and the **future** Heal
 
 ---
 
+## Full endpoint design — GoDaddy + MySQL (SQL)
+
+**References:** **`../../PROJECT-EXPLAINER/HOSTING_AND_DATABASE.md`**, **`../../PROJECT-EXPLAINER/API_STANDARD_GODADDY_MYSQL.md`**. This admin surface **aggregates** the PHP/SQL contracts defined in each **`../machafi-services/*_PAGE_MAP.md`** “Full endpoint design” section; do not fork conflicting paths.
+
+### Auth (Health Services scope)
+
+| Method | Path | PHP |
+|--------|------|-----|
+| POST | `/api/admin/auth/login` | **`api/admin/auth/login.php`** (existing pattern) |
+| POST | `/api/admin/auth/logout` | **`api/admin/auth/logout.php`** |
+
+### Module → primary PHP (illustrative)
+
+| Module | Admin PHP | Backing tables (see service trackers) |
+|--------|-----------|--------------------------------------|
+| News | `api/admin/news.php` | `news_articles`, i18n tables |
+| Donations | `api/admin/donations-*.php` | `donation_campaigns`, `donation_intents` |
+| Pharmacies | `api/admin/pharmacies.php`, `pharmacy-night-shift.php` | § Pharmacies tracker |
+| Hospitals / Ambulances / Housing / Consultations | matching `api/admin/*.php` | per tracker DDL |
+| Library | `api/admin/library-books.php` | `library_books` |
+| Live | `api/admin/live-settings.php` | `live_settings` |
+| Site copy | `api/admin/site-settings.php` | `site_settings` |
+| Audit | `api/admin/audit.php` | `admin_audit_log` (create as needed) |
+
+---
+
 ## Documentation sync (2026-05-12)
 
 - Cross-route **dataset handoff**: see `../../PROJECT-EXPLAINER/PAGE_DATASET_REFERENCE.md`.
 - **Site chrome** / process: `../../PROJECT-EXPLAINER/PROMPT_LOG.md`.
 - Related public trackers: **`../machafi-services/NEWS_PAGE_MAP.md`**, **`../machafi-services/DONATIONS_PAGE_MAP.md`**, directory `*_PAGE_MAP.md` files under **`../machafi-services/`**.
+
+
+---
+
+*Last updated: **2026-05-13** — evening session close (project-wide doc sync).*

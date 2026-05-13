@@ -245,6 +245,11 @@ export const translations = {
       live: 'Live',
     },
     common: {
+      errorTitle: 'Something went wrong',
+      errorBody:
+        'The page hit an unexpected error. Try reloading. If it keeps happening, return to the site choice and pick your destination again.',
+      reloadPage: 'Reload page',
+      backToGateway: 'Site choice',
       watchLive: 'Watch live',
       contactUs: 'Contact',
       phone: 'Phone',
@@ -255,6 +260,12 @@ export const translations = {
       terms: 'Terms',
       copyright: '© KGC Machafi — All rights reserved.',
       madeWith: 'Built for healthcare discovery.',
+      listLoadingTitle: 'Loading list…',
+      listLoadingHint: 'Fetching the latest data. On slow networks this can take a few seconds.',
+      listErrorTitle: 'Could not load this list',
+      listErrorDesc:
+        'Check your connection and try again. If you enabled live API flags in `.env`, verify the PHP host is reachable from this origin.',
+      listRetry: 'Try again',
     },
     footer: {
       brandName: 'KGC MACHAFI',
@@ -1167,6 +1178,11 @@ export const translations = {
       live: 'Direct',
     },
     common: {
+      errorTitle: 'Une erreur est survenue',
+      errorBody:
+        'La page a rencontré une erreur inattendue. Essayez de recharger. Si le problème persiste, revenez au choix du site.',
+      reloadPage: 'Recharger la page',
+      backToGateway: 'Choix du site',
       watchLive: 'Regarder en direct',
       contactUs: 'Contact',
       phone: 'Téléphone',
@@ -1177,6 +1193,12 @@ export const translations = {
       terms: 'Conditions',
       copyright: '© KGC Machafi — Tous droits réservés.',
       madeWith: 'Conçu pour la découverte santé.',
+      listLoadingTitle: 'Chargement de la liste…',
+      listLoadingHint: 'Récupération des dernières données. Sur réseau lent, cela peut prendre quelques secondes.',
+      listErrorTitle: 'Impossible de charger cette liste',
+      listErrorDesc:
+        'Vérifiez la connexion puis réessayez. Si les drapeaux API sont activés dans `.env`, vérifiez que l’hôte PHP est joignable depuis cette origine.',
+      listRetry: 'Réessayer',
     },
     footer: {
       brandName: 'KGC MACHAFI',
@@ -2085,6 +2107,11 @@ export const translations = {
       live: 'مباشر',
     },
     common: {
+      errorTitle: 'حدث خطأ ما',
+      errorBody:
+        'واجهت الصفحة خطأ غير متوقع. جرّب إعادة التحميل. إذا استمرّت المشكلة، عد إلى اختيار الموقع واختر وجهتك من جديد.',
+      reloadPage: 'إعادة تحميل الصفحة',
+      backToGateway: 'اختيار الموقع',
       watchLive: 'شاهد البث المباشر',
       contactUs: 'اتصل بنا',
       phone: 'الهاتف',
@@ -2095,6 +2122,12 @@ export const translations = {
       terms: 'الشروط',
       copyright: '© مشافي — جميع الحقوق محفوظة.',
       madeWith: 'منصة لاكتشاف الخدمات الصحية.',
+      listLoadingTitle: 'جاري تحميل القائمة…',
+      listLoadingHint: 'جلب أحدث البيانات. على الشبكات البطيئة قد يستغرق الأمر بضع ثوانٍ.',
+      listErrorTitle: 'تعذر تحميل هذه القائمة',
+      listErrorDesc:
+        'تحقق من الاتصال ثم أعد المحاولة. إذا فعلت وضع الاتصال بـ API في ملف `.env`، تأكد أن خادم PHP يمكن الوصول إليه من هذا المصدر.',
+      listRetry: 'إعادة المحاولة',
     },
     footer: {
       brandName: 'KGC MACHAFI',

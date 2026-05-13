@@ -63,7 +63,30 @@ Single source of truth for **`TvArticlePage`**: long-form story view with share/
 
 ---
 
+## Full endpoint design — GoDaddy + MySQL (SQL)
+
+**References:** **`../../PROJECT-EXPLAINER/HOSTING_AND_DATABASE.md`**, **`../../PROJECT-EXPLAINER/API_STANDARD_GODADDY_MYSQL.md`**. Detail row = **`tv_articles`** (`TV_HOME_PAGE_MAP.md`); add optional `tv_article_seo(edition, slug, json)` if needed.
+
+### HTTP — public
+
+| Method | Path | PHP | SQL |
+|--------|------|-----|-----|
+| GET | `/api/public/tv/editions/{edition}/articles/{slug}` | **`api/public/tv-article.php`** | `SELECT * FROM tv_articles WHERE edition=? AND slug=? AND status='published'` and `embargo_until` check |
+
+### HTTP — admin
+
+| Method | Path | PHP |
+|--------|------|-----|
+| GET/POST/PUT/DELETE | `/api/admin/machafitv/editions/{edition}/articles` | **`api/admin/tv-articles.php`** — full CRUD, embargo, breaking |
+
+---
+
 ## Documentation sync (2026-05-12)
 
 - **`../machafi-services/NEWS_PAGE_MAP.md`** — Services newsroom (related editorial patterns).
 - **`../../PROJECT-EXPLAINER/PROMPT_LOG.md`**.
+
+
+---
+
+*Last updated: **2026-05-13** — evening session close (project-wide doc sync).*

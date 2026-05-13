@@ -142,8 +142,69 @@ Professionally, we keep schedule endpoints lightweight:
 
 ---
 
+## Full endpoint design — GoDaddy + MySQL (SQL)
+
+**References:** **`../../PROJECT-EXPLAINER/HOSTING_AND_DATABASE.md`**, **`../../PROJECT-EXPLAINER/API_STANDARD_GODADDY_MYSQL.md`**.
+
+### MySQL
+
+```sql
+CREATE TABLE programs (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  program_key VARCHAR(64) NOT NULL UNIQUE,
+  category VARCHAR(64) NOT NULL,
+  host_name VARCHAR(160) NULL,
+  replay_available TINYINT(1) NOT NULL DEFAULT 0,
+  cover_url VARCHAR(512) NULL,
+  status ENUM('active','archived') NOT NULL DEFAULT 'active',
+  updated_at DATETIME NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE program_i18n (
+  program_id BIGINT NOT NULL,
+  lang CHAR(2) NOT NULL,
+  title VARCHAR(255) NOT NULL,
+  description_md TEXT NULL,
+  PRIMARY KEY (program_id, lang),
+  FOREIGN KEY (program_id) REFERENCES programs(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE program_schedule_slots (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  program_id BIGINT NOT NULL,
+  day_of_week TINYINT NOT NULL,
+  start_time TIME NOT NULL,
+  duration_min INT NOT NULL,
+  is_live TINYINT(1) NOT NULL DEFAULT 0,
+  published TINYINT(1) NOT NULL DEFAULT 1,
+  FOREIGN KEY (program_id) REFERENCES programs(id),
+  KEY idx_day (day_of_week, start_time)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+```
+
+### HTTP — public
+
+| Method | Path | PHP | SQL |
+|--------|------|-----|-----|
+| GET | `/api/public/programs/schedule` | **`api/public/programs-schedule.php`** | Join `program_schedule_slots` + `programs` + `program_i18n` for `?lang=&day=&category=&q=&limit=` |
+| GET | `/api/public/programs/:id` | **`api/public/program-detail.php`** | Single program + i18n |
+
+### HTTP — admin
+
+| Method | Path | PHP | SQL |
+|--------|------|-----|-----|
+| GET/POST/PUT/DELETE | `/api/admin/programs` | **`api/admin/programs.php`** | CRUD `programs` + `program_i18n` |
+| GET/POST/PUT/DELETE | `/api/admin/programs/schedule` | **`api/admin/programs-schedule.php`** | CRUD `program_schedule_slots` |
+
+---
+
 ## Documentation sync (2026-04-30)
 
 - Cross-route **dataset handoff**: see `../../PROJECT-EXPLAINER/PAGE_DATASET_REFERENCE.md` (purpose + suggested columns per route).
 - **Site chrome** (header, desktop nav gradient `.kgc-main-nav-gradient`, partner logo rules) is global; details in `../../PROJECT-EXPLAINER/PROMPT_LOG.md` under **2026-04-30**.
-- This page’s **API / admin contracts** below are unchanged unless product scope changes.
+- Endpoint contracts in this tracker stay aligned with **`../../PROJECT-EXPLAINER/API_STANDARD_GODADDY_MYSQL.md`** unless product scope changes.
+
+
+---
+
+*Last updated: **2026-05-13** — evening session close (project-wide doc sync).*

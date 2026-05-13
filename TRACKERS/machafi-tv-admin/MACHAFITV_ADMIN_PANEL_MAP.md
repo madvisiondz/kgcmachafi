@@ -83,8 +83,39 @@ Single source of truth for **`MachafiTvAdminPage`** and the **future** Machafi T
 
 ---
 
+## Full endpoint design — GoDaddy + MySQL (SQL)
+
+**References:** **`../../PROJECT-EXPLAINER/HOSTING_AND_DATABASE.md`**, **`../../PROJECT-EXPLAINER/API_STANDARD_GODADDY_MYSQL.md`**. All routes are **edition-scoped** where applicable (`ar` / `fr` / `en`). Public read contracts: **`../machafi-tv/TV_*_PAGE_MAP.md`**.
+
+### Auth (TV-only)
+
+| Method | Path | PHP |
+|--------|------|-----|
+| POST | `/api/admin/machafitv/auth/login` | **`api/admin/machafitv-auth-login.php`** — session scoped to TV roles |
+| POST | `/api/admin/machafitv/auth/logout` | **`api/admin/machafitv-auth-logout.php`** |
+
+### Editorial + playout (PHP map)
+
+| Area | Admin PHP (suggested) | Tables |
+|------|----------------------|--------|
+| Articles | `api/admin/tv-articles.php` | `tv_articles` |
+| Wire | `api/admin/tv-wire.php` | `tv_wire_items` |
+| Ticker | `api/admin/tv-ticker.php` | `tv_ticker_lines` |
+| Home layout | `api/admin/tv-home-layout.php` | `tv_home_layout` |
+| Live | `api/admin/tv-live.php` | `tv_live_settings` |
+| Schedule | `api/admin/tv-schedule.php` | `tv_schedule_slots` |
+| Search config | `api/admin/tv-search-config.php` | JSON or `tv_search_config` |
+| Style / desk | `api/admin/tv-style-guide.php` | `tv_style_guides` |
+
+---
+
 ## Documentation sync (2026-05-12)
 
 - Cross-route **dataset handoff**: `../../PROJECT-EXPLAINER/PAGE_DATASET_REFERENCE.md`.
 - Process / decisions: `../../PROJECT-EXPLAINER/PROMPT_LOG.md`.
 - Related: **`../machafi-services/NEWS_PAGE_MAP.md`** (editorial patterns), **`../machafi-tv/`** public TV trackers.
+
+
+---
+
+*Last updated: **2026-05-13** — evening session close (project-wide doc sync).*

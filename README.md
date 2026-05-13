@@ -1,6 +1,6 @@
 # MACHAFI (kgcmachafi)
 
-MACHAFI is a **directory-first health platform**. This repo is in **UI-first rebuild mode**: we build pixel-perfect pages with **i18n (AR/FR/EN) + mock data** first, then wire APIs later via a thin `services/` boundary.
+MACHAFI is a **directory-first health platform**. This repo pairs a **UI-first rebuild** in `frontend/` with a **thin `services/` client** (`getJson`, timeouts) so pages can call the same-origin **GoDaddy PHP + MySQL** API under **`VITE_API_BASE_URL`** (default `/api`) when flags like **`VITE_NEWS_API`** are enabled.
 
 ## Production domain
 
@@ -10,12 +10,25 @@ Public site: **[https://kgc-machafi.net/](https://kgc-machafi.net/)**
 
 Product specs, status, routing maps, and logs live under **`PROJECT-EXPLAINER/`** (only **`README.md`** stays at the repo root for GitHub).
 
+At the repo root (next to **`README.md`**):
+
+- **`WORKING_PLAN.md`** — **path-sheet**: dated timeline + detailed inventory + forward checklists (tick as you go)
+- **`NEXT_MOVES.md`** — **strategy**: value/readiness study, tracker-informed priorities, ordered moves vs `NEXT_STEPS` / architecture
+- **`NEXT_STEPS_PRODUCTION.md`** — production roadmap + **Sprint execution table** (sync with `WORKING_PLAN.md`)
+- **`.github/workflows/frontend-ci.yml`** — CI: `npm ci` + lint + build for `frontend/` on push/PR
+- **`ARCHITECTURE_PRODUCTION_READINESS.md`** — ASCII architecture diagrams + **% to 100% production** per layer
+- **`PROJECT-EXPLAINER/SMOKE_CHECKLIST_PRODUCTION.md`** — release smoke matrix (fill per deploy)
+- **`MACHAFI_DATABASE_AND_API_PLAYBOOK.md`** — **beginner-friendly** step-by-step: MySQL/phpMyAdmin, schema updates, `api/public` ↔ `frontend/src/services/`, real project examples
+
 - **`PROJECT-EXPLAINER/project-explainer.md`** — product intent + directory philosophy
 - **`PROJECT-EXPLAINER/PROJECT_STATUS.md`** — done vs remaining (keep current)
 - **`PROJECT-EXPLAINER/PROMPT_LOG.md`** — one entry per prompt (keep current)
 - **`PROJECT-EXPLAINER/PLATFORM_SHELL_LAYOUT.md`** — domain → gateway → Machafi Services vs Machafi TV (planned editions, live TV, newsroom)
 - **`PROJECT-EXPLAINER/ROUTING_SWITCH_BRIEFING.md`** — handoff: gateway + `/healthservices` + `/tv` routing switch (what was done)
 - **`PROJECT-EXPLAINER/WEBAPP_PAGES_OVERVIEW.md`** — routes in `frontend/src/App.tsx` (gateway, services, TV, admin placeholders)
+- **`PROJECT-EXPLAINER/HOSTING_AND_DATABASE.md`** — GoDaddy + MySQL deploy assumptions for `api/` + SPA
+- **`PROJECT-EXPLAINER/API_STANDARD_GODADDY_MYSQL.md`** — JSON response conventions for PHP on shared hosting
+- **`PROJECT-EXPLAINER/ARCHIVE_LEGACY_*.md`** — archived copies of the former monolith **audit** + **deployment** notes (the `legacy/` tree was removed from the repo on 2026-05-13)
 - **`PROJECT-EXPLAINER/LEGACY_SYSTEM_PROBLEMS_AND_REBUILD_RULES.md`** — why the legacy system blocked UI work + rebuild rules
 - **`PROJECT-EXPLAINER/HEADER_SCROLL_ANIMATION.md`** — sticky header collapse spec + QA checklist
 - **`PROJECT-EXPLAINER/HOW_DOES_A_PRO_AI_WEB_DEVELOPER_DO_THAT.md`** — phased execution plan
@@ -58,7 +71,6 @@ Cursor canvases must live in Cursor’s managed canvases directory to render.
 - `frontend/`: new UI rebuild (current work)
 - `PROJECT-EXPLAINER/`: project memory markdown (status, prompts, rules, routing maps, diagrams)
 - `TRACKERS/`: per-surface tracker maps — **`machafi-services/`**, **`machafi-tv/`** (public apps), **`machafi-services-admin/`**, **`machafi-tv-admin/`** (admin panels)
-- `legacy/`: archived old frontend (kept intact for reference)
 - `deploy/`, `ready-to-deploy/`: deployment-related assets (review before using)
 - `uploads/`: media/assets used by the app
 
@@ -107,3 +119,8 @@ After every prompt/work session, update:
 - **`PROJECT-EXPLAINER/PROMPT_LOG.md`** (what changed)
 - **`PROJECT-EXPLAINER/PROJECT_STATUS.md`** (done/in progress/remaining)
 - any relevant tracker under **`TRACKERS/`** or spec docs under **`PROJECT-EXPLAINER/`**
+
+
+---
+
+*Last updated: **2026-05-13** — evening session close (project-wide doc sync).*

@@ -217,3 +217,8 @@ Rule #1 is satisfied when:
 - admin cannot accidentally publish “half-translated” content (or the fallback policy is explicit and visible)
 - automated checks prevent regressions
 
+
+
+---
+
+*Last updated: **2026-05-13** — evening session close (project-wide doc sync).*

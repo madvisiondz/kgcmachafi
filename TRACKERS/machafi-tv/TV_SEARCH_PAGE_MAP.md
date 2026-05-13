@@ -63,6 +63,29 @@ Single source of truth for **`TvSearchPage`**: headline search across TV mock st
 
 ---
 
+## Full endpoint design — GoDaddy + MySQL (SQL)
+
+**References:** **`../../PROJECT-EXPLAINER/HOSTING_AND_DATABASE.md`**, **`../../PROJECT-EXPLAINER/API_STANDARD_GODADDY_MYSQL.md`**. Search reads **`tv_articles`** (see **`TV_HOME_PAGE_MAP.md`** DDL).
+
+### HTTP — public
+
+| Method | Path | PHP | SQL |
+|--------|------|-----|-----|
+| GET | `/api/public/tv/editions/{edition}/search` | **`api/public/tv-search.php`** | `MATCH(title,dek,body_md) AGAINST (? IN BOOLEAN MODE)` or `LIKE` with length cap; `LIMIT` per API standard |
+
+### HTTP — admin
+
+| Method | Path | Purpose |
+|--------|------|---------|
+| GET/PUT | `/api/admin/machafitv/search-config` | synonyms, blocked terms, editor picks (optional JSON table) |
+
+---
+
 ## Documentation sync (2026-05-12)
 
 - **`../machafi-services/NEWS_PAGE_MAP.md`** (newsroom filters/search patterns), **`../../PROJECT-EXPLAINER/PROMPT_LOG.md`**.
+
+
+---
+
+*Last updated: **2026-05-13** — evening session close (project-wide doc sync).*

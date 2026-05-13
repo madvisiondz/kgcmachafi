@@ -181,8 +181,62 @@ Whenever we touch this page, we also update:
 
 ---
 
+## Full endpoint design — GoDaddy + MySQL (SQL)
+
+**References:** **`../../PROJECT-EXPLAINER/HOSTING_AND_DATABASE.md`**, **`../../PROJECT-EXPLAINER/API_STANDARD_GODADDY_MYSQL.md`**.
+
+### MySQL
+
+```sql
+CREATE TABLE housing_listings (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  listing_type ENUM('volunteer','association','guesthouse') NOT NULL,
+  wilaya_code VARCHAR(8) NOT NULL,
+  commune_id VARCHAR(32) NOT NULL,
+  phone VARCHAR(64) NOT NULL,
+  capacity INT NULL,
+  price_note VARCHAR(255) NULL,
+  lat DECIMAL(10,7) NULL,
+  lng DECIMAL(10,7) NULL,
+  verified TINYINT(1) NOT NULL DEFAULT 0,
+  verified_at DATETIME NULL,
+  status ENUM('pending','active','hidden') NOT NULL DEFAULT 'pending',
+  updated_at DATETIME NOT NULL,
+  KEY idx_loc (wilaya_code, commune_id, status)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE housing_listing_i18n (
+  listing_id BIGINT NOT NULL,
+  lang CHAR(2) NOT NULL,
+  title VARCHAR(255) NOT NULL,
+  conditions TEXT NULL,
+  description_md TEXT NULL,
+  PRIMARY KEY (listing_id, lang),
+  FOREIGN KEY (listing_id) REFERENCES housing_listings(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+```
+
+### HTTP — public
+
+| Method | Path | PHP | SQL |
+|--------|------|-----|-----|
+| GET | `/api/public/housing` | **`api/public/housing.php`** | Filter by wilaya/commune/q/type; `?lang=` |
+
+### HTTP — admin
+
+| Method | Path | PHP |
+|--------|------|-----|
+| GET/POST/PUT/DELETE | `/api/admin/housing` | **`api/admin/housing.php`** — verification + status |
+
+---
+
 ## Documentation sync (2026-04-30)
 
 - Cross-route **dataset handoff**: see `../../PROJECT-EXPLAINER/PAGE_DATASET_REFERENCE.md` (purpose + suggested columns per route).
 - **Site chrome** (header, desktop nav gradient `.kgc-main-nav-gradient`, partner logo rules) is global; details in `../../PROJECT-EXPLAINER/PROMPT_LOG.md` under **2026-04-30**.
-- This page’s **API / admin contracts** below are unchanged unless product scope changes.
+- Endpoint contracts in this tracker stay aligned with **`../../PROJECT-EXPLAINER/API_STANDARD_GODADDY_MYSQL.md`** unless product scope changes.
+
+
+---
+
+*Last updated: **2026-05-13** — evening session close (project-wide doc sync).*

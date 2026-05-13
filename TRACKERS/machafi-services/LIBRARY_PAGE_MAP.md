@@ -1,13 +1,13 @@
-# Library page map (Legacy → Rebuild)
+# Library page map (former monolith → rebuild)
 
 ## Purpose
 
 Directory-style **health books** listing: browse cards, category label, e-book vs physical, optional read (PDF iframe) or download CTA.
 
-## Legacy source
+## Former monolith source (removed 2026-05-13)
 
-- **Page shell**: `legacy/src/pages/LibraryPage.jsx` (renders `HealthLibrary` only).
-- **UI + behavior**: `legacy/src/components/HealthLibrary.jsx`
+- **Page shell**: old `LibraryPage.jsx` (rendered `HealthLibrary` only).
+- **UI + behavior**: old `HealthLibrary.jsx`
   - Fetched books via `contentApi.listBooks()`.
   - Grid: `grid-cols-1 sm:grid-cols-2 lg:grid-cols-4`, card height ~380px skeleton.
   - Card: cover image, category, type badge (ebook / physical), title, author, pages + icon, CTA (Read / Download).
@@ -97,8 +97,66 @@ Per card: `id`, `bookKey` (i18n `library.books.*`), `categoryKey` (`library.cate
 
 ---
 
+## Full endpoint design — GoDaddy + MySQL (SQL)
+
+**References:** **`../../PROJECT-EXPLAINER/HOSTING_AND_DATABASE.md`**, **`../../PROJECT-EXPLAINER/API_STANDARD_GODADDY_MYSQL.md`**.
+
+### MySQL
+
+```sql
+CREATE TABLE library_categories (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  category_key VARCHAR(64) NOT NULL UNIQUE,
+  sort_order INT NOT NULL DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE library_books (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  category_id INT NOT NULL,
+  book_type ENUM('ebook','physical') NOT NULL,
+  pages INT NULL,
+  image_url VARCHAR(512) NULL,
+  file_path VARCHAR(512) NULL,
+  status ENUM('active','hidden') NOT NULL DEFAULT 'active',
+  updated_at DATETIME NOT NULL,
+  FOREIGN KEY (category_id) REFERENCES library_categories(id),
+  KEY idx_cat (category_id, status)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE library_book_i18n (
+  book_id BIGINT NOT NULL,
+  lang CHAR(2) NOT NULL,
+  title VARCHAR(255) NOT NULL,
+  author VARCHAR(255) NOT NULL,
+  PRIMARY KEY (book_id, lang),
+  FOREIGN KEY (book_id) REFERENCES library_books(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+```
+
+### HTTP — public
+
+| Method | Path | PHP | SQL |
+|--------|------|-----|-----|
+| GET | `/api/public/library/books` | **`api/public/library-books.php`** | List + filters `?lang=&q=&category=&type=&limit=&cursor=` |
+| GET | `/api/public/library/books/:id` | **`api/public/library-book.php`** | Single row + i18n |
+| GET | `/api/public/library/categories` | **`api/public/library-categories.php`** | Optional if categories are DB-driven |
+
+### HTTP — admin
+
+| Method | Path | PHP |
+|--------|------|-----|
+| GET/POST/PUT/DELETE | `/api/admin/library/books` | **`api/admin/library-books.php`** |
+| GET/POST/PUT/DELETE | `/api/admin/library/categories` | **`api/admin/library-categories.php`** |
+
+---
+
 ## Documentation sync (2026-04-30)
 
 - Cross-route **dataset handoff**: see `../../PROJECT-EXPLAINER/PAGE_DATASET_REFERENCE.md` (purpose + suggested columns per route).
 - **Site chrome** (header, desktop nav gradient `.kgc-main-nav-gradient`, partner logo rules) is global; details in `../../PROJECT-EXPLAINER/PROMPT_LOG.md` under **2026-04-30**.
-- This page’s **API / admin contracts** below are unchanged unless product scope changes.
+- Endpoint contracts in this tracker stay aligned with **`../../PROJECT-EXPLAINER/API_STANDARD_GODADDY_MYSQL.md`** unless product scope changes.
+
+
+---
+
+*Last updated: **2026-05-13** — evening session close (project-wide doc sync).*

@@ -1,8 +1,12 @@
-import React, { useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { CircleMarker, MapContainer, Popup, TileLayer } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import { useI18n } from '../i18n/I18nProvider';
+import { useBootstrapList } from '../hooks/useBootstrapList';
+import ListGridSkeleton from '../components/ListGridSkeleton';
+import ListFetchErrorBanner from '../components/ListFetchErrorBanner';
 import { getWeekStartIso, nightShiftScheduleMock, pharmaciesDirectoryMock } from '../data/pharmacies';
+import { loadPharmaciesForList } from '../services';
 import { getCommunes, wilayas } from '../data/algeria-data';
 
 function Icon({ children, className = '' }) {
@@ -79,14 +83,24 @@ export default function PharmaciesPage() {
   const { t, dir, language } = useI18n();
   const isRTL = dir === 'rtl';
 
+  const loadDirectory = useCallback(() => loadPharmaciesForList(), []);
+
+  const { status, data, error, reload } = useBootstrapList(loadDirectory);
+  const directory = data ?? pharmaciesDirectoryMock;
+  const showSkeleton = status === 'loading';
+
   const [wilaya, setWilaya] = useState('');
   const [city, setCity] = useState('');
   const [query, setQuery] = useState('');
   const [nightOnly, setNightOnly] = useState(false);
 
   const weekStart = useMemo(() => getWeekStartIso(new Date()), []);
-  const nightDutyIds = nightShiftScheduleMock[weekStart]?.nightDutyIds ?? [];
-  const nightDutySet = useMemo(() => new Set(nightDutyIds), [nightDutyIds]);
+  const nightDutySet = useMemo(() => {
+    const fromApi = directory.filter((p) => p.isNightDuty).map((p) => p.id);
+    if (fromApi.length > 0) return new Set(fromApi);
+    const nightDutyIds = nightShiftScheduleMock[weekStart]?.nightDutyIds ?? [];
+    return new Set(nightDutyIds);
+  }, [directory, weekStart]);
 
   const wilayaOptions = useMemo(() => {
     return wilayas
@@ -106,7 +120,7 @@ export default function PharmaciesPage() {
   const filtered = useMemo(() => {
     const q = normalize(query);
 
-    return pharmaciesDirectoryMock.filter((p) => {
+    return directory.filter((p) => {
       const matchesWilaya = !wilaya || p.wilayaCode === wilaya;
       const displayCity = isRTL ? p.cityAr : p.cityFr;
       const matchesCity = !city || displayCity === city;
@@ -128,10 +142,10 @@ export default function PharmaciesPage() {
       ];
       return normalize(parts.join(' ')).includes(q);
     });
-  }, [city, isRTL, nightDutySet, nightOnly, query, wilaya]);
+  }, [city, directory, isRTL, nightDutySet, nightOnly, query, wilaya]);
 
   const nightDutyList = useMemo(() => {
-    const list = pharmaciesDirectoryMock.filter((p) => nightDutySet.has(p.id));
+    const list = directory.filter((p) => nightDutySet.has(p.id));
     // Prefer showing the closest relevance: selected wilaya/city first.
     return list.sort((a, b) => {
       const score = (p) => {
@@ -143,7 +157,7 @@ export default function PharmaciesPage() {
       };
       return score(a) - score(b);
     });
-  }, [city, isRTL, nightDutySet, wilaya]);
+  }, [city, directory, isRTL, nightDutySet, wilaya]);
 
   const mappable = useMemo(() => {
     return filtered
@@ -162,6 +176,11 @@ export default function PharmaciesPage() {
     <div className="space-y-12" dir={dir}>
       <section className="border-y border-emerald-100 bg-gradient-to-b from-emerald-50/60 to-white py-14">
         <div className="container mx-auto px-4">
+          {status === 'error' ? (
+            <div className="mb-6">
+              <ListFetchErrorBanner message={error?.message} onRetry={reload} />
+            </div>
+          ) : null}
           <div className="flex flex-col gap-8 lg:flex-row lg:items-start">
             {/* Sticky filters */}
             <aside className="w-full lg:w-[360px] lg:sticky lg:top-24">
@@ -285,7 +304,7 @@ export default function PharmaciesPage() {
                   </button>
 
                   <div className="rounded-2xl border border-emerald-100 bg-emerald-50/70 p-4 text-sm text-emerald-950">
-                    <p className="font-extrabold">{t('pharmacies.resultsCount',).replace('{count}', String(filtered.length))}</p>
+                    <p className="font-extrabold">{t('pharmacies.resultsCount').replace('{count}', String(filtered.length))}</p>
                     <p className="mt-1 text-emerald-800">{t('pharmacies.valueHint')}</p>
                     <p className="mt-2 text-[12px] text-emerald-700">
                       {t('pharmacies.weekLabel').replace('{week}', weekStart)}
@@ -297,6 +316,17 @@ export default function PharmaciesPage() {
 
             {/* Results */}
             <div className="w-full lg:flex-1 space-y-6">
+              {showSkeleton ? (
+                <>
+                  <div className="rounded-3xl border border-emerald-100 bg-white p-6 shadow-sm">
+                    <p className="text-sm font-extrabold text-slate-700">{t('common.listLoadingTitle')}</p>
+                    <p className="text-xs text-slate-500 mt-2">{t('common.listLoadingHint')}</p>
+                    <div className="mt-6 h-40 rounded-2xl bg-slate-100 animate-pulse" />
+                  </div>
+                  <ListGridSkeleton columnsClass="md:grid-cols-2" count={4} />
+                </>
+              ) : (
+                <>
               {/* Night shift highlight */}
               <div className="overflow-hidden rounded-3xl border border-indigo-100 bg-white shadow-sm">
                 <div className="flex items-center justify-between gap-3 border-b bg-indigo-50/70 px-5 py-4">
@@ -435,6 +465,8 @@ export default function PharmaciesPage() {
                   </MapContainer>
                 </div>
               </div>
+                </>
+              )}
             </div>
           </div>
         </div>

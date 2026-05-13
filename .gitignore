@@ -1,2 +1,4 @@
-# Full working-copy backup: clone on another PC matches this folder.
-# Dependencies (node_modules), uploads, local PHP config, etc. are tracked intentionally.
+# Local env (never commit real secrets)
+.env
+.env.local
+.env.*.local
