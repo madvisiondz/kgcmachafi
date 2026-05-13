@@ -405,7 +405,7 @@ Check boxes as you complete them. **Source of truth for execution status:** `NEX
 - [x] **A1** — Environments + `VITE_*` documented in **`frontend/.env.example`**.
 - [x] **A2** — Central **`frontend/src/config.ts`** (+ **`frontend/src/vite-env.d.ts`** typings).
 - [x] **A3** — **`RootErrorBoundary`** in **`frontend/src/components/RootErrorBoundary.tsx`**, wired in **`frontend/src/main.tsx`**; i18n `common.errorTitle` / `errorBody` / `reloadPage` / `backToGateway` (AR/FR/EN).
-- [x] **A4** — Loading / empty / error list UX on **News**, **Pharmacies**, **Hospitals** (`ListGridSkeleton`, `ListFetchErrorBanner`, `useBootstrapList`, `common.list*` i18n).
+- [x] **A4** — Loading / empty / error list UX on **News**, **Pharmacies**, **Hospitals**, **Ambulances** (`ListGridSkeleton`, `ListFetchErrorBanner`, `useBootstrapList`, `common.list*` i18n).
 - [x] **A5** — Smoke checklist template: **`PROJECT-EXPLAINER/SMOKE_CHECKLIST_PRODUCTION.md`** (fill Pass per release).
 - [x] **A6** — **`frontend/.gitignore`** ignores `.env` / `.env.local` (secrets not committed).
 
@@ -419,7 +419,7 @@ Check boxes as you complete them. **Source of truth for execution status:** `NEX
 
 ### Phase C — Frontend architecture
 
-- [x] **C1** — `frontend/src/services/` — `http.ts` (`apiUrl`, `getJson`, `ApiError`), `news.ts`, `index.ts`; timeouts on fetch.
+- [x] **C1** — `frontend/src/services/` — `http.ts` (`apiUrl`, `getJson`, `ApiError`), `news.ts`, `pharmacies.ts`, **`hospitals.ts`**, `index.ts`; timeouts on fetch.
 - [ ] **C2** — Auth model documented + implemented for admins (cookies vs bearer; CSRF if cookies).
 - [ ] **C3** — `React.lazy` for TV + admin routes; verify loading boundaries.
 - [ ] **C4** — Type API DTOs at boundary; tighten hooks typing.
@@ -427,7 +427,7 @@ Check boxes as you complete them. **Source of truth for execution status:** `NEX
 
 ### Phase D — Machafi Services + PHP API
 
-- [/] **D1** — News list read path: **`VITE_NEWS_API=true`** → `GET /api/public/news.php` + mapper; next: detail + pharmacies read.
+- [/] **D1** — Read-only wiring: **`VITE_NEWS_API`** → news list + detail; **`VITE_PHARMACIES_API`** → pharmacies; **`VITE_HOSPITALS_API`** → Algeria + international hospital lists; next: **public settings** (if endpoint) or another directory + contract typing.
 - [ ] **D2** — Real **`/healthservices/admin`** UI + RBAC per `TRACKERS/machafi-services-admin/HEALTHSERVICES_ADMIN_PANEL_MAP.md`.
 - [ ] **D3** — Rate limits + server validation on writes (forms, donations intents, comments).
 - [ ] **D4** — CORS + `SameSite` if SPA and API differ by origin.

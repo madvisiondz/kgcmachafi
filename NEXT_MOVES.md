@@ -28,8 +28,8 @@
 | **Services UI surface** | Strong | `PROJECT_STATUS.md` — full route set under `/healthservices/*`; trackers complete for 13 service maps. |
 | **TV shell** | Mid | Routes + `tvMock`; **L4b ~41%** — no HLS, no CMS, no auth (`ARCHITECTURE_PRODUCTION_READINESS.md`). |
 | **Admin** | Weak | **L4c ~12%** — placeholders only; trackers describe future RBAC (`TRACKERS/*-admin/`). |
-| **Client ↔ API boundary** | Mid | **L5 ~32%** — `frontend/src/services/*`, `useBootstrapList`, optional **`VITE_NEWS_API`** → `/public/news.php`; detail + directories still mocks-first. |
-| **PHP API** | Exists, partial SPA use | **L6 ~44%** — `api/public/*` in repo; news **list** can load from PHP when flag enabled (`loadNewsArticlesForList`). |
+| **Client ↔ API boundary** | Rising | **L5 ~32%** (layer %) — `services/*` + `useBootstrapList`; **news list + detail** (`VITE_NEWS_API`), **pharmacies** (`VITE_PHARMACIES_API`), **hospitals** (`VITE_HOSPITALS_API`) read PHP when flags on; other routes remain mocks-first until wired. |
+| **PHP API** | Exists, growing SPA use | **L6 ~44%** (layer %) — `api/public/*` consumed for **news**, **pharmacies**, **hospitals** + **international_hospitals** when SPA flags enabled; home-feed / settings / remaining directories still ahead. |
 | **Quality gates** | Stronger | Phase A list UX slice; **I1 CI** in `.github/workflows/frontend-ci.yml`; **A5** smoke template still needs filled passes per deploy. |
 | **CI / observability** | Mid (CI only) | **L12 ~28%** — GitHub Actions lint+build; **L13 ~12%** — no pipeline or RUM in repo beyond CI. |
 | **i18n / docs discipline** | Strong | Cross-cuts **~74%** / **~82%** per architecture doc — trackers + Rule #0 are an asset. |
@@ -126,11 +126,12 @@ Each move lists **impact** (user/trust/velocity), **effort**, **unlocks layers**
 | ID | Action | Impact | Effort | Layers | Phase |
 |----|--------|--------|--------|--------|-------|
 | **3a** | **`frontend/src/services/`** — `getJson`, timeouts, `ApiError`, **`apiUrl`** from **`config.ts`** | **Shipped (baseline)** — extend to POST/auth + DTOs | M | **L5** | **C1** |
-| **3b** | **D1 slice 1** — `GET` news list matching `NEWS_PAGE_MAP.md` / PHP `news.php` | **Partial** — list behind **`VITE_NEWS_API`**; **detail page** still mock-only | M–L | **L6**, L4a | **D1** |
-| **3c** | **D1 slice 2** — Pharmacies read endpoint per `PHARMACIES_PAGE_MAP.md` | Highest citizen value directory | L | **L6**, L4a | **D1** |
-| **3d** | **News** list uses `services/` + bootstrap UX (error + retry) | **Shipped** for listing; keep mocks when API flag off | M | L5, L4a | **C1+D1** |
+| **3b** | **D1 slice 1** — News list + detail per `NEWS_PAGE_MAP.md` / `news.php` | **Shipped** — **`VITE_NEWS_API`** → list + `?id=` detail; mocks when flag off | M–L | **L6**, L4a | **D1** |
+| **3c** | **D1 slice 2** — Pharmacies read per `PHARMACIES_PAGE_MAP.md` | **Shipped** — **`VITE_PHARMACIES_API`** → `pharmacies.php` | L | **L6**, L4a | **D1** |
+| **3d** | **News** list + detail use `services/` + bootstrap UX | **Shipped**; keep mocks when API flag off | M | L5, L4a | **C1+D1** |
+| **3e** | **D1 slice 3** — Hospitals (Algeria + abroad) per `HOSPITALS_PAGE_MAP.md` | **Shipped** — **`VITE_HOSPITALS_API`** → `hospitals.php` + `international-hospitals.php` | L | **L6**, L4a | **D1** |
 
-**Why this order:** `NEWS_PAGE_MAP.md` already documents PHP alignment → **lowest integration risk**. Pharmacies second → **validates directory pattern** (filters, pagination) before hospitals.
+**Why this order:** news first (lowest contract risk), then pharmacies (directory + map pattern), then hospitals (richer filters + **commune/city alignment** with admin data). Next marginal win: **mechanical perfection** (B1/B5/A5) **or** next read path (**settings** / **home-feed** / another directory) per staging priority.
 
 ### Move 4 — **Home as hub** (after Move 3b succeeds)
 
@@ -164,7 +165,7 @@ Each move lists **impact** (user/trust/velocity), **effort**, **unlocks layers**
 
 |  | **Low effort** | **High effort** |
 |--|----------------|-----------------|
-| **High impact** | **I1** CI, **A5** smoke pass, **2a** | **3a–3d** services + news wire |
+| **High impact** | **I1** CI, **A5** smoke pass, **B1** header QA, **2a** | **3a–3e** services + wired reads; **B2** home hub |
 | **Lower impact** (defer) | Token doc **B3** | Full **TV CMS** **6c**, **Donations** PSP |
 
 ---
@@ -211,9 +212,26 @@ Record answers in `PROJECT-EXPLAINER/PROMPT_LOG.md` when decided.
 
 ---
 
+## 10. Next session — “perfection” sprint (recommended order)
+
+**Intent:** raise **felt** quality on the existing surface before widening API scope — aligns **Phase B** + **A5** in `NEXT_STEPS_PRODUCTION.md` and **L4a / i18n** cross-cuts in `ARCHITECTURE_PRODUCTION_READINESS.md`.
+
+| Order | Focus | Do this | Success signal |
+|------:|--------|---------|----------------|
+| 1 | **B1** Header | **Code:** responsive thresholds + collapsed **`aria-hidden`**, mobile menu a11y + **Escape** + scroll lock + **`prefers-reduced-motion`** on collapse transitions (`HEADER_SCROLL_ANIMATION.md` changelog 2026-05-13). **Still:** run full **QA checklist** on **iOS Safari**, **Android Chrome**, **desktop** × **AR** + **EN**. | Doc checklist passes on real devices; no flicker / underlap. |
+| 2 | **A5** Smoke | Execute `PROJECT-EXPLAINER/SMOKE_CHECKLIST_PRODUCTION.md` on a **staging** build; fill **Pass** (or log defects). | Checklist reflects one real run, not template-only. |
+| 3 | **B5** RTL / Arabic | Stress **long labels** on **News**, **Pharmacies**, **Hospitals** filters + cards; gateway + TV shell if time. | No clipped nav, no broken filter layout, marquee/ticker acceptable in RTL. |
+| 4 | **B2** Home | Legacy parity + Health-in-Drama embed policy per `TRACKERS/machafi-services/HOMEPAGE_MAP.md` / product. | Home matches agreed “credibility anchor” bar. |
+| 5 | **A4** extend | Same **skeleton + empty + `ListFetchErrorBanner`** on **Ambulances** (`useBootstrapList` + mock resolve today; swap loader when **`api/public/ambulances.php`** exists). **Next:** Programs, Accommodations, or other list-heavy routes. | Same UX class as News/Pharmacies/Hospitals under slow network. |
+| 6 | **C4** tighten | Optional: stricter types at `services/*` boundaries where PHP JSON is stable. | Fewer `unknown` escapes; safer refactors. |
+
+**After** this sprint (or in parallel if two agents): resume **D1** — **public settings** / **home-feed** client / next directory — per §5 Move **4a** and `NEXT_STEPS_PRODUCTION.md` “next execution slice.”
+
+---
+
 *This file is strategy, not execution logs. Update when priorities shift; keep `NEXT_STEPS_PRODUCTION.md` and `WORKING_PLAN.md` in sync with what you actually schedule.*
 
 
 ---
 
-*Last updated: **2026-05-13** — evening session close (project-wide doc sync).*
+*Last updated: **2026-05-13** — §10: A4 extended to **Ambulances**; B1 code pass retained.*

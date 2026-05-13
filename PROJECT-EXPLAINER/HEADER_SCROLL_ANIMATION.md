@@ -33,8 +33,12 @@ The original React tree under `legacy/` was deleted from this repo. The bullets 
 - **Header shell**: `frontend/src/components/layout/Header.jsx`
   - Owns `isCompact` + scroll effect (ported from the old monolith header).
   - Passes `collapsed={isCompact}` into the ticker.
+  - **Scroll thresholds** use **`max-width: 768px`** on **each rAF frame** and on **`matchMedia('change')`**, so rotating/resizing across mobile/desktop does not stick to the wrong `ENTER_AT` / `EXIT_AT`.
+  - **Collapsed** utility bar: **`aria-hidden`** in addition to **`pointer-events-none`** (matches ticker doc intent).
+  - **Mobile menu**: **`aria-expanded` / `aria-controls`**, **`Escape`** closes, **`body { overflow: hidden }`** while open; **`motion-reduce:transition-none`** on key collapse transitions.
 - **Ticker**: `frontend/src/components/layout/NewsTicker.jsx`
   - Accepts optional `collapsed` prop; outer wrapper uses **grid `0fr` / `1fr`** + `overflow-hidden` + `pointer-events-none` when collapsed (matches old `UrgentNewsBanner` pattern).
+  - Collapsed inner region is **`aria-hidden`**; prefers-reduced-motion trims grid transition.
 
 ## UX / accessibility notes
 
@@ -85,12 +89,12 @@ Result: the page content never scrolls underneath the collapsing header.
 | 2026-04-29 | Implemented: `isCompact` drives `NewsTicker collapsed`, utility bar grid collapse, branding logo shrink + partner hide + Live/Programs icon-only (desktop) + tighter branding padding. |
 | 2026-04-29 | No header behavior change: workflow canvas JSX repair only (documentation cross-reference in `../TRACKERS/machafi-services/HOMEPAGE_MAP.md`). |
 | 2026-04-29 | Fixed “content goes under header” inconvenience: header is fixed + app spacer uses `--app-header-height` (ResizeObserver) so content never underlaps during collapse/expand. |
-| 2026-04-30 | **Partner logos**: show only at **`lg+`** (`hidden lg:block`). **Tablet + mobile:** no partner images (avoids broken image + alt text row on tablet). See **Branding bar — partner logos** above. |
+| 2026-05-13 | **B1 code pass**: scroll thresholds re-evaluated per frame + on **`matchMedia`** breakpoint change; collapsed utility + ticker **`aria-hidden`**; mobile menu **`aria-expanded` / `aria-controls`**, **Escape** to close, **body scroll lock** while open; **`motion-reduce:transition-none`** on collapse-related transitions (`Header.jsx`, `NewsTicker.jsx`). |
 
 ## Open decisions / follow-ups
 
 - Optional: mirror legacy **exact** branding vertical rhythm (pixel diff) using a screenshot overlay.
-- Optional: add `prefers-reduced-motion` to shorten or disable `transition-[grid-template-rows]` (accessibility polish).
+- Optional: extend **`prefers-reduced-motion`** to branding width/opacity transitions (partially applied: ticker + utility grid + branding padding).
 
 
 ---

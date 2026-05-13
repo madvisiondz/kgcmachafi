@@ -52,8 +52,9 @@ Someone opens the site → React loads **`NewsPage.jsx`** → if **`VITE_NEWS_AP
 | Shared `fetch` + timeout + errors | **`frontend/src/services/http.ts`** (`apiUrl`, `getJson`, `ApiError`) |
 | News list + article detail | **`frontend/src/services/news.ts`** (`loadNewsArticlesForList`, `loadNewsArticleForDetail`) — flag **`VITE_NEWS_API`** |
 | Pharmacies list + map | **`frontend/src/services/pharmacies.ts`** (`loadPharmaciesForList`) — flag **`VITE_PHARMACIES_API`** |
+| Hospitals directory (Algeria + abroad tabs) | **`frontend/src/services/hospitals.ts`** (`loadHospitalDatasets`) — flag **`VITE_HOSPITALS_API`** |
 | Copy-paste env names | **`frontend/.env.example`** |
-| Pages that already show loading / retry | **`NewsPage.jsx`**, **`NewsDetailPage.jsx`**, **`PharmaciesPage.jsx`** |
+| Pages that already show loading / retry | **`NewsPage.jsx`**, **`NewsDetailPage.jsx`**, **`PharmaciesPage.jsx`**, **`HospitalsPage.jsx`** |
 
 ### PHP (where SQL runs)
 
@@ -61,6 +62,8 @@ Someone opens the site → React loads **`NewsPage.jsx`** → if **`VITE_NEWS_AP
 |-----|------|
 | Public news JSON | **`api/public/news.php`** → table **`news_articles`** |
 | Public pharmacies JSON | **`api/public/pharmacies.php`** → table **`pharmacies`** |
+| Public hospitals JSON | **`api/public/hospitals.php`** → table **`hospitals`** |
+| Public international hospitals JSON | **`api/public/international-hospitals.php`** → table **`international_hospitals`** |
 | Admin create/edit news | **`api/admin/news.php`** |
 | Admin create/edit pharmacies | **`api/admin/pharmacies.php`** |
 | DB bootstrapping | **`api/admin/bootstrap.php`** |
@@ -100,7 +103,7 @@ When the browser calls **`/api/public/<file>.php`** (with **`VITE_API_BASE_URL=/
 
 ## phpMyAdmin — your first database (you can do this **later**)
 
-You do **not** have to create MySQL on day one. The app can use **mocks** until you flip **`VITE_NEWS_API`** / **`VITE_PHARMACIES_API`**.
+You do **not** have to create MySQL on day one. The app can use **mocks** until you flip **`VITE_NEWS_API`** / **`VITE_PHARMACIES_API`** / **`VITE_HOSPITALS_API`**.
 
 ### A) Create the empty database
 
@@ -209,6 +212,7 @@ Create **`frontend/.env.local`**:
 VITE_API_BASE_URL=/api
 VITE_NEWS_API=true
 VITE_PHARMACIES_API=true
+VITE_HOSPITALS_API=true
 ```
 
 Then:
@@ -240,7 +244,7 @@ Check each box mentally (or on paper):
 - [ ] I know **MySQL** holds data; **phpMyAdmin** is where I create tables.  
 - [ ] I know **`api/public/*.php`** returns JSON; **`frontend/src/services/`** calls it.  
 - [ ] I know **`admin-config.php`** is server-only secrets.  
-- [ ] I can run the app **without** a database (mocks) **or** flip **`VITE_NEWS_API` / `VITE_PHARMACIES_API`** when MySQL is ready.  
+- [ ] I can run the app **without** a database (mocks) **or** flip **`VITE_NEWS_API` / `VITE_PHARMACIES_API` / `VITE_HOSPITALS_API`** when MySQL is ready.  
 - [ ] I know where to read deeper: **`PROJECT-EXPLAINER/HOSTING_AND_DATABASE.md`**, **`API_STANDARD_GODADDY_MYSQL.md`**, **`NEXT_STEPS_PRODUCTION.md`**, **`TRACKERS/`**.
 
 If those are true, you are ready for the next build day without feeling lost.

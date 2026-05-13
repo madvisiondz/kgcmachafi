@@ -5,6 +5,7 @@ import ListGridSkeleton from '../components/ListGridSkeleton';
 import ListFetchErrorBanner from '../components/ListFetchErrorBanner';
 import { getCommunes, wilayas } from '../data/algeria-data';
 import { hospitalsAlgeriaMock, hospitalsInternationalMock } from '../data/hospitals';
+import { loadHospitalDatasets } from '../services';
 
 function Icon({ children, className = '' }) {
   return (
@@ -89,13 +90,6 @@ function buildGoogleMapsDirectionsUrl(lat, lng) {
 const LOCAL_TYPES = ['all', 'public', 'private', 'clinic', 'specialized'];
 const ABROAD_COUNTRIES = ['all', 'turkey', 'tunisia', 'france', 'germany', 'jordan', 'egypt'];
 const ABROAD_SPECIALTIES = ['all', 'oncology', 'cardiology', 'neurology', 'transplants', 'fertility', 'orthopedics'];
-
-async function loadHospitalDatasets() {
-  return {
-    local: hospitalsAlgeriaMock,
-    abroad: hospitalsInternationalMock,
-  };
-}
 
 export default function HospitalsPage() {
   const { t, dir } = useI18n();

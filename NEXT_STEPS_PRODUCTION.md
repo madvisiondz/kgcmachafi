@@ -6,7 +6,7 @@ Actionable roadmap to take **MACHAFI** from **UI-first + mocks** to **production
 
 | File | Role |
 |------|------|
-| **`NEXT_MOVES.md`** | Strategy: value, readiness study, tracker-informed **next moves** (above this checklist) |
+| **`NEXT_MOVES.md`** | Strategy: value, readiness study, tracker-informed **next moves** (above this checklist); **§10** = next-session **perfection** sprint order |
 | **`ARCHITECTURE_PRODUCTION_READINESS.md`** | ASCII stack + **% to 100%** per layer (**L1–L13** + cross-cuts). Use it when reprioritising. |
 | **`WORKING_PLAN.md`** | Path-sheet: what is done + unchecked forward rows. |
 | **`PROJECT-EXPLAINER/SMOKE_CHECKLIST_PRODUCTION.md`** | Release smoke matrix (**Phase A5**). |
@@ -50,12 +50,12 @@ Track quick wins here; mirror in **`WORKING_PLAN.md`** §10 if you use that as m
 | **A1** Environments documented | **Done** | `frontend/.env.example` |
 | **A2** Central config | **Done** | `frontend/src/config.ts`, `frontend/src/vite-env.d.ts` |
 | **A3** Error boundary | **Done** | `frontend/src/components/RootErrorBoundary.tsx`, wired in `frontend/src/main.tsx`; i18n `common.error*` keys |
-| **A4** Loading / empty audit | **Done** (first slice) | News + Pharmacies + Hospitals: skeleton + `ListFetchErrorBanner` + `common.list*` i18n; optional **`VITE_LIST_BOOTSTRAP_MS`** for skeleton QA |
+| **A4** Loading / empty audit | **Done** (extended slice) | News + Pharmacies + Hospitals + **Ambulances**: skeleton + `ListFetchErrorBanner` + `common.list*` i18n; optional **`VITE_LIST_BOOTSTRAP_MS`** for skeleton QA |
 | **A5** Smoke checklist | **Done** (template) | `PROJECT-EXPLAINER/SMOKE_CHECKLIST_PRODUCTION.md` — fill **Pass** checkboxes per release |
 
 **Also done:** `frontend/.gitignore` ignores `.env` / `.env.local` so secrets are not committed by mistake.
 
-**Next execution slice:** run **A5** smoke on a staging build; extend **A4** to more list routes if needed; **D1** — **`VITE_PHARMACIES_API`** pharmacies list is wired; next: **public settings** (if endpoint exists) or **hospitals** read path + smoke pass.
+**Next execution slice:** run **A5** smoke on a staging build; extend **A4** to **Programs** / **Accommodations** (or TV lists) if desired; **D1** — **`VITE_PHARMACIES_API`** + **`VITE_HOSPITALS_API`** wired; next: **public settings** or another directory + smoke pass.
 
 ---
 
@@ -68,7 +68,7 @@ Track quick wins here; mirror in **`WORKING_PLAN.md`** §10 if you use that as m
 | A1 | **Define environments** — `dev` / `staging` / `prod` base URLs, API origin, TV stream origin | **Done** | `.env.example` removes “works on my machine” drift |
 | A2 | **Central config** — read `import.meta.env.VITE_*` once | **Done** | `config.ts` — no scattered magic strings |
 | A3 | **Error boundary** — shell fallback + reload + gateway link | **Done** | Avoid blank screen on runtime errors (**L3**) |
-| A4 | **Loading & empty states audit** — lists/grids + future async routes | **In progress** (News/Pharmacies/Hospitals shipped) | Professional under slow networks (**L4a/L4b**) |
+| A4 | **Loading & empty states audit** — lists/grids + future async routes | **In progress** (News, Pharmacies, Hospitals, **Ambulances** — bootstrap list UX) | Professional under slow networks (**L4a/L4b**) |
 | A5 | **Smoke checklist** — gateway, Services home, TV edition, admins × RTL/LTR × breakpoints | **Template ready** | `PROJECT-EXPLAINER/SMOKE_CHECKLIST_PRODUCTION.md` |
 
 ---
@@ -93,7 +93,7 @@ Track quick wins here; mirror in **`WORKING_PLAN.md`** §10 if you use that as m
 
 | # | Step | Why |
 |---|------|-----|
-| C1 | **`services/` API client** — typed `fetch`, timeouts, normalized errors | Unlocks **L5** + clean **L6** consumption (**started**: `http.ts`, `news.ts`, **`pharmacies.ts`**, list loaders) |
+| C1 | **`services/` API client** — typed `fetch`, timeouts, normalized errors | Unlocks **L5** + clean **L6** consumption (**started**: `http.ts`, `news.ts`, **`pharmacies.ts`**, **`hospitals.ts`**, list loaders) |
 | C2 | **Auth model** — cookies vs bearer; CSRF doc; align `api/admin/auth/*.php` | **L4c** + **L9** |
 | C3 | **`React.lazy`** for TV + admin chunks | **L3** bundle (**G2**) |
 | C4 | **Types at boundaries** — DTOs + hooks | Fewer integration bugs |
@@ -107,7 +107,7 @@ Track quick wins here; mirror in **`WORKING_PLAN.md`** §10 if you use that as m
 
 | # | Step | Why |
 |---|------|-----|
-| D1 | **First read-only wiring** — settings + one directory + news → `api/public/*.php` | Proves **L5–L6** path (**in progress**: news **list + detail** `VITE_NEWS_API` → `news.php`; pharmacies list **`VITE_PHARMACIES_API`** → `pharmacies.php` + row mapper; settings next) |
+| D1 | **First read-only wiring** — settings + directories + news → `api/public/*.php` | Proves **L5–L6** path (**in progress**: news **list + detail** `VITE_NEWS_API` → `news.php`; pharmacies **`VITE_PHARMACIES_API`** → `pharmacies.php`; hospitals **`VITE_HOSPITALS_API`** → `hospitals.php` + `international-hospitals.php`; **settings** or further directories next) |
 | D2 | **RBAC** — real `/healthservices/admin` per **`TRACKERS/machafi-services-admin/`** | **L4c** |
 | D3 | **Rate limits + validation** on writes | **L9** |
 | D4 | **CORS + `SameSite`** if SPA/API origins differ | Session reliability |
@@ -199,7 +199,7 @@ Track quick wins here; mirror in **`WORKING_PLAN.md`** §10 if you use that as m
 1. **Finish A** — extend **A4** to remaining high-traffic lists; run and fill **`SMOKE_CHECKLIST_PRODUCTION.md`** on a staging build.  
 2. **I1** — CI is live in GitHub Actions; keep green on every push touching `frontend/`.  
 3. **B** + **B5** — UX and RTL before widening surface area.  
-4. **C1** + **D1** — **`NewsDetailPage`** + news list use **`VITE_NEWS_API`**; **Pharmacies** list uses **`VITE_PHARMACIES_API`**; next: **settings** / **hospitals** read or tighten DTO types; keep **`config.apiBaseUrl`** as the single origin.
+4. **C1** + **D1** — **`NewsDetailPage`** + news list use **`VITE_NEWS_API`**; **Pharmacies** uses **`VITE_PHARMACIES_API`**; **Hospitals** uses **`VITE_HOSPITALS_API`**; next: **settings** or tighten DTO types; keep **`config.apiBaseUrl`** as the single origin.
 5. **C2** + **D2** — admin RBAC before exposing panels.  
 6. **F1–F3** in parallel as traffic approaches.  
 7. **G** + **H** when marketing/SEO matters.  
@@ -222,7 +222,7 @@ Track quick wins here; mirror in **`WORKING_PLAN.md`** §10 if you use that as m
 | Platform map | **`PROJECT-EXPLAINER/PLATFORM_SHELL_LAYOUT.md`** |
 | Env template | **`frontend/.env.example`** |
 | Runtime config | **`frontend/src/config.ts`** |
-| HTTP client (`services/`) | **`frontend/src/services/http.ts`**, **`frontend/src/services/news.ts`**, **`frontend/src/services/pharmacies.ts`** |
+| HTTP client (`services/`) | **`frontend/src/services/http.ts`**, **`frontend/src/services/news.ts`**, **`frontend/src/services/pharmacies.ts`**, **`frontend/src/services/hospitals.ts`** |
 
 ---
 

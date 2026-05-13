@@ -1,7 +1,10 @@
-import React, { useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { CircleMarker, MapContainer, Popup, TileLayer } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import { useI18n } from '../i18n/I18nProvider';
+import { useBootstrapList } from '../hooks/useBootstrapList';
+import ListGridSkeleton from '../components/ListGridSkeleton';
+import ListFetchErrorBanner from '../components/ListFetchErrorBanner';
 import { getCommunes, wilayas } from '../data/algeria-data';
 import { ambulanceListingsMock } from '../data/ambulances';
 
@@ -93,6 +96,11 @@ export default function AmbulancesPage() {
   const { t, dir } = useI18n();
   const isRTL = dir === 'rtl';
 
+  const loadListings = useCallback(() => Promise.resolve(ambulanceListingsMock), []);
+  const { status, data, error, reload } = useBootstrapList(loadListings);
+  const listings = data ?? ambulanceListingsMock;
+  const showSkeleton = status === 'loading';
+
   const [wilaya, setWilaya] = useState('');
   const [communeId, setCommuneId] = useState('');
   const [query, setQuery] = useState('');
@@ -108,7 +116,7 @@ export default function AmbulancesPage() {
 
   const filtered = useMemo(() => {
     const q = normalize(query);
-    return ambulanceListingsMock.filter((a) => {
+    return listings.filter((a) => {
       if (!a.isActive) return false;
       if (wilaya && a.wilayaCode !== wilaya) return false;
       if (communeId && a.communeId !== communeId) return false;
@@ -118,7 +126,7 @@ export default function AmbulancesPage() {
       const hay = normalize([a.ownerName, a.phone, a.wilayaCode].join(' '));
       return hay.includes(q);
     });
-  }, [communeId, freeOnly, query, vehicleType, wilaya]);
+  }, [communeId, freeOnly, listings, query, vehicleType, wilaya]);
 
   const stats = useMemo(() => {
     const total = filtered.length;
@@ -141,6 +149,11 @@ export default function AmbulancesPage() {
     <div className="space-y-12" dir={dir}>
       <section className="border-y border-red-100 bg-gradient-to-b from-red-50/70 via-white to-white py-14">
         <div className="container mx-auto px-4">
+          {status === 'error' ? (
+            <div className="mb-6">
+              <ListFetchErrorBanner message={error?.message} onRetry={reload} />
+            </div>
+          ) : null}
           {/* Hero (different from Pharmacies: emergency-first tone) */}
           <div className="mb-10">
             <div className="inline-flex items-center gap-2 rounded-full border border-red-200 bg-white px-4 py-2 text-sm font-extrabold text-red-700">
@@ -287,7 +300,21 @@ export default function AmbulancesPage() {
             </div>
           </div>
 
-          {/* Results (cards) */}
+          {/* Results (cards) + map */}
+          {showSkeleton ? (
+            <>
+              <div className="rounded-3xl border border-red-100 bg-white p-6 shadow-sm">
+                <p className="text-sm font-extrabold text-slate-700">{t('common.listLoadingTitle')}</p>
+                <p className="text-xs text-slate-500 mt-2">{t('common.listLoadingHint')}</p>
+                <div className="mt-6 h-40 rounded-2xl bg-slate-100 animate-pulse" />
+              </div>
+              <ListGridSkeleton columnsClass="md:grid-cols-2" count={4} />
+              <div className="mt-10 overflow-hidden rounded-3xl border border-red-100 bg-white shadow-sm">
+                <div className="h-[420px] w-full animate-pulse bg-red-50/50" aria-hidden />
+              </div>
+            </>
+          ) : (
+            <>
           <div className="grid gap-4">
             {filtered.length === 0 ? (
               <div className="rounded-3xl border border-dashed border-slate-200 bg-white py-12 text-center">
@@ -377,6 +404,8 @@ export default function AmbulancesPage() {
               </MapContainer>
             </div>
           </div>
+            </>
+          )}
         </div>
       </section>
     </div>

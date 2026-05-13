@@ -12,11 +12,14 @@ export default function NewsTicker({ collapsed = false }) {
 
   return (
     <div
-      className={`relative z-[1] grid min-h-0 transition-[grid-template-rows] duration-200 ease-out ${
+      className={`relative z-[1] grid min-h-0 transition-[grid-template-rows] duration-200 ease-out motion-reduce:transition-none ${
         collapsed ? 'grid-rows-[0fr]' : 'grid-rows-[1fr]'
       }`}
     >
-      <div className={`min-h-0 overflow-hidden ${collapsed ? 'pointer-events-none' : ''}`}>
+      <div
+        className={`min-h-0 overflow-hidden ${collapsed ? 'pointer-events-none' : ''}`}
+        aria-hidden={collapsed}
+      >
         <div className="bg-blue-700 text-white border-b border-blue-800 shadow-md">
           <div className="container mx-auto px-3 sm:px-4 py-1.5 sm:py-2">
             <div className="flex items-center gap-3 min-h-0">

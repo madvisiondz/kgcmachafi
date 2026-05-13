@@ -11,6 +11,8 @@ interface ImportMetaEnv {
   readonly VITE_NEWS_API?: string
   /** When `true`, pharmacies directory calls `GET {VITE_API_BASE_URL}/public/pharmacies.php`. */
   readonly VITE_PHARMACIES_API?: string
+  /** When `true`, hospitals directory loads `hospitals.php` + `international-hospitals.php` under public API. */
+  readonly VITE_HOSPITALS_API?: string
   /** Optional delay in ms before list loaders resolve (dev-only UI review of skeletons). */
   readonly VITE_LIST_BOOTSTRAP_MS?: string
 }

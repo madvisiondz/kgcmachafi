@@ -2,6 +2,30 @@
 
 This file is updated after every user prompt.
 
+## 2026-05-13
+
+### Git push — GitHub + dev view
+- **Prompt**: Push to GitHub and give a view on dev.
+- **What I did**: `git add -A`, commit on **`main`** (hospitals **`services/`** + **`VITE_HOSPITALS_API`**, header B1 polish, Ambulances A4 bootstrap UX, playbook + roadmap + status + dist), `git push` to **`origin/main`**. Local dev: `cd frontend` → **`npm run dev`** → open the URL Vite prints (default **http://localhost:5173/**).
+
+## 2026-05-12
+
+### A4 — Ambulances list bootstrap UX
+- **Prompt**: Next session (perfection sprint §10).
+- **What I did**: **`AmbulancesPage.jsx`** — **`useBootstrapList`**, **`ListGridSkeleton`**, **`ListFetchErrorBanner`**, **`common.listLoading*`**; loader is **`Promise.resolve(ambulanceListingsMock)`** (ready to swap for `GET` when endpoint exists). **`npm run lint`** + **`npm run build`** pass. Synced **`NEXT_MOVES.md` §10**, **`NEXT_STEPS_PRODUCTION.md`** Sprint A4 row, **`WORKING_PLAN.md`** §10 A4, **`PROJECT_STATUS.md`** Ambulances bullet.
+
+### B1 — Header scroll / mobile menu polish (code)
+- **Prompt**: Next session (perfection sprint).
+- **What I did**: **`Header.jsx`** — responsive compact thresholds (per-frame + `matchMedia` change), **`aria-hidden`** on collapsed utility shell, mobile menu **`aria-expanded` / `aria-controls`**, **Escape** closes menu, **body overflow lock** while menu open, **`motion-reduce:transition-none`** on collapse transitions. **`NewsTicker.jsx`** — **`aria-hidden`** when collapsed + motion-reduce on grid transition. Updated **`HEADER_SCROLL_ANIMATION.md`** rebuild notes + changelog. **`npm run lint`** pass.
+
+### Handoff — “perfection” next session (`NEXT_MOVES.md` §10)
+- **Prompt**: Next session work for perfection.
+- **What I did**: Added **`NEXT_MOVES.md` §10** (ordered B1 → A5 → B5 → B2 → A4 → C4) and refreshed **§2** + **Move 3** rows so strategy matches shipped **news + detail**, **pharmacies**, **hospitals** API flags. Ran **`npm run lint`** in **`frontend/`** (pass, exit 0).
+
+### D1 — Hospitals optional public PHP reads
+- **Prompt**: Continue last session from **`NEXT_MOVES.md`**, **`NEXT_STEPS_PRODUCTION.md`**, **`WORKING_PLAN.md`**, **`ARCHITECTURE_PRODUCTION_READINESS.md`**.
+- **What I did**: Added **`frontend/src/services/hospitals.ts`** (`loadHospitalDatasets`, row mappers for **`/public/hospitals.php`** and **`/public/international-hospitals.php`**), **`VITE_HOSPITALS_API`** in **`vite-env.d.ts`** + **`frontend/.env.example`**, re-export from **`services/index.ts`**, wired **`HospitalsPage.jsx`** to the service loader (mocks when flag off). Synced **`NEXT_STEPS_PRODUCTION.md`**, **`WORKING_PLAN.md`** §10, **`MACHAFI_DATABASE_AND_API_PLAYBOOK.md`**, **`PROJECT_STATUS.md`**. **`npm run build`** in **`frontend/`** passes.
+
 ## 2026-05-14
 
 ### Git push policy + chat log before push (standing)

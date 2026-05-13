@@ -11,9 +11,9 @@ This file is kept current throughout the rebuild.
 - **Git / clone policy (2026-05-14):** Owner wants **full pushes** (including **`frontend/dist`** when tracked)—no “size” opt-out prompts. **`PROMPT_LOG.md`** is updated **before each push** with the latest chat/work summary for cross-PC continuity.
 - **Production execution — Phase A (expanded) + CI + API client (2026-05-11)**:
   - **GitHub Actions**: **`.github/workflows/frontend-ci.yml`** runs `npm ci`, `npm run lint`, and `npm run build` in **`frontend/`** when `frontend/**` or the workflow file changes.
-  - **`frontend/src/services/`** — `http.ts`, `news.ts` (news list + detail), **`pharmacies.ts`** (`loadPharmaciesForList`, PHP → `Pharmacy` mapper), `index.ts` re-exports (Phase **C1** / **D1** slice per **`NEXT_STEPS_PRODUCTION.md`**).
-  - **List UX (Phase A4 slice)**: **News**, **Pharmacies**, **Hospitals** use **`useBootstrapList`**, **`ListGridSkeleton`**, **`ListFetchErrorBanner`**, and **`common.list*`** i18n keys for loading/error + retry.
-  - **Optional env**: **`VITE_NEWS_API=true`** → **`/public/news.php`** (list + detail); **`VITE_PHARMACIES_API=true`** → **`/public/pharmacies.php`** (directory + map); **`VITE_LIST_BOOTSTRAP_MS`** can delay loaders in dev (`frontend/.env.example`).
+  - **`frontend/src/services/`** — `http.ts`, `news.ts` (news list + detail), **`pharmacies.ts`** (`loadPharmaciesForList`, PHP → `Pharmacy` mapper), **`hospitals.ts`** (`loadHospitalDatasets`, PHP → `HospitalListing` / `InternationalHospitalListing` mappers), `index.ts` re-exports (Phase **C1** / **D1** slice per **`NEXT_STEPS_PRODUCTION.md`**).
+  - **List UX (Phase A4 slice)**: **News**, **Pharmacies**, **Hospitals**, **Ambulances** use **`useBootstrapList`**, **`ListGridSkeleton`**, **`ListFetchErrorBanner`**, and **`common.list*`** i18n keys for loading/error + retry.
+  - **Optional env**: **`VITE_NEWS_API=true`** → **`/public/news.php`** (list + detail); **`VITE_PHARMACIES_API=true`** → **`/public/pharmacies.php`** (directory + map); **`VITE_HOSPITALS_API=true`** → **`/public/hospitals.php`** + **`/public/international-hospitals.php`**; **`VITE_LIST_BOOTSTRAP_MS`** can delay loaders in dev (`frontend/.env.example`).
   - **`frontend/.env.example`** — documents `VITE_*` variables for dev/staging/prod lanes.
   - **`frontend/src/config.ts`** + **`frontend/src/vite-env.d.ts`** — single import for public site URL, API base, optional TV stream URL, HLS feature flag.
   - **`frontend/src/components/RootErrorBoundary.tsx`** — shell error UI with AR/FR/EN copy (`common.error*` keys); wired in **`frontend/src/main.tsx`** inside **`BrowserRouter`** so `Link` works.
@@ -54,7 +54,7 @@ This file is kept current throughout the rebuild.
     - Health-in-Drama iframe uses legacy embed URL (`SbDeMQ26RM8`)
 - **Hospitals page (UI-only, directory-first, legacy-inspired)**:
   - Tracker: `../TRACKERS/machafi-services/HOSPITALS_PAGE_MAP.md`.
-  - Page: `frontend/src/pages/HospitalsPage.jsx`; mock data: `frontend/src/data/hospitals.ts`; route **`/hospitals`**.
+  - Page: `frontend/src/pages/HospitalsPage.jsx`; mock data: `frontend/src/data/hospitals.ts`; optional live **`loadHospitalDatasets`** when **`VITE_HOSPITALS_API=true`**; route **`/hospitals`**.
   - UX: two tabs (Algeria / abroad) + client-friendly filters + grid cards with call/directions + verified badges.
   - Location lists: canonical `Map.json` + `algeria-data.js` (69 wilayas).
   - i18n: `hospitals.*` keys (AR/FR/EN) in `frontend/src/i18n/translations.ts` (Rule #1).
@@ -65,14 +65,14 @@ This file is kept current throughout the rebuild.
   - No API: replace mocks with a `services/` layer when wiring backend.
 - **Pharmacies page (UI-only, legacy-inspired directory)**:
   - Tracker: `../TRACKERS/machafi-services/PHARMACIES_PAGE_MAP.md`.
-  - Page: `frontend/src/pages/PharmaciesPage.jsx`; mock data: `frontend/src/data/pharmacies.ts`; route **`/pharmacies`**.
+  - Page: `frontend/src/pages/PharmaciesPage.jsx`; mock data: `frontend/src/data/pharmacies.ts`; optional live **`loadPharmaciesForList`** when **`VITE_PHARMACIES_API=true`**; route **`/pharmacies`**.
   - Location lists (canonical, updated): `frontend/src/data/Map.json` + adapter `frontend/src/data/algeria-data.js` (wilayas + `getCommunes`) used for the wilaya/city filters.
   - UX: sticky filter panel + “Night shift this week” highlight + directory cards + **map at bottom** for filtered results.
   - Data model: **80% static directory cards** + **20% weekly night-shift rotation** (`weekStart` → assignments).
   - Build verified: `npm run build` OK.
-- **Ambulances page (UI-only, emergency-first directory)**:
+- **Ambulances page (UI-first, emergency-first directory)**:
   - Tracker: `../TRACKERS/machafi-services/AMBULANCES_PAGE_MAP.md`.
-  - Page: `frontend/src/pages/AmbulancesPage.jsx`; mock data: `frontend/src/data/ambulances.ts`; route **`/ambulances`**.
+  - Page: `frontend/src/pages/AmbulancesPage.jsx`; mock data: `frontend/src/data/ambulances.ts`; **`useBootstrapList`** + loading skeleton + fetch error banner (mock `Promise.resolve` until public API); route **`/ambulances`**.
   - UX variation: top filter bar + quick chips (not a Pharmacies clone); cards optimized for “Call now”; **map at bottom** for filtered results.
   - Location lists: canonical `Map.json` + `algeria-data.js`.
   - Build verified: `npm run build` OK.
