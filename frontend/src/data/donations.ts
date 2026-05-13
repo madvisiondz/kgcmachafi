@@ -71,7 +71,7 @@ export type DonationCampaign = {
   raisedEur: number;
   goalEur: number;
   donors: number;
-  theme: 'red' | 'purple' | 'blue';
+  theme: 'red' | 'emerald' | 'blue';
 };
 
 export const campaignsMock: DonationCampaign[] = [
@@ -107,7 +107,7 @@ export const campaignsMock: DonationCampaign[] = [
     raisedEur: 3200,
     goalEur: 5000,
     donors: 98,
-    theme: 'purple',
+    theme: 'emerald',
   },
   {
     id: 'cmp-3',

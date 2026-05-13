@@ -12,7 +12,7 @@ This document tracks **`frontend/src/App.tsx`** routing on **[https://kgc-machaf
 | **JSON API rules** | **`API_STANDARD_GODADDY_MYSQL.md`** |
 | **SPA → API** | Same origin **`VITE_API_BASE_URL=/api`** → `https://kgc-machafi.net/api/...` (see `frontend/src/config.ts`, `frontend/.env.example`) |
 
-**Endpoint source of truth per page:** each route has a tracker under **`TRACKERS/`** with a section **“Full endpoint design — GoDaddy + MySQL (SQL)”** (tables + HTTP + PHP file targets). **24** tracker files (services, TV, both admins) follow this pattern.
+**Endpoint source of truth per page:** each data-backed route has a tracker under **`TRACKERS/`** with a section **“Full endpoint design — GoDaddy + MySQL (SQL)”** where APIs apply. **25** tracker files total: **gateway** (`../TRACKERS/gateway/GATEWAY_PAGE_MAP.md`), **13** Services maps, **9** TV maps, **2** admin maps. The gateway page is **UI + routing only** (no SQL section).
 
 ---
 
@@ -20,7 +20,7 @@ This document tracks **`frontend/src/App.tsx`** routing on **[https://kgc-machaf
 
 | Metric | Value |
 |--------|------:|
-| Gateway | **`/`** → `GatewayPage.jsx` |
+| Gateway | **`/`** → `GatewayPage.jsx` — tracker **`../TRACKERS/gateway/GATEWAY_PAGE_MAP.md`** |
 | Machafi Services page components (`frontend/src/pages/` root, shared by routes) | **14** |
 | Services routes (canonical) | Under **`/healthservices/*`** (+ legacy redirects from old flat paths) |
 | Machafi TV routes per edition | **index**, **`desk`**, **`activity`**, **`topics/:topicId`**, **`search`**, **`live`**, **`schedule`**, **`article/:slug`** |
@@ -37,7 +37,7 @@ BrowserRouter (main.tsx)
 └── App.tsx
     ├── DocumentTitle (global — gateway, services, TV, admin)
     └── Routes
-        ├── /                          → GatewayPage
+        ├── /                          → GatewayPage  (see ../TRACKERS/gateway/GATEWAY_PAGE_MAP.md)
         ├── /healthservices/admin/*    → HealthServicesAdminPage (placeholder)
         ├── /machafitv/admin/*         → MachafiTvAdminPage (placeholder)
         ├── /tv/:edition/*             → TvShellLayout → Outlet (Tv* pages)
@@ -124,4 +124,4 @@ Admin JSON remains under **`/api/admin/...`** with **session + RBAC** (see **`AP
 
 ---
 
-*Last updated: **2026-05-13** — evening session close (project-wide doc sync).*
+*Last updated: **2026-05-11** — full repo doc sync (emerald Services UI, gateway art + tracker, Vite 5173 strictPort, Header TV/portal, visual eval logs) + GitHub push.*

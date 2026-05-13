@@ -99,7 +99,9 @@ function StatCard({ icon, tone, value, label }) {
         ? 'from-green-500 to-emerald-600'
         : tone === 'blue'
           ? 'from-blue-500 to-cyan-600'
-          : 'from-purple-500 to-violet-600';
+          : tone === 'emerald'
+            ? 'from-emerald-600 to-teal-600'
+            : 'from-blue-500 to-cyan-600';
   return (
     <div className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100">
       <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${toneClass} flex items-center justify-center mb-4 shadow-md text-white`}>
@@ -160,7 +162,7 @@ export default function DonationsPage() {
         label: pickText(donationStatsMock.donorsLabel, language),
       },
       {
-        tone: 'purple',
+        tone: 'emerald',
         icon: Icons.trendingUp({ className: 'w-7 h-7' }),
         value: donationStatsMock.successValue,
         label: pickText(donationStatsMock.successLabel, language),
@@ -180,8 +182,8 @@ export default function DonationsPage() {
   const themeGradient = (theme) =>
     theme === 'red'
       ? 'from-red-500 to-pink-600'
-      : theme === 'purple'
-        ? 'from-purple-500 to-violet-600'
+      : theme === 'emerald'
+        ? 'from-emerald-600 to-teal-600'
         : 'from-blue-500 to-cyan-600';
 
   const convertFromEur = (eur) => {

@@ -18,7 +18,7 @@ function StatCard({ value, label, tone, enterDelay = 0 }) {
       ? 'bg-blue-100 text-blue-600'
       : tone === 'green'
         ? 'bg-green-100 text-green-600'
-        : 'bg-purple-100 text-purple-600';
+        : 'bg-emerald-100 text-emerald-700';
 
   const icon =
     tone === 'blue' ? '/nav-icons/news.png' : tone === 'green' ? '/nav-icons/services.png' : '/nav-icons/library.png';
@@ -43,8 +43,8 @@ function StaffPill({ value, label, icon, tone, enterDelay = 0 }) {
   const toneClass =
     tone === 'red'
       ? 'text-red-600'
-      : tone === 'indigo'
-        ? 'text-indigo-600'
+      : tone === 'teal'
+        ? 'text-teal-600'
         : tone === 'cyan'
           ? 'text-cyan-600'
           : tone === 'pink'
@@ -129,7 +129,7 @@ export default function HomePage() {
         desc: t('home.platform.libraryDesc'),
         href: servicesPath('/library'),
         icon: '/nav-icons/library.png',
-        color: 'from-indigo-500 to-violet-600',
+        color: 'from-teal-600 to-emerald-700',
       },
       {
         title: t('nav.pharmacies'),
@@ -171,7 +171,7 @@ export default function HomePage() {
         desc: t('home.platform.donationsDesc'),
         href: servicesPath('/donations'),
         icon: '/nav-icons/donations.png',
-        color: 'from-pink-500 to-rose-600',
+        color: 'from-emerald-600 to-teal-700',
       },
     ],
     [t],
@@ -181,7 +181,7 @@ export default function HomePage() {
     () => [
       { value: t('home.stats.visitorsValue'), label: t('home.stats.visitorsLabel'), tone: 'blue' },
       { value: t('home.stats.subscribersValue'), label: t('home.stats.subscribersLabel'), tone: 'green' },
-      { value: t('home.stats.registeredValue'), label: t('home.stats.registeredLabel'), tone: 'purple' },
+      { value: t('home.stats.registeredValue'), label: t('home.stats.registeredLabel'), tone: 'emerald' },
     ],
     [t],
   );
@@ -189,7 +189,7 @@ export default function HomePage() {
   const staffStats = useMemo(
     () => [
       { value: t('home.stats.staff.managerValue'), label: t('home.stats.staff.managerLabel'), icon: '/nav-icons/hospitals.png', tone: 'red' },
-      { value: t('home.stats.staff.consultantValue'), label: t('home.stats.staff.consultantLabel'), icon: '/nav-icons/consultations.png', tone: 'indigo' },
+      { value: t('home.stats.staff.consultantValue'), label: t('home.stats.staff.consultantLabel'), icon: '/nav-icons/consultations.png', tone: 'teal' },
       { value: t('home.stats.staff.newsManagerValue'), label: t('home.stats.staff.newsManagerLabel'), icon: '/nav-icons/news.png', tone: 'cyan' },
       { value: t('home.stats.staff.supportManagerValue'), label: t('home.stats.staff.supportManagerLabel'), icon: '/nav-icons/services.png', tone: 'pink' },
       { value: t('home.stats.staff.editorValue'), label: t('home.stats.staff.editorLabel'), icon: '/nav-icons/library.png', tone: 'green' },

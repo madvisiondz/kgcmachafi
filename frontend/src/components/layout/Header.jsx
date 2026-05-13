@@ -1,7 +1,7 @@
 import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useI18n } from '../../i18n/I18nProvider';
-import { SERVICES_BASE, servicesPath } from '../../routes/paths';
+import { SERVICES_BASE, servicesPath, tvEditionPath } from '../../routes/paths';
 import NewsTicker from './NewsTicker.jsx';
 
 function Icon({ children, className = '' }) {
@@ -75,6 +75,14 @@ const Icons = {
     <Icon {...props}>
       <path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 0 0 1.46 6.42 29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58 2.78 2.78 0 0 0 1.95 1.96C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.96A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z" />
       <path d="m9.75 15.02 5.27-3.02-5.27-3.02v6.04z" />
+    </Icon>
+  ),
+  portal: (props) => (
+    <Icon {...props}>
+      <rect x="3" y="3" width="7" height="7" rx="1" />
+      <rect x="14" y="3" width="7" height="7" rx="1" />
+      <rect x="3" y="14" width="7" height="7" rx="1" />
+      <rect x="14" y="14" width="7" height="7" rx="1" />
     </Icon>
   ),
 };
@@ -179,6 +187,9 @@ export default function Header() {
       window.removeEventListener('keydown', onKeyDown);
     };
   }, [isMenuOpen]);
+
+  const tvLiveHref = tvEditionPath(language, '/live');
+  const tvScheduleHref = tvEditionPath(language, '/schedule');
 
   const nav = useMemo(
     () => [
@@ -317,25 +328,36 @@ export default function Header() {
               <div className="flex-1 lg:hidden" />
 
               <div className="flex items-center gap-2 lg:hidden">
-                {/* Mobile: icon-only key actions (matches legacy) */}
+                {/* Mobile: portal + Machafi TV (live / schedule) — same language edition as header */}
                 <Link
-                  to={servicesPath('/live')}
+                  to="/"
+                  className={`rounded-md border border-emerald-200 text-emerald-700 hover:bg-emerald-50 hover:text-emerald-900 shadow-sm grid place-items-center transition-[width,height,padding] duration-200 ${
+                    isCompact ? 'h-8 w-8' : 'h-9 w-9'
+                  }`}
+                  aria-label={t('header.sitePortal')}
+                  title={t('header.sitePortal')}
+                >
+                  {Icons.portal({ className: 'w-[18px] h-[18px]' })}
+                </Link>
+
+                <Link
+                  to={tvLiveHref}
                   className={`rounded-md border border-red-100 text-red-600 hover:bg-red-50 hover:text-red-700 shadow-sm grid place-items-center transition-[width,height,padding] duration-200 ${
                     isCompact ? 'h-8 w-8' : 'h-9 w-9'
                   }`}
                   aria-label={t('common.watchLive')}
-                  title={t('common.watchLive')}
+                  title={`${t('common.watchLive')} — ${t('header.tvShellHint')}`}
                 >
                   <img src="/nav-icons/live-red.png" alt="" aria-hidden="true" className="w-[18px] h-[18px]" draggable="false" />
                 </Link>
 
                 <Link
-                  to={servicesPath('/programs')}
+                  to={tvScheduleHref}
                   className={`rounded-md border border-blue-100 text-blue-600 hover:bg-blue-50 hover:text-blue-700 shadow-sm grid place-items-center transition-[width,height,padding] duration-200 ${
                     isCompact ? 'h-8 w-8' : 'h-9 w-9'
                   }`}
-                  aria-label={t('nav.programs')}
-                  title={t('nav.programs')}
+                  aria-label={t('header.tvScheduleBranding')}
+                  title={`${t('header.tvScheduleBranding')} — ${t('header.tvShellHint')}`}
                 >
                   <img src="/nav-icons/programs-blue.png" alt="" aria-hidden="true" className="w-[18px] h-[18px]" draggable="false" />
                 </Link>
@@ -355,30 +377,42 @@ export default function Header() {
               </div>
             </div>
 
-            {/* Desktop: key actions (matches legacy) */}
-            <div className="hidden lg:flex items-center gap-3">
+            {/* Desktop: portal home + Machafi TV live & schedule (current edition) */}
+            <div className="hidden lg:flex items-center gap-2">
               <Link
-                to={servicesPath('/live')}
+                to="/"
+                className={`inline-flex items-center justify-center rounded-md border border-emerald-200 text-emerald-800 hover:bg-emerald-50 hover:text-emerald-950 shadow-sm transition-[width,height,padding] duration-200 ${
+                  isCompact ? 'h-8 w-8 p-0 min-w-0' : 'gap-2 px-3 h-9'
+                }`}
+                aria-label={t('header.sitePortal')}
+                title={t('header.sitePortal')}
+              >
+                {Icons.portal({ className: 'w-[18px] h-[18px]' })}
+                {!isCompact && <span className="font-bold max-w-[10rem] leading-tight text-center">{t('header.sitePortal')}</span>}
+              </Link>
+
+              <Link
+                to={tvLiveHref}
                 className={`inline-flex items-center justify-center rounded-md border border-red-100 text-red-600 hover:bg-red-50 hover:text-red-700 shadow-sm transition-[width,height,padding] duration-200 ${
                   isCompact ? 'h-8 w-8 p-0 min-w-0' : 'gap-2 animate-pulse px-4 h-9'
                 }`}
                 aria-label={t('common.watchLive')}
-                title={t('common.watchLive')}
+                title={`${t('common.watchLive')} — ${t('header.tvShellHint')}`}
               >
                 <img src="/nav-icons/live-red.png" alt="" aria-hidden="true" className="w-[18px] h-[18px]" draggable="false" />
                 {!isCompact && <span className="font-bold">{t('common.watchLive')}</span>}
               </Link>
 
               <Link
-                to={servicesPath('/programs')}
+                to={tvScheduleHref}
                 className={`inline-flex items-center justify-center rounded-md border border-blue-100 text-blue-600 hover:bg-blue-50 hover:text-blue-700 shadow-sm transition-[width,height,padding] duration-200 ${
                   isCompact ? 'h-8 w-8 p-0 min-w-0' : 'gap-2 px-4 h-9'
                 }`}
-                aria-label={t('nav.programs')}
-                title={t('nav.programs')}
+                aria-label={t('header.tvScheduleBranding')}
+                title={`${t('header.tvScheduleBranding')} — ${t('header.tvShellHint')}`}
               >
                 <img src="/nav-icons/programs-blue.png" alt="" aria-hidden="true" className="w-[18px] h-[18px]" draggable="false" />
-                {!isCompact && <span className="font-bold">{t('nav.programs')}</span>}
+                {!isCompact && <span className="font-bold">{t('header.tvScheduleBranding')}</span>}
               </Link>
             </div>
           </div>

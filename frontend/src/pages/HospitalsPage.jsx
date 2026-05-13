@@ -477,7 +477,7 @@ function HospitalCard({ item, t, tone }) {
     <div className="overflow-hidden rounded-[28px] border border-slate-200 bg-white shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl">
       <div
         className={`relative p-5 ${
-          isAbroad ? 'bg-gradient-to-br from-indigo-700 via-purple-700 to-slate-900 text-white' : 'bg-gradient-to-br from-slate-900 via-slate-800 to-slate-700 text-white'
+          isAbroad ? 'bg-gradient-to-br from-emerald-800 via-teal-800 to-slate-900 text-white' : 'bg-gradient-to-br from-slate-900 via-slate-800 to-slate-700 text-white'
         }`}
       >
         <div className="flex items-start justify-between gap-3">
@@ -544,8 +544,8 @@ function HospitalCard({ item, t, tone }) {
         <div className="flex items-center justify-between gap-3">
           <div className="flex flex-wrap gap-2">
             {(item.features || []).includes('emergency') ? <Chip tone="rose" label={t('hospitals.chips.emergency')} /> : null}
-            {(item.features || []).includes('icu') ? <Chip tone="indigo" label={t('hospitals.chips.icu')} /> : null}
-            {(item.features || []).includes('online_consult') ? <Chip tone="purple" label={t('hospitals.chips.onlineConsult')} /> : null}
+            {(item.features || []).includes('icu') ? <Chip tone="emerald" label={t('hospitals.chips.icu')} /> : null}
+            {(item.features || []).includes('online_consult') ? <Chip tone="teal" label={t('hospitals.chips.onlineConsult')} /> : null}
             {(item.features || []).includes('card_payment') ? <Chip tone="amber" label={t('hospitals.chips.cardPayment')} /> : null}
           </div>
 
@@ -578,10 +578,10 @@ function Chip({ label, tone }) {
   const cls =
     tone === 'rose'
       ? 'border-rose-200 bg-rose-50 text-rose-800'
-      : tone === 'indigo'
-        ? 'border-indigo-200 bg-indigo-50 text-indigo-800'
-        : tone === 'purple'
-          ? 'border-purple-200 bg-purple-50 text-purple-800'
+      : tone === 'emerald'
+        ? 'border-emerald-200 bg-emerald-50 text-emerald-800'
+        : tone === 'teal'
+          ? 'border-teal-200 bg-teal-50 text-teal-800'
           : 'border-amber-200 bg-amber-50 text-amber-800';
 
   return <span className={`rounded-full border px-2.5 py-1 text-[11px] font-extrabold ${cls}`}>{label}</span>;

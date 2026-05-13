@@ -26,7 +26,7 @@ export type ConsultationDoctor = {
 export const consultationSpecialtiesMock: ConsultationSpecialty[] = [
   { id: 'sp-1', key: 'general', iconEmoji: '🩺', colorClass: 'from-emerald-500 to-green-600' },
   { id: 'sp-2', key: 'cardiology', iconEmoji: '❤️', colorClass: 'from-rose-500 to-red-600' },
-  { id: 'sp-3', key: 'dermatology', iconEmoji: '🧴', colorClass: 'from-indigo-500 to-violet-600' },
+  { id: 'sp-3', key: 'dermatology', iconEmoji: '🧴', colorClass: 'from-teal-600 to-emerald-700' },
   { id: 'sp-4', key: 'pediatrics', iconEmoji: '🧒', colorClass: 'from-sky-500 to-blue-600' },
   { id: 'sp-5', key: 'psychology', iconEmoji: '🧠', colorClass: 'from-amber-500 to-orange-600' },
 ];

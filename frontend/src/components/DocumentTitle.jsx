@@ -12,7 +12,7 @@ function stripServicesBase(pathname) {
 }
 
 function titleKeyForPath(pathname) {
-  if (pathname === '/') return 'gateway.title';
+  if (pathname === '/') return 'gateway.pageTitle';
   if (pathname.startsWith('/tv/')) {
     if (pathname.includes('/desk')) return 'tvApp.deskTitle';
     if (pathname.includes('/activity')) return 'tvApp.activityTitle';
@@ -66,7 +66,7 @@ export default function DocumentTitle() {
     const key = titleKeyForPath(pathname);
     let pageName;
     if (pathname === '/') {
-      pageName = t('gateway.title');
+      pageName = t('gateway.pageTitle');
     } else {
       pageName = key ? t(key) : pathname.replace(/^\//, '') || t('nav.home');
     }

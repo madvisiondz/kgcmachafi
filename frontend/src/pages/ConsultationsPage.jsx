@@ -498,7 +498,7 @@ function DoctorCard({ item, t, onBook }) {
 
       <div className="space-y-4 p-5">
         <div className="flex flex-wrap gap-2">
-          {item.supportsRemote ? <Chip tone="indigo" label={t('consultations.chips.remote')} /> : null}
+          {item.supportsRemote ? <Chip tone="teal" label={t('consultations.chips.remote')} /> : null}
           {item.supportsInPerson ? <Chip tone="slate" label={t('consultations.chips.inPerson')} /> : null}
           <Chip tone="amber" label={t('consultations.experienceLabel').replace('{years}', String(item.experienceYears))} />
         </div>
@@ -535,8 +535,8 @@ function DoctorCard({ item, t, onBook }) {
 
 function Chip({ label, tone }) {
   const cls =
-    tone === 'indigo'
-      ? 'border-indigo-200 bg-indigo-50 text-indigo-800'
+    tone === 'teal'
+      ? 'border-teal-200 bg-teal-50 text-teal-800'
       : tone === 'amber'
         ? 'border-amber-200 bg-amber-50 text-amber-800'
         : 'border-slate-200 bg-slate-50 text-slate-700';

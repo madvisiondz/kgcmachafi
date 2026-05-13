@@ -27,4 +27,4 @@ Run this after `npm run build` and when deploying `frontend/dist` or `ready-to-d
 
 ---
 
-*Last updated: **2026-05-13** — evening session close (project-wide doc sync).*
+*Last updated: **2026-05-11** — full repo doc sync (emerald Services UI, gateway art + tracker, Vite 5173 strictPort, Header TV/portal, visual eval logs) + GitHub push.*

@@ -71,10 +71,10 @@ const Icons = {
 const CATEGORY_BG = {
   awareness: 'from-emerald-600 to-teal-500',
   nutrition: 'from-amber-500 to-orange-600',
-  'mental-health': 'from-violet-600 to-indigo-600',
+  'mental-health': 'from-emerald-700 to-teal-600',
   family: 'from-sky-600 to-blue-600',
   emergency: 'from-rose-600 to-red-600',
-  'chronic-care': 'from-fuchsia-600 to-pink-600',
+  'chronic-care': 'from-teal-600 to-emerald-700',
 };
 
 function programTitle(t, programKey) {

@@ -398,11 +398,9 @@ export default function ServicesPage() {
                     className={`w-14 h-14 rounded-xl grid place-items-center mb-5 ${
                       s.tone === 'blue'
                         ? 'bg-blue-100 text-blue-700'
-                        : s.tone === 'purple'
-                          ? 'bg-purple-100 text-purple-700'
-                          : s.tone === 'emerald'
-                            ? 'bg-emerald-100 text-emerald-700'
-                            : 'bg-orange-100 text-orange-700'
+                        : s.tone === 'emerald'
+                          ? 'bg-emerald-100 text-emerald-700'
+                          : 'bg-orange-100 text-orange-700'
                     }`}
                   >
                     <ServiceGlyph iconKey="support" className="h-7 w-7" />
@@ -442,15 +440,15 @@ export default function ServicesPage() {
       {/* Health exhibitions agenda */}
       <section className="py-6">
         <div className="container mx-auto px-4">
-          <div className="rounded-3xl border border-indigo-100 bg-gradient-to-br from-indigo-50 via-white to-purple-50 shadow-sm overflow-hidden">
-            <div className="px-6 py-6 border-b border-indigo-100/60">
+          <div className="rounded-3xl border border-emerald-100 bg-gradient-to-br from-emerald-50 via-white to-teal-50 shadow-sm overflow-hidden">
+            <div className="px-6 py-6 border-b border-emerald-100/60">
               <div className="flex items-start gap-3">
-                <div className="rounded-2xl bg-white text-indigo-700 p-3 shadow-sm border border-indigo-100">
+                <div className="rounded-2xl bg-white text-emerald-700 p-3 shadow-sm border border-emerald-100">
                   {Icons.globe({ className: 'h-7 w-7' })}
                 </div>
                 <div>
-                  <h2 className="text-2xl font-extrabold text-indigo-950">{t('services.exhibitions.title')}</h2>
-                  <p className="mt-1 text-sm text-indigo-900/70">{t('services.exhibitions.subtitle')}</p>
+                  <h2 className="text-2xl font-extrabold text-emerald-950">{t('services.exhibitions.title')}</h2>
+                  <p className="mt-1 text-sm text-emerald-900/70">{t('services.exhibitions.subtitle')}</p>
                 </div>
               </div>
 
@@ -466,8 +464,8 @@ export default function ServicesPage() {
                     onClick={() => setExTab(tab.key)}
                     className={`rounded-xl px-4 h-10 text-sm font-extrabold border transition ${
                       exTab === tab.key
-                        ? 'bg-indigo-600 text-white border-indigo-600'
-                        : 'bg-white/80 text-indigo-900 border-indigo-100 hover:bg-white'
+                        ? 'bg-emerald-600 text-white border-emerald-600'
+                        : 'bg-white/80 text-emerald-900 border-emerald-100 hover:bg-white'
                     }`}
                     aria-pressed={exTab === tab.key}
                   >
@@ -479,9 +477,9 @@ export default function ServicesPage() {
 
             <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
               {exhibitions.map((e) => (
-                <div key={e.id} className="rounded-2xl bg-white p-6 shadow-sm border border-indigo-100 hover:shadow-md hover:border-indigo-200 transition-all">
+                <div key={e.id} className="rounded-2xl bg-white p-6 shadow-sm border border-emerald-100 hover:shadow-md hover:border-emerald-200 transition-all">
                   <div className="flex items-start justify-between gap-3">
-                    <div className="rounded-xl bg-indigo-50 text-indigo-600 p-3">
+                    <div className="rounded-xl bg-emerald-50 text-emerald-700 p-3">
                       {Icons.calendar({ className: 'h-6 w-6' })}
                     </div>
                     <span className="text-xs font-extrabold bg-gray-100 text-gray-700 px-3 py-1 rounded-full border border-gray-200">
@@ -493,7 +491,7 @@ export default function ServicesPage() {
                   <div className="mt-3 text-sm text-slate-600 leading-relaxed">{pickText(e.desc, language)}</div>
 
                   <div className="mt-5 pt-4 border-t border-gray-100 flex items-center gap-2 text-sm text-slate-600">
-                    {Icons.pin({ className: 'h-4 w-4 text-indigo-400' })}
+                    {Icons.pin({ className: 'h-4 w-4 text-emerald-500' })}
                     <span className="truncate">{pickText(e.location, language)}</span>
                   </div>
                 </div>
@@ -503,7 +501,7 @@ export default function ServicesPage() {
             <div className="px-6 pb-6">
               <a
                 href="#"
-                className="inline-flex items-center gap-2 text-indigo-700 font-extrabold hover:text-indigo-900"
+                className="inline-flex items-center gap-2 text-emerald-700 font-extrabold hover:text-emerald-900"
               >
                 {t('services.exhibitions.more')}
                 <span aria-hidden="true">{isRTL ? '←' : '→'}</span>

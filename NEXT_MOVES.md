@@ -234,4 +234,4 @@ Record answers in `PROJECT-EXPLAINER/PROMPT_LOG.md` when decided.
 
 ---
 
-*Last updated: **2026-05-13** — §10: A4 extended to **Ambulances**; B1 code pass retained.*
+*Last updated: **2026-05-11** — §10 sprint (A4 Ambulances, B1 header) + repo-wide doc sync + push.*

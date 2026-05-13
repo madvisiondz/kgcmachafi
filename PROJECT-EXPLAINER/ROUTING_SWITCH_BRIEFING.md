@@ -44,7 +44,7 @@ This note summarizes **what was implemented** when Machafi moved from a **single
 
 6. **i18n** — new groups **`gateway.*`**, **`tvApp.*`**, **`admin.*`** in **`translations.ts`** (AR / FR / EN).
 
-7. **Gateway “remember”** — optional **`localStorage`** keys (`kgc_shell_choice`: `services` | `tv_ar` | `tv_fr` | `tv_en`) so repeat visitors can skip the chooser (same-origin only).
+7. **Gateway “remember”** — optional **`localStorage`** keys (`kgc_shell_choice`: `services` | `tv_ar` | `tv_fr` | `tv_en`) to persist the last choice; **`/` always shows the gateway** (saved `tv_*` only pre-selects the TV edition dropdown — no auto-redirect off `/`).
 
 ---
 
@@ -52,7 +52,7 @@ This note summarizes **what was implemented** when Machafi moved from a **single
 
 | Area | Pattern | Role |
 |------|---------|------|
-| Gateway | **`/`** | Pick Services vs TV (+ optional remember). |
+| Gateway | **`/`** | Pick Services vs TV; optional remember saves shell + defaults TV edition (no skip). |
 | Machafi Services | **`/healthservices`**, **`/healthservices/about`**, … | Existing 14-page directory platform. |
 | Machafi TV | **`/tv/ar`**, **`/tv/fr`**, **`/tv/en`** + **`live`**, **`schedule`**, **`article/:slug`** | TV shell (stubs beyond layout/navigation). |
 | Services admin (placeholder) | **`/healthservices/admin/*`** | Until real panel + **`/api/admin`** wiring. |
@@ -92,4 +92,4 @@ This note summarizes **what was implemented** when Machafi moved from a **single
 
 ---
 
-*Last updated: **2026-05-13** — evening session close (project-wide doc sync).*
+*Last updated: **2026-05-11** — full repo doc sync (emerald Services UI, gateway art + tracker, Vite 5173 strictPort, Header TV/portal, visual eval logs) + GitHub push.*

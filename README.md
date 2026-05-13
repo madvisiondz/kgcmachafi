@@ -19,6 +19,8 @@ At the repo root (next to **`README.md`**):
 - **`ARCHITECTURE_PRODUCTION_READINESS.md`** — ASCII architecture diagrams + **% to 100% production** per layer
 - **`PROJECT-EXPLAINER/SMOKE_CHECKLIST_PRODUCTION.md`** — release smoke matrix (fill per deploy)
 - **`MACHAFI_DATABASE_AND_API_PLAYBOOK.md`** — **beginner-friendly** step-by-step: MySQL/phpMyAdmin, schema updates, `api/public` ↔ `frontend/src/services/`, real project examples
+- **`SERVICES_UI_VISUAL_EVALUATION.md`** — **Machafi Services** UI: visual critique + creative ideas log (`/healthservices/*`)
+- **`TV_UI_VISUAL_EVALUATION.md`** — **Machafi TV** UI: visual critique + creative ideas log (`/tv/:edition/*`)
 
 - **`PROJECT-EXPLAINER/project-explainer.md`** — product intent + directory philosophy
 - **`PROJECT-EXPLAINER/PROJECT_STATUS.md`** — done vs remaining (keep current)
@@ -37,6 +39,7 @@ At the repo root (next to **`README.md`**):
 - **`PROJECT-EXPLAINER/FRONTEND_BLOCK_DIAGRAM.md`** — Mermaid diagrams (runtime stack + future `services/` boundary)
 - **`PROJECT-EXPLAINER/general-animation.md`** — animation notes
 - **`TRACKERS/`** — page trackers by product branch (see below).
+- **Gateway** (`/`): `TRACKERS/gateway/GATEWAY_PAGE_MAP.md`
 - **Machafi Services** (`/healthservices/*`): `TRACKERS/machafi-services/HOMEPAGE_MAP.md`, `TRACKERS/machafi-services/LIBRARY_PAGE_MAP.md`, and other `*_PAGE_MAP.md` files in that folder.
 - **Machafi Services admin** (`/healthservices/admin/*`): `TRACKERS/machafi-services-admin/HEALTHSERVICES_ADMIN_PANEL_MAP.md`
 - **Machafi TV** (`/tv/:edition/*`): `TRACKERS/machafi-tv/TV_SHELL_PAGE_MAP.md`, `TRACKERS/machafi-tv/TV_HOME_PAGE_MAP.md`, `TRACKERS/machafi-tv/TV_LIVE_PAGE_MAP.md`, `TRACKERS/machafi-tv/TV_SCHEDULE_PAGE_MAP.md`, `TRACKERS/machafi-tv/TV_ARTICLE_PAGE_MAP.md`, `TRACKERS/machafi-tv/TV_DESK_PAGE_MAP.md`, `TRACKERS/machafi-tv/TV_ACTIVITY_PAGE_MAP.md`, `TRACKERS/machafi-tv/TV_TOPIC_PAGE_MAP.md`, `TRACKERS/machafi-tv/TV_SEARCH_PAGE_MAP.md`
@@ -70,7 +73,7 @@ Cursor canvases must live in Cursor’s managed canvases directory to render.
 
 - `frontend/`: new UI rebuild (current work)
 - `PROJECT-EXPLAINER/`: project memory markdown (status, prompts, rules, routing maps, diagrams)
-- `TRACKERS/`: per-surface tracker maps — **`machafi-services/`**, **`machafi-tv/`** (public apps), **`machafi-services-admin/`**, **`machafi-tv-admin/`** (admin panels)
+- `TRACKERS/`: per-surface tracker maps — **`gateway/`** (site entry `/`), **`machafi-services/`**, **`machafi-tv/`** (public apps), **`machafi-services-admin/`**, **`machafi-tv-admin/`** (admin panels)
 - `deploy/`, `ready-to-deploy/`: deployment-related assets (review before using)
 - `uploads/`: media/assets used by the app
 
@@ -125,4 +128,4 @@ After every prompt/work session, update:
 
 ---
 
-*Last updated: **2026-05-14** — PROMPT_LOG + README push policy; then push.*
+*Last updated: **2026-05-11** — full doc footer sync + emerald/gateway/Vite/Header work + `git push`.*

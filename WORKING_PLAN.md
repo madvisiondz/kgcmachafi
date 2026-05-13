@@ -259,10 +259,11 @@ Commits on `main` (chronological):
 - [x] `TRACKERS/machafi-tv/` — 9 TV maps (`TV_SHELL`, `TV_HOME`, `TV_LIVE`, `TV_SCHEDULE`, `TV_ARTICLE`, `TV_DESK`, `TV_ACTIVITY`, `TV_TOPIC`, `TV_SEARCH`).
 - [x] `TRACKERS/machafi-services-admin/HEALTHSERVICES_ADMIN_PANEL_MAP.md`.
 - [x] `TRACKERS/machafi-tv-admin/MACHAFITV_ADMIN_PANEL_MAP.md`.
+- [x] `TRACKERS/gateway/GATEWAY_PAGE_MAP.md` — **`/`** gateway (Services vs TV + optional `localStorage` remember).
 
 ### 6.3 Routing & shells — `frontend/src/App.tsx`
 
-- [x] **`/`** → `frontend/src/pages/GatewayPage.jsx` — choose Services vs TV; optional `localStorage` `kgc_shell_choice`; TV edition selector.
+- [x] **`/`** → `frontend/src/pages/GatewayPage.jsx` — choose Services vs TV; optional `localStorage` `kgc_shell_choice` (persists choice / defaults TV edition only — **no** auto-redirect from `/`).
 - [x] **`/healthservices`** → `frontend/src/layouts/ServicesLayout.jsx` — nested child routes.
 - [x] **`/healthservices/admin/*`** → `frontend/src/pages/admin/HealthServicesAdminPage.jsx` (placeholder shell).
 - [x] **`/machafitv/admin/*`** → `frontend/src/pages/admin/MachafiTvAdminPage.jsx` (placeholder shell).
@@ -508,4 +509,4 @@ Check boxes as you complete them. **Source of truth for execution status:** `NEX
 
 ---
 
-*Last updated: **2026-05-13** — evening session close (project-wide doc sync).*
+*Last updated: **2026-05-11** — full repo doc sync (emerald Services UI, gateway art + tracker, Vite 5173 strictPort, Header TV/portal, visual eval logs) + GitHub push.*

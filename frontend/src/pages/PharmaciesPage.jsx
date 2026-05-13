@@ -276,13 +276,13 @@ export default function PharmaciesPage() {
                     type="button"
                     onClick={() => setNightOnly((v) => !v)}
                     className={`flex w-full items-center justify-between rounded-2xl border p-3 transition ${
-                      nightOnly ? 'border-indigo-200 bg-indigo-50' : 'border-slate-200 bg-white hover:bg-slate-50'
+                      nightOnly ? 'border-emerald-200 bg-emerald-50' : 'border-slate-200 bg-white hover:bg-slate-50'
                     }`}
                   >
                     <span className="flex items-center gap-2">
                       <span
                         className={`grid h-9 w-9 place-items-center rounded-xl ${
-                          nightOnly ? 'bg-indigo-600 text-white' : 'bg-indigo-50 text-indigo-600'
+                          nightOnly ? 'bg-emerald-600 text-white' : 'bg-emerald-50 text-emerald-600'
                         }`}
                       >
                         {Icons.moon({ className: 'h-4 w-4' })}
@@ -291,7 +291,7 @@ export default function PharmaciesPage() {
                     </span>
                     <span
                       className={`relative h-5 w-10 rounded-full transition-colors ${
-                        nightOnly ? 'bg-indigo-600' : 'bg-slate-300'
+                        nightOnly ? 'bg-emerald-600' : 'bg-slate-300'
                       }`}
                       aria-hidden="true"
                     >
@@ -328,15 +328,15 @@ export default function PharmaciesPage() {
               ) : (
                 <>
               {/* Night shift highlight */}
-              <div className="overflow-hidden rounded-3xl border border-indigo-100 bg-white shadow-sm">
-                <div className="flex items-center justify-between gap-3 border-b bg-indigo-50/70 px-5 py-4">
+              <div className="overflow-hidden rounded-3xl border border-emerald-100 bg-white shadow-sm">
+                <div className="flex items-center justify-between gap-3 border-b bg-emerald-50/70 px-5 py-4">
                   <div className="flex items-center gap-2">
-                    <span className="grid h-9 w-9 place-items-center rounded-xl bg-indigo-600 text-white">
+                    <span className="grid h-9 w-9 place-items-center rounded-xl bg-emerald-600 text-white">
                       {Icons.moon({ className: 'h-4 w-4' })}
                     </span>
                     <div>
                       <h2 className="text-lg font-extrabold text-slate-900">{t('pharmacies.nightShiftTitle')}</h2>
-                      <p className="text-xs text-indigo-700">{t('pharmacies.nightShiftSubtitle')}</p>
+                      <p className="text-xs text-emerald-700">{t('pharmacies.nightShiftSubtitle')}</p>
                     </div>
                   </div>
                   <span className="rounded-full bg-white px-3 py-1 text-xs font-bold text-slate-600">
@@ -483,13 +483,13 @@ function PharmacyCard({ pharmacy, isNight, t, isRTL }) {
   return (
     <div
       className={`group flex flex-col gap-4 rounded-2xl border bg-white p-6 shadow-sm transition hover:shadow-md sm:flex-row sm:items-center ${
-        isNight ? 'border-indigo-200 ring-1 ring-indigo-50' : 'border-slate-100'
+        isNight ? 'border-emerald-200 ring-1 ring-emerald-50' : 'border-slate-100'
       }`}
     >
       <div className="flex items-start gap-4">
         <div
           className={`grid h-14 w-14 place-items-center rounded-2xl transition-colors ${
-            isNight ? 'bg-indigo-600 text-white' : 'bg-emerald-50 text-emerald-700 group-hover:bg-emerald-600 group-hover:text-white'
+            isNight ? 'bg-emerald-600 text-white' : 'bg-emerald-50 text-emerald-700 group-hover:bg-emerald-600 group-hover:text-white'
           }`}
         >
           <span className="text-xl font-black" aria-hidden="true">
@@ -501,7 +501,7 @@ function PharmacyCard({ pharmacy, isNight, t, isRTL }) {
           <div className="flex flex-wrap items-center gap-2">
             <h3 className="text-lg font-extrabold text-slate-900 truncate">{pharmacy.name}</h3>
             {isNight ? (
-              <span className="inline-flex items-center gap-1 rounded-md border border-indigo-200 bg-indigo-50 px-2 py-1 text-xs font-extrabold text-indigo-700">
+              <span className="inline-flex items-center gap-1 rounded-md border border-emerald-200 bg-emerald-50 px-2 py-1 text-xs font-extrabold text-emerald-700">
                 {Icons.moon({ className: 'h-3 w-3' })}
                 {t('pharmacies.nightBadge')}
               </span>
@@ -549,7 +549,7 @@ function PharmacyCard({ pharmacy, isNight, t, isRTL }) {
         {pharmacy.phone ? (
           <a
             className={`inline-flex flex-1 items-center justify-center rounded-xl px-4 py-2 text-sm font-extrabold text-white shadow-md ${
-              isNight ? 'bg-indigo-600 hover:bg-indigo-700 shadow-indigo-100' : 'bg-emerald-600 hover:bg-emerald-700 shadow-emerald-100'
+              isNight ? 'bg-emerald-600 hover:bg-emerald-700 shadow-emerald-100' : 'bg-emerald-600 hover:bg-emerald-700 shadow-emerald-100'
             }`}
             href={`tel:${pharmacy.phone}`}
             aria-label={t('pharmacies.call')}

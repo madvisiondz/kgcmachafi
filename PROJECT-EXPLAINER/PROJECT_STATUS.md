@@ -23,7 +23,15 @@ This file is kept current throughout the rebuild.
 - **Central i18n**:
   - Languages: **AR / FR / EN**
   - Direction switching: **RTL/LTR** updates `document.documentElement.dir` and `lang`
-- **Header rebuilt (UI only)**:
+- **Header (2026-05-11 refresh)**:
+  - Branding-bar **Watch live** / **TV schedule** → **`/tv/{lang}/live`** and **`/tv/{lang}/schedule`** (current i18n language = TV edition).
+  - **Site portal** control → **`/`** gateway (`header.sitePortal` + grid icon).
+- **UI accent policy (2026-05-11)**: Machafi Services pages and mocks prefer **emerald / teal / green** for secondary accents; purple/indigo/violet strips removed from `frontend/src` for brand cohesion.
+- **Dev server (2026-05-11)**: **`frontend/vite.config.ts`** pins **`http://localhost:5173/`** with **`strictPort: true`** (free the port if Vite refuses to start).
+- **Gateway (2026-05-11)**: **`GatewayPage.jsx`** — layered mesh background, SVG curves, slow drift animations (`motion-safe` + `prefers-reduced-motion`); no auto-redirect off `/` for remembered shell choice (TV edition still pre-selects).
+- **Visual evaluation logs (root)**: **`SERVICES_UI_VISUAL_EVALUATION.md`**, **`TV_UI_VISUAL_EVALUATION.md`** — living creative / critique docs.
+- **Gateway tracker**: **`TRACKERS/gateway/GATEWAY_PAGE_MAP.md`**.
+- **Header layout (Machafi Services shell)**:
   - Top ticker bar (blue) with marquee + glowing badge
   - Dark top bar (social + links + language toggle)
   - Branding bar (logos) with **Live** + **Programs** exclusive buttons (desktop + mobile)
@@ -147,7 +155,7 @@ This file is kept current throughout the rebuild.
   - **Product split (planned)**: Services news (**`/healthservices/news`**) stays the **development-track** newsroom for the directory app; **Machafi TV** is the **broadcast-style** news product with its own queues and routes.
 
 - **2026-05-12 — routing architecture in `frontend/` (implemented)**:
-  - **`/`** → `GatewayPage` (Machafi Services vs Machafi TV + optional **remember** via `localStorage`).
+  - **`/`** → `GatewayPage` (Machafi Services vs Machafi TV; optional **remember** via `localStorage` — no auto-redirect; `tv_*` defaults edition only).
   - **`/healthservices/*`** → `ServicesLayout` (existing directory platform pages); **`servicesPath()`** in `frontend/src/routes/paths.ts`; **`DocumentTitle`** handles gateway + services + TV + admin titles.
   - **Legacy URLs** (`/about`, `/live`, `/news`, …) → **`Navigate`** to `/healthservices/...`.
   - **`/tv/:edition`** (`ar` \| `fr` \| `en`) → **`TvShellLayout`** + nested routes: index home, **`desk`**, **`activity`**, **`topics/:topicId`**, **`search`**, **`live`**, **`schedule`**, **`article/:slug`** (edition syncs i18n language).
@@ -225,4 +233,4 @@ This file is kept current throughout the rebuild.
 
 ---
 
-*Last updated: **2026-05-14** — clone parity / push policy noted in Done.*
+*Last updated: **2026-05-11** — emerald Services UI, gateway art + tracker, Vite 5173 strictPort, Header TV/portal, visual-eval MDs; GitHub push.*

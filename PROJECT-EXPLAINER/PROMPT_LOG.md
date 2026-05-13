@@ -2,6 +2,12 @@
 
 This file is updated after every user prompt.
 
+## 2026-05-11 (doc sync + push)
+
+### All project `.md` footers + `git push` (emerald UI, gateway, Vite)
+- **Prompt**: Update all md files with latest updates and push to GitHub.
+- **What I did**: Refreshed *Last updated* footers dated **2026-05-11** across repo markdown (root, **`PROJECT-EXPLAINER/`**, **`TRACKERS/`**, **`frontend/README.md`**) for shipped work: **emerald/teal-first** accents (removed purple/indigo/violet from `frontend/src`), **gateway** layered background + `kgc-gateway-*` animations in **`tailwind.config.js`** / **`index.css`**, **`vite.config.ts`** **`server.port: 5173`** + **`strictPort: true`**, **Header** branding bar → **Machafi TV** live/schedule + **portal** to `/`, **`GatewayPage`** / **`translations`** / **`DocumentTitle`**, **`TRACKERS/gateway/GATEWAY_PAGE_MAP.md`**, **`SERVICES_UI_VISUAL_EVALUATION.md`** + **`TV_UI_VISUAL_EVALUATION.md`**. **`PROJECT_STATUS.md`** — fixed duplicate **Central i18n** heading vs header chrome. **`npm run build`** in **`frontend/`**, **`git add -A`**, commit, **`git push origin main`** (includes **`frontend/dist`**).
+
 ## 2026-05-13
 
 ### Git push — GitHub + dev view
@@ -615,4 +621,4 @@ This file is updated after every user prompt.
 
 ---
 
-*Last updated: **2026-05-14** — push policy + PROMPT_LOG entry; pushed to `origin/main`.*
+*Last updated: **2026-05-11** — doc sync + push (emerald UI, gateway art, Vite 5173 strict, visual-eval MDs).*

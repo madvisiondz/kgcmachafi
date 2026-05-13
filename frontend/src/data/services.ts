@@ -77,8 +77,8 @@ export const servicesMock: ServiceItem[] = [
   {
     id: 'srv-2',
     icon_key: 'lab',
-    color_class: 'from-indigo-500 to-violet-600',
-    bg_class: 'bg-indigo-50',
+    color_class: 'from-teal-600 to-emerald-700',
+    bg_class: 'bg-teal-50',
     sort_order: 20,
     is_active: true,
     title: {
@@ -217,8 +217,8 @@ export const servicesMock: ServiceItem[] = [
   {
     id: 'srv-7',
     icon_key: 'support',
-    color_class: 'from-fuchsia-500 to-pink-600',
-    bg_class: 'bg-fuchsia-50',
+    color_class: 'from-emerald-600 to-teal-600',
+    bg_class: 'bg-emerald-50',
     sort_order: 70,
     is_active: true,
     title: {
@@ -252,7 +252,7 @@ export type SupplierItem = {
   desc: TranslatedText;
   location: TranslatedText;
   phone: string;
-  tone: 'blue' | 'purple' | 'emerald' | 'orange';
+  tone: 'blue' | 'emerald' | 'orange';
 };
 
 export const suppliersMock: SupplierItem[] = [
@@ -282,7 +282,7 @@ export const suppliersMock: SupplierItem[] = [
     },
     location: { ar: 'وهران', fr: 'Oran', en: 'Oran' },
     phone: '041 33 22 11',
-    tone: 'purple',
+    tone: 'emerald',
   },
   {
     id: 'sup-3',

@@ -282,7 +282,7 @@ export default function AccommodationsPage() {
             <InfoCard
               title={t('housing.how.step2Title')}
               desc={t('housing.how.step2Desc')}
-              tone="indigo"
+              tone="teal"
               icon={Icons.users({ className: 'h-5 w-5' })}
             />
             <InfoCard
@@ -561,12 +561,12 @@ function InfoCard({ title, desc, tone, icon }) {
   const toneCls =
     tone === 'emerald'
       ? 'border-emerald-200 bg-emerald-50/50'
-      : tone === 'indigo'
-        ? 'border-indigo-200 bg-indigo-50/50'
+      : tone === 'teal'
+        ? 'border-teal-200 bg-teal-50/50'
         : 'border-blue-200 bg-blue-50/50';
 
   const iconCls =
-    tone === 'emerald' ? 'bg-emerald-600' : tone === 'indigo' ? 'bg-indigo-600' : 'bg-blue-600';
+    tone === 'emerald' ? 'bg-emerald-600' : tone === 'teal' ? 'bg-teal-600' : 'bg-blue-600';
 
   return (
     <div className={`rounded-3xl border p-5 ${toneCls}`}>
@@ -641,7 +641,7 @@ function HousingCard({ item, t, isRTL }) {
             ) : (
               <Tag tone="slate">{t('housing.patientOnly')}</Tag>
             )}
-            {item.suitableForLongStay ? <Tag tone="indigo">{t('housing.longStay')}</Tag> : <Tag tone="slate">{t('housing.shortStay')}</Tag>}
+            {item.suitableForLongStay ? <Tag tone="teal">{t('housing.longStay')}</Tag> : <Tag tone="slate">{t('housing.shortStay')}</Tag>}
           </div>
         </div>
       </div>
@@ -664,8 +664,8 @@ function Tag({ tone, children }) {
   const cls =
     tone === 'emerald'
       ? 'border-emerald-200 bg-emerald-50 text-emerald-800'
-      : tone === 'indigo'
-        ? 'border-indigo-200 bg-indigo-50 text-indigo-800'
+      : tone === 'teal'
+        ? 'border-teal-200 bg-teal-50 text-teal-800'
         : 'border-slate-200 bg-slate-50 text-slate-700';
 
   return <span className={`inline-flex items-center rounded-full border px-3 py-1 text-[11px] font-extrabold ${cls}`}>{children}</span>;
