@@ -1,7 +1,10 @@
-import React, { useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { useI18n } from '../i18n/I18nProvider';
 import { servicesPath } from '../routes/paths';
+import { useBootstrapList } from '../hooks/useBootstrapList';
+import ListFetchErrorBanner from '../components/ListFetchErrorBanner';
+import { loadHomeBundle } from '../services';
 
 function SectionTitle({ title, subtitle }) {
   return (
@@ -98,8 +101,12 @@ function NewsCard({ tag, date, title, desc, cta, enterDelay = 0 }) {
 }
 
 export default function HomePage() {
-  const { t, dir } = useI18n();
+  const { t, dir, language } = useI18n();
   const isRtl = dir === 'rtl';
+
+  const loadHome = useCallback(() => loadHomeBundle(language), [language]);
+  const { status, data: homeApi, error, reload } = useBootstrapList(loadHome);
+  const homeLoading = status === 'loading';
 
   const cards = useMemo(
     () => [
@@ -177,14 +184,17 @@ export default function HomePage() {
     [t],
   );
 
-  const mainStats = useMemo(
-    () => [
-      { value: t('home.stats.visitorsValue'), label: t('home.stats.visitorsLabel'), tone: 'blue' },
-      { value: t('home.stats.subscribersValue'), label: t('home.stats.subscribersLabel'), tone: 'green' },
-      { value: t('home.stats.registeredValue'), label: t('home.stats.registeredLabel'), tone: 'emerald' },
-    ],
-    [t],
-  );
+  const mainStats = useMemo(() => {
+    const rows = homeApi?.mainStats && homeApi.mainStats.length > 0 ? homeApi.mainStats : null;
+    const base =
+      rows ??
+      [
+        { value: t('home.stats.visitorsValue'), label: t('home.stats.visitorsLabel'), tone: 'blue' },
+        { value: t('home.stats.subscribersValue'), label: t('home.stats.subscribersLabel'), tone: 'green' },
+        { value: t('home.stats.registeredValue'), label: t('home.stats.registeredLabel'), tone: 'emerald' },
+      ];
+    return base.map((s, i) => ({ ...s, enterDelay: i * 95 }));
+  }, [homeApi, t]);
 
   const staffStats = useMemo(
     () => [
@@ -199,14 +209,22 @@ export default function HomePage() {
     [t],
   );
 
-  const newsItems = useMemo(
-    () => [
+  const newsItems = useMemo(() => {
+    const teasers = homeApi?.newsTeasers && homeApi.newsTeasers.length > 0 ? homeApi.newsTeasers : null;
+    if (teasers) {
+      return teasers.map((n) => ({
+        tag: n.tag,
+        date: n.date,
+        title: n.title,
+        desc: n.desc,
+      }));
+    }
+    return [
       { tag: t('home.news.items.0.tag'), date: t('home.news.items.0.date'), title: t('home.news.items.0.title'), desc: t('home.news.items.0.desc') },
       { tag: t('home.news.items.1.tag'), date: t('home.news.items.1.date'), title: t('home.news.items.1.title'), desc: t('home.news.items.1.desc') },
       { tag: t('home.news.items.2.tag'), date: t('home.news.items.2.date'), title: t('home.news.items.2.title'), desc: t('home.news.items.2.desc') },
-    ],
-    [t],
-  );
+    ];
+  }, [homeApi, t]);
 
   return (
     <div className="space-y-16">
@@ -308,10 +326,21 @@ export default function HomePage() {
       {/* Stats counter (UI-only mock) */}
       <section className="py-12 bg-white" dir={dir}>
         <div className="container mx-auto px-4">
+          {error ? (
+            <div className="mb-6">
+              <ListFetchErrorBanner message={error.message} onRetry={reload} />
+            </div>
+          ) : null}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
-            {mainStats.map((s, i) => (
-              <StatCard key={s.label} value={s.value} label={s.label} tone={s.tone} enterDelay={i * 95} />
-            ))}
+            {homeLoading ? (
+              Array.from({ length: 3 }).map((_, i) => (
+                <div key={`hs-sk-${i}`} className="h-28 rounded-2xl bg-slate-100 animate-pulse border border-slate-100" aria-hidden="true" />
+              ))
+            ) : (
+              mainStats.map((s, i) => (
+                <StatCard key={s.label} value={s.value} label={s.label} tone={s.tone} enterDelay={s.enterDelay ?? i * 95} />
+              ))
+            )}
           </div>
 
           <div className="bg-slate-900 rounded-2xl p-8 text-white">

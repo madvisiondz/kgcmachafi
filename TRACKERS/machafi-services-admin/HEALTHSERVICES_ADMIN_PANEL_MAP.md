@@ -92,18 +92,29 @@ Single source of truth for **`HealthServicesAdminPage`** and the **future** Heal
 | POST | `/api/admin/auth/login` | **`api/admin/auth/login.php`** (existing pattern) |
 | POST | `/api/admin/auth/logout` | **`api/admin/auth/logout.php`** |
 
-### Module → primary PHP (illustrative)
+### Module → primary PHP (**implemented** in `api/admin/`)
 
-| Module | Admin PHP | Backing tables (see service trackers) |
-|--------|-----------|--------------------------------------|
-| News | `api/admin/news.php` | `news_articles`, i18n tables |
-| Donations | `api/admin/donations-*.php` | `donation_campaigns`, `donation_intents` |
-| Pharmacies | `api/admin/pharmacies.php`, `pharmacy-night-shift.php` | § Pharmacies tracker |
-| Hospitals / Ambulances / Housing / Consultations | matching `api/admin/*.php` | per tracker DDL |
-| Library | `api/admin/library-books.php` | `library_books` |
-| Live | `api/admin/live-settings.php` | `live_settings` |
-| Site copy | `api/admin/site-settings.php` | `site_settings` |
-| Audit | `api/admin/audit.php` | `admin_audit_log` (create as needed) |
+| Module | Admin PHP | Notes |
+|--------|-----------|--------|
+| Auth | `api/admin/auth/login.php`, `logout.php`, `session.php` | Login JSON includes **`csrf_token`** for mutating calls |
+| News | `api/admin/news.php` | POST/PUT/DELETE need **`X-CSRF-Token`** |
+| Pharmacies | `api/admin/pharmacies.php` | CSRF on writes |
+| Hospitals | `api/admin/hospitals.php`, `api/admin/international-hospitals.php` | CSRF on writes |
+| Ambulances | `api/admin/ambulances.php` | CSRF on writes |
+| Accommodations | `api/admin/accommodations.php` | CSRF on writes |
+| Programs | `api/admin/programs.php` | CSRF on writes |
+| Library | `api/admin/books.php` | CSRF on writes |
+| Services copy | `api/admin/services-content.php` | CSRF on writes |
+| Site settings | `api/admin/site-settings.php` | CSRF on writes |
+| Hero + home sections | `api/admin/hero-stats.php`, `api/admin/homepage-sections.php` | CSRF on writes |
+| Video programs | `api/admin/video-programs.php` | CSRF on writes |
+| Consultations | `api/admin/consultation-specialties.php`, `consultation-doctors.php`, `consultation-bookings.php` | Bookings: GET/PATCH/DELETE |
+| Donations | `api/admin/donation-campaigns.php` | CSRF on writes |
+| Live page | `api/admin/live-page.php` | CSRF on PUT |
+| Contact inbox | `api/admin/contact-messages.php` | CSRF on DELETE |
+| i18n / users | `api/admin/i18n.php`, `api/admin/public-users.php` | CSRF on writes |
+
+**Full matrix + public `api/public/*`:** **`PROJECT-EXPLAINER/API_ENDPOINT_REGISTRY.md`** and **`HEALTH_SERVICES_BACKEND.md`**.
 
 ---
 
@@ -113,6 +124,11 @@ Single source of truth for **`HealthServicesAdminPage`** and the **future** Heal
 - **Site chrome** / process: `../../PROJECT-EXPLAINER/PROMPT_LOG.md`.
 - Related public trackers: **`../machafi-services/NEWS_PAGE_MAP.md`**, **`../machafi-services/DONATIONS_PAGE_MAP.md`**, directory `*_PAGE_MAP.md` files under **`../machafi-services/`**.
 
+---
+
+## 12) Health Services admin — session + CSRF (2026-05-14)
+
+All **mutating** admin handlers touched in the Health Services pass call `require_admin_write()` → validate header **`X-CSRF-Token`** against the session value issued at login. Scripts or a future React admin must store `csrf_token` from `POST api/admin/auth/login.php` and send it on POST/PUT/PATCH/DELETE.
 
 ---
 

@@ -18,6 +18,10 @@ export type ProgramScheduleItem = {
   durationMin: number;
   isLive: boolean;
   isReplayAvailable: boolean;
+  /** When set (API rows), overrides `programs.items.*` i18n for card title */
+  title?: string;
+  /** When set (API rows), overrides `programs.items.*` i18n for card description */
+  description?: string;
 };
 
 export const programScheduleMock: ProgramScheduleItem[] = [

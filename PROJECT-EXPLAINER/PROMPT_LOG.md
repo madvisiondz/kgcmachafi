@@ -34,6 +34,14 @@ This file is updated after every user prompt.
 
 ## 2026-05-14
 
+### Docs sync + GitHub push — Health Services admin + GoDaddy guide
+- **Prompt**: Update the md files, and then push to github (push everything).
+- **What I did**: Updated **`NEXT_STEPS_PRODUCTION.md`** (L4c **~50%**, companion link **`GODADDY_CPANEL_DEPLOYMENT_GUIDE.md`**, Phase **D2** v1 note, quick-ref row, pragmatic order #5), **`MACHAFI_TECHNICAL_PRODUCT_STATUS_REPORT.md`** (§1.3 admin shipped, §3 admin route table, §4.3/§6.5/§6.7/§7.1/§7.2, §8 file table, §9), **`PROJECT-EXPLAINER/PLATFORM_SHELL_LAYOUT.md`** (routing tree + quick reference + related docs + footers), **`PROJECT-EXPLAINER/PROJECT_STATUS.md`** (Done bullet for admin v1 + optional SQL + PHP; Remaining → follow-ups; routing note; footer). Appended **`PROMPT_LOG.md`** (this entry). Then **`git add -A`**, **`git commit`**, **`git push origin main`** (full tree per user policy).
+
+### Trackers + docs — API registry and §12 HTTP maps
+- **Prompt**: Update all trackers, map all endpoints in every tracker, update all `.md` files with proper data.
+- **What I did**: Added **`PROJECT-EXPLAINER/API_ENDPOINT_REGISTRY.md`** (canonical `api/public` + `api/admin` matrix, `VITE_*`, honeypots, CSRF). Inserted **§12 Implemented HTTP map** into all **25** `TRACKERS/**/*.md` files (per-page tables; TV trackers note `/api/public/tv/*` not implemented). Synced **`WEBAPP_PAGES_OVERVIEW.md`**, **`API_STANDARD_GODADDY_MYSQL.md`**, **`README.md`**, **`PROJECT_STATUS.md`**, **`PAGE_DATASET_REFERENCE.md`**, **`MACHAFI_DATABASE_AND_API_PLAYBOOK.md`**, **`MACHAFI_TECHNICAL_PRODUCT_STATUS_REPORT.md`**, **`HEALTHSERVICES_ADMIN_PANEL_MAP.md`** (implemented admin module table), **`DONATIONS_PAGE_MAP.md`** (correct public/admin PHP names). **`TRACKERS/machafi-services/DONATIONS_PAGE_MAP.md`** HTTP table fixed to match `donations.php` / `donation-campaigns.php`.
+
 ### Markdown doc sweep — gateway/TV branding + Vercel
 - **Prompt**: Update all md files.
 - **What I did**: Refreshed `Last updated` footers dated **2026-05-14** across **52** repo markdown files (root, **`PROJECT-EXPLAINER/`**, **`TRACKERS/`**, `WORKING_PLAN.md`, etc.; **`node_modules`** excluded). **`TRACKERS/gateway/GATEWAY_PAGE_MAP.md`** — route table + behaviour for **segmented edition** controls, **identity strip** (Machafi + KGC + Komas + **`machafi-tv-logo.png`**), TV card lockup, changelog. **`TRACKERS/machafi-tv/TV_SHELL_PAGE_MAP.md`** — new **§4 Masthead + footer branding**, renumbered sections, changelog. **`PROJECT-EXPLAINER/PLATFORM_SHELL_LAYOUT.md`** — **Vercel** preview URL. **`ARCHITECTURE_PRODUCTION_READINESS.md`** — Vercel callout in §2. **`TRACKERS/machafi-services/HOMEPAGE_MAP.md`** — zinc panels vs **ServicesLayout** grid note. **`frontend/README.md`** — replaced Vite boilerplate with **KGC Machafi** frontend overview (scripts, branding paths, Vercel link).

@@ -17,13 +17,14 @@ if ($method === 'GET') {
 }
 
 if ($method === 'POST') {
-    require_admin();
+    require_admin_write();
     $payload = read_json_input();
     $statement = db()->prepare(
-        'INSERT INTO consultation_specialties (name, icon_emoji, color_class, sort_order, is_active)
-         VALUES (:name, :icon_emoji, :color_class, :sort_order, :is_active)'
+        'INSERT INTO consultation_specialties (specialty_key, name, icon_emoji, color_class, sort_order, is_active)
+         VALUES (:specialty_key, :name, :icon_emoji, :color_class, :sort_order, :is_active)'
     );
     $statement->execute([
+        'specialty_key' => trim((string) ($payload['specialty_key'] ?? '')) ?: 'custom-' . bin2hex(random_bytes(4)),
         'name' => trim((string) ($payload['name'] ?? '')),
         'icon_emoji' => trim((string) ($payload['icon_emoji'] ?? '🏥')),
         'color_class' => trim((string) ($payload['color_class'] ?? 'from-green-500 to-emerald-600')),
@@ -37,12 +38,24 @@ if ($method === 'POST') {
 }
 
 if ($method === 'PUT') {
-    require_admin();
+    require_admin_write();
     $id = (int) ($_GET['id'] ?? 0);
     $payload = read_json_input();
+    $cur = db()->prepare('SELECT specialty_key FROM consultation_specialties WHERE id = :id LIMIT 1');
+    $cur->execute(['id' => $id]);
+    $curRow = $cur->fetch();
+    if (!$curRow) {
+        json_response(['message' => 'التخصص غير موجود.'], 404);
+    }
+    $keyIn = trim((string) ($payload['specialty_key'] ?? ''));
+    $specialtyKey = $keyIn !== '' ? $keyIn : (string) ($curRow['specialty_key'] ?? '');
+    if ($specialtyKey === '') {
+        json_response(['message' => 'specialty_key مطلوب.'], 422);
+    }
     $statement = db()->prepare(
         'UPDATE consultation_specialties
-         SET name = :name,
+         SET specialty_key = :specialty_key,
+             name = :name,
              icon_emoji = :icon_emoji,
              color_class = :color_class,
              sort_order = :sort_order,
@@ -51,6 +64,7 @@ if ($method === 'PUT') {
     );
     $statement->execute([
         'id' => $id,
+        'specialty_key' => $specialtyKey,
         'name' => trim((string) ($payload['name'] ?? '')),
         'icon_emoji' => trim((string) ($payload['icon_emoji'] ?? '🏥')),
         'color_class' => trim((string) ($payload['color_class'] ?? 'from-green-500 to-emerald-600')),
@@ -63,7 +77,7 @@ if ($method === 'PUT') {
 }
 
 if ($method === 'DELETE') {
-    require_admin();
+    require_admin_write();
     $id = (int) ($_GET['id'] ?? 0);
     $statement = db()->prepare('DELETE FROM consultation_specialties WHERE id = :id');
     $statement->execute(['id' => $id]);

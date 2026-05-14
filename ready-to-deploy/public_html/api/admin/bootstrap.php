@@ -35,9 +35,11 @@ function db(): PDO
     }
 
     $dbConfig = admin_config()['db'];
+    $port = isset($dbConfig['port']) ? (int) $dbConfig['port'] : 3306;
     $dsn = sprintf(
-        'mysql:host=%s;dbname=%s;charset=%s',
+        'mysql:host=%s;port=%d;dbname=%s;charset=%s',
         $dbConfig['host'],
+        $port,
         $dbConfig['database'],
         $dbConfig['charset'] ?? 'utf8mb4'
     );
@@ -205,4 +207,86 @@ function i18n_apply_row(string $entityType, array $row, string $lang, array $ski
     }
 
     return $row;
+}
+
+/* ─────────────────────────────────────────────────────────────
+ * Public API envelopes (Machafi Services `/api/public/*`)
+ * ─────────────────────────────────────────────────────────── */
+
+function api_envelope_ok(mixed $data = null): never
+{
+    json_response(['ok' => true, 'data' => $data]);
+}
+
+/**
+ * @param array<int, array<string, mixed>> $items
+ * @param array{page:int,per_page:int,total:int,total_pages?:int} $pagination
+ */
+function api_envelope_list(array $items, array $pagination = []): never
+{
+    json_response(['ok' => true, 'data' => ['items' => $items, 'pagination' => $pagination]]);
+}
+
+function api_envelope_error(string $code, string $message, int $http = 400): never
+{
+    json_response([
+        'ok' => false,
+        'error' => ['code' => $code, 'message' => $message],
+    ], $http);
+}
+
+/**
+ * @return array{limit: int, offset: int, page: int}
+ */
+function request_pagination(int $defaultLimit = 50, int $maxLimit = 100): array
+{
+    $limit = (int) ($_GET['limit'] ?? $defaultLimit);
+    $page = max(1, (int) ($_GET['page'] ?? 1));
+    if ($limit < 1) {
+        $limit = $defaultLimit;
+    }
+    if ($limit > $maxLimit) {
+        $limit = $maxLimit;
+    }
+    $offset = ($page - 1) * $limit;
+
+    return ['limit' => $limit, 'offset' => $offset, 'page' => $page];
+}
+
+function csrf_issue_token(): string
+{
+    $token = bin2hex(random_bytes(16));
+    $_SESSION['csrf_token'] = $token;
+
+    return $token;
+}
+
+function csrf_require_valid(): void
+{
+    $header = trim((string) ($_SERVER['HTTP_X_CSRF_TOKEN'] ?? ''));
+    $sessionToken = (string) ($_SESSION['csrf_token'] ?? '');
+    if ($sessionToken === '' || $header === '' || !hash_equals($sessionToken, $header)) {
+        api_envelope_error('csrf', 'CSRF token missing or invalid.', 419);
+    }
+}
+
+/** Admin session + CSRF header (X-CSRF-Token) for mutating requests. */
+function require_admin_write(): array
+{
+    $admin = require_admin();
+    csrf_require_valid();
+
+    return $admin;
+}
+
+function require_role(string ...$roles): void
+{
+    $admin = get_admin_session();
+    if ($admin === null) {
+        api_envelope_error('auth', 'Authentication required.', 401);
+    }
+    $role = (string) ($admin['role'] ?? '');
+    if ($roles !== [] && !in_array($role, $roles, true)) {
+        api_envelope_error('forbidden', 'Insufficient permissions.', 403);
+    }
 }

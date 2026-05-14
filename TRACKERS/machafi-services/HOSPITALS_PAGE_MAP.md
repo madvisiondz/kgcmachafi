@@ -205,4 +205,17 @@ CREATE TABLE hospital_i18n (
 
 ---
 
+## 12) Implemented HTTP map (2026-05-14)
+
+**Full catalog:** `PROJECT-EXPLAINER/API_ENDPOINT_REGISTRY.md`.
+
+| Role | Method | PHP | Notes | SPA flag |
+|------|--------|-----|-------|----------|
+| Algeria hospitals | GET | `api/public/hospitals.php` | Paginated list + filters | `VITE_HOSPITALS_API` |
+| International | GET | `api/public/international-hospitals.php` | Paginated list | same |
+| Admin — Algeria | GET POST PUT DELETE | `api/admin/hospitals.php` | CSRF on writes | Desk |
+| Admin — international | GET POST PUT DELETE | `api/admin/international-hospitals.php` | CSRF on writes | Desk |
+
+---
+
 *Last updated: **2026-05-14** — Gateway + TV branding (Machafi TV logo in shell and gateway strip), Services masthead mint/grid, `frontend/public/branding/`, Vercel https://kgcmachafi.vercel.app ; doc sync.*

@@ -46,7 +46,7 @@ if ($method === 'GET') {
 }
 
 if ($method === 'POST') {
-    require_admin();
+    require_admin_write();
     $payload = international_hospital_payload();
 
     $statement = db()->prepare(
@@ -82,7 +82,7 @@ if ($method === 'POST') {
 }
 
 if ($method === 'PUT') {
-    require_admin();
+    require_admin_write();
     $id = (int) ($_GET['id'] ?? 0);
     $payload = international_hospital_payload();
 
@@ -134,7 +134,7 @@ if ($method === 'PUT') {
 }
 
 if ($method === 'DELETE') {
-    require_admin();
+    require_admin_write();
     $id = (int) ($_GET['id'] ?? 0);
     $statement = db()->prepare('DELETE FROM international_hospitals WHERE id = :id');
     $statement->execute(['id' => $id]);

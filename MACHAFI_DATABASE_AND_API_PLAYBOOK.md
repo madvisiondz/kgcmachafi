@@ -245,7 +245,7 @@ Check each box mentally (or on paper):
 - [ ] I know **`api/public/*.php`** returns JSON; **`frontend/src/services/`** calls it.  
 - [ ] I know **`admin-config.php`** is server-only secrets.  
 - [ ] I can run the app **without** a database (mocks) **or** flip **`VITE_NEWS_API` / `VITE_PHARMACIES_API` / `VITE_HOSPITALS_API`** when MySQL is ready.  
-- [ ] I know where to read deeper: **`PROJECT-EXPLAINER/HOSTING_AND_DATABASE.md`**, **`API_STANDARD_GODADDY_MYSQL.md`**, **`NEXT_STEPS_PRODUCTION.md`**, **`TRACKERS/`**.
+- [ ] I know where to read deeper: **`PROJECT-EXPLAINER/HOSTING_AND_DATABASE.md`**, **`PROJECT-EXPLAINER/GODADDY_CPANEL_DEPLOYMENT_GUIDE.md`** (step-by-step cPanel), **`API_STANDARD_GODADDY_MYSQL.md`**, **`API_ENDPOINT_REGISTRY.md`**, **`NEXT_STEPS_PRODUCTION.md`**, **`TRACKERS/`**.
 
 If those are true, you are ready for the next build day without feeling lost.
 
@@ -254,6 +254,7 @@ If those are true, you are ready for the next build day without feeling lost.
 ## Read next (same project, more detail)
 
 - **`PROJECT-EXPLAINER/HOSTING_AND_DATABASE.md`** — GoDaddy + folder layout.  
+- **`PROJECT-EXPLAINER/GODADDY_CPANEL_DEPLOYMENT_GUIDE.md`** — beginner **cPanel** deploy (MySQL import, `api/`, `dist/`, `.htaccess`, first admin login).  
 - **`PROJECT-EXPLAINER/API_STANDARD_GODADDY_MYSQL.md`** — how JSON responses should look.  
 - **`NEXT_STEPS_PRODUCTION.md`** — ordered production work.  
 - **`ARCHITECTURE_PRODUCTION_READINESS.md`** — “how close to production are we?”  
@@ -264,4 +265,4 @@ If those are true, you are ready for the next build day without feeling lost.
 *This playbook is yours to edit when reality changes. Keep examples pointing at real paths in this repo.*
 
 ---
-*Last updated: **2026-05-14** — Gateway + TV branding (Machafi TV logo in shell and gateway strip), Services masthead mint/grid, `frontend/public/branding/`, Vercel https://kgcmachafi.vercel.app ; doc sync.*
+*Last updated: **2026-05-14** — **`GODADDY_CPANEL_DEPLOYMENT_GUIDE.md`** + Health Services **admin v1**; Gateway + TV branding, Vercel https://kgcmachafi.vercel.app ; doc sync.*

@@ -1,6 +1,9 @@
-import React, { useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { useI18n } from '../i18n/I18nProvider';
 import { libraryBooksMock } from '../data/libraryBooks';
+import { useBootstrapList } from '../hooks/useBootstrapList';
+import ListFetchErrorBanner from '../components/ListFetchErrorBanner';
+import { loadLibraryBooksForList } from '../services';
 
 function IconBookOpen({ className }) {
   return (
@@ -62,21 +65,31 @@ function normalizeForSearch(s) {
 
 export default function LibraryPage() {
   const { t, dir } = useI18n();
+  const loadBooks = useCallback(() => loadLibraryBooksForList(), []);
+  const { status, data, error, reload } = useBootstrapList(loadBooks);
+  const books = data ?? libraryBooksMock;
+  const showSkeleton = status === 'loading';
+
+  const bookTitle = (book) => book.apiTitle?.trim() || t(`library.books.${book.bookKey}.title`);
+  const bookAuthor = (book) => book.apiAuthor?.trim() || t(`library.books.${book.bookKey}.author`);
+  const bookCategory = (book) => book.apiCategory?.trim() || t(`library.categories.${book.categoryKey}`);
+
   const [selectedBook, setSelectedBook] = useState(null);
   const [feedback, setFeedback] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
 
   const filteredBooks = useMemo(() => {
     const q = normalizeForSearch(searchQuery);
-    if (!q) return libraryBooksMock;
-    return libraryBooksMock.filter((book) => {
-      const title = t(`library.books.${book.bookKey}.title`);
-      const author = t(`library.books.${book.bookKey}.author`);
-      const category = t(`library.categories.${book.categoryKey}`);
+    if (!q) return books;
+    return books.filter((book) => {
+      const title = book.apiTitle?.trim() || t(`library.books.${book.bookKey}.title`);
+      const author = book.apiAuthor?.trim() || t(`library.books.${book.bookKey}.author`);
+      const category =
+        book.apiCategory?.trim() || t(`library.categories.${book.categoryKey}`);
       const haystack = normalizeForSearch(`${title} ${author} ${category}`);
       return haystack.includes(q);
     });
-  }, [searchQuery, t]);
+  }, [books, searchQuery, t]);
 
   const showNoFile = () => {
     setFeedback({ tone: 'error', title: t('library.noFileTitle'), desc: t('library.noFileDesc') });
@@ -84,13 +97,13 @@ export default function LibraryPage() {
   };
 
   const handleDownload = (book) => {
-    setFeedback({ tone: 'info', title: t('library.startDownload'), desc: t(`library.books.${book.bookKey}.title`) });
+    setFeedback({ tone: 'info', title: t('library.startDownload'), desc: bookTitle(book) });
     window.setTimeout(() => setFeedback(null), 3000);
 
     if (book.filePath && book.filePath !== '#') {
       const a = document.createElement('a');
       a.href = book.filePath;
-      a.download = `${t(`library.books.${book.bookKey}.title`)}.pdf`;
+      a.download = `${bookTitle(book)}.pdf`;
       a.target = '_blank';
       a.rel = 'noopener noreferrer';
       document.body.appendChild(a);
@@ -116,6 +129,11 @@ export default function LibraryPage() {
     <div className="space-y-12">
       <section id="library" className="py-16 bg-slate-50" dir={dir}>
         <div className="container mx-auto px-4">
+          {error ? (
+            <div className="mb-6">
+              <ListFetchErrorBanner message={error.message} onRetry={reload} />
+            </div>
+          ) : null}
           {feedback && (
             <div
               role="status"
@@ -171,16 +189,22 @@ export default function LibraryPage() {
             </div>
           </div>
 
-          {libraryBooksMock.length === 0 ? (
+          {books.length === 0 ? (
             <div className="text-center py-12 bg-white rounded-2xl border border-dashed text-gray-500">{t('library.empty')}</div>
+          ) : showSkeleton ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+              {Array.from({ length: 8 }).map((_, i) => (
+                <div key={`lb-sk-${i}`} className="h-96 rounded-xl bg-white shadow animate-pulse border border-gray-100" aria-hidden="true" />
+              ))}
+            </div>
           ) : filteredBooks.length === 0 ? (
             <div className="text-center py-12 bg-white rounded-2xl border border-dashed text-gray-500">{t('library.noSearchResults')}</div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
               {filteredBooks.map((book) => {
-                const title = t(`library.books.${book.bookKey}.title`);
-                const author = t(`library.books.${book.bookKey}.author`);
-                const categoryLabel = t(`library.categories.${book.categoryKey}`);
+                const title = bookTitle(book);
+                const author = bookAuthor(book);
+                const categoryLabel = bookCategory(book);
 
                 return (
                   <div
@@ -260,9 +284,9 @@ export default function LibraryPage() {
             <div className="flex items-start justify-between gap-4 px-6 pt-6 pb-2 border-b border-gray-100">
               <div>
                 <h2 id="library-dialog-title" className="text-lg font-bold text-gray-900">
-                  {t(`library.books.${selectedBook.bookKey}.title`)}
+                  {bookTitle(selectedBook)}
                 </h2>
-                <p className="text-sm text-gray-500">{t(`library.books.${selectedBook.bookKey}.author`)}</p>
+                <p className="text-sm text-gray-500">{bookAuthor(selectedBook)}</p>
               </div>
               <button
                 type="button"
@@ -274,7 +298,7 @@ export default function LibraryPage() {
             </div>
             <div className="flex-1 min-h-[60vh] px-6 pb-6 pt-4">
               <iframe
-                title={t(`library.books.${selectedBook.bookKey}.title`)}
+                title={bookTitle(selectedBook)}
                 src={selectedBook.filePath}
                 className="w-full h-[70vh] rounded-lg border border-gray-200"
               />

@@ -151,4 +151,15 @@ CREATE TABLE live_settings (
 
 ---
 
+## 12) Implemented HTTP map (2026-05-14)
+
+**Full catalog:** `PROJECT-EXPLAINER/API_ENDPOINT_REGISTRY.md`.
+
+| Role | Method | PHP | Notes | SPA flag |
+|------|--------|-----|-------|----------|
+| Public live hub | GET | `api/public/live.php` | Stream meta + lists | `VITE_LIVE_API` |
+| Admin row | GET PUT | `api/admin/live-page.php` | Single `live_page_settings` row; CSRF on PUT | Desk |
+
+---
+
 *Last updated: **2026-05-14** — Gateway + TV branding (Machafi TV logo in shell and gateway strip), Services masthead mint/grid, `frontend/public/branding/`, Vercel https://kgcmachafi.vercel.app ; doc sync.*

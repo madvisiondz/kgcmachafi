@@ -18,8 +18,8 @@ Main domain (https://kgc-machafi.net/)
     └── Routes
         ├── /                                    GatewayPage — Services vs TV (+ optional remember-shell)
         │
-        ├── /healthservices/admin/*               HealthServicesAdminPage (placeholder shell)
-        ├── /machafitv/admin/*                    MachafiTvAdminPage (placeholder shell)
+        ├── /healthservices/admin/*               HealthServicesAdminPage — **nested admin app** (login, CRUD, dashboard; **`frontend/src/pages/admin/healthservices/`**)
+        ├── /machafitv/admin/*                    MachafiTvAdminPage (**placeholder** shell)
         │
         ├── /tv/:edition/*                        TvShellLayout — edition = ar | fr | en (invalid → /tv/ar)
         │   ├── (index)                           TvHomePage (stub)
@@ -64,6 +64,8 @@ Admin/API later: sanitized stream URL, schedule row, “on air” flag — align
 | **Gateway** | On `kgc-machafi.net`, user chooses Services vs TV. |
 | **Services** | **14** routes under **`/healthservices/*`**; i18n via `t()` + legacy URLs redirect (Rule #1). |
 | **Machafi TV** | Three **route trees** (`/tv/ar`, `/tv/fr`, `/tv/en`) + shared shell chrome pattern. |
+| **Health Services admin** | **`/healthservices/admin/*`** — session + CSRF, CRUD against **`/api/admin/*`**; deploy: **`GODADDY_CPANEL_DEPLOYMENT_GUIDE.md`**. |
+| **Machafi TV admin** | **`/machafitv/admin/*`** — placeholder until CMS. |
 | **TV news** | Editorial queues per edition; journalist desk submits into scoped queues. |
 | **TV live** | Simulcast page per edition + broadcast pipeline behind HTTPS/HLS. |
 
@@ -74,14 +76,15 @@ Admin/API later: sanitized stream URL, schedule row, “on air” flag — align
 | Doc | Contents |
 |-----|----------|
 | `WEBAPP_PAGES_OVERVIEW.md` | Gateway + `/healthservices/*` + `/tv/*` route tables and readiness. |
+| `GODADDY_CPANEL_DEPLOYMENT_GUIDE.md` | Beginner GoDaddy cPanel deploy (MySQL, `api/`, Vite `dist/`, `.htaccess`). |
 | `project-explainer.md` | Directory-first product intent (Services). |
 | `PROJECT_STATUS.md` | Done / in progress. |
 
 ---
 
-*Routing scaffold implemented in `frontend/src/App.tsx`; TV/CMS/admin wiring continues in later milestones.*
+*Routing scaffold implemented in `frontend/src/App.tsx`; Health Services **admin v1** wired; TV/CMS wiring continues in later milestones.*
 
 
 ---
 
-*Last updated: **2026-05-14** — Gateway + TV branding (Machafi TV logo in shell and gateway strip), Services masthead mint/grid, `frontend/public/branding/`, Vercel https://kgcmachafi.vercel.app ; doc sync.*
+*Last updated: **2026-05-14** — Health Services **admin SPA** (`/healthservices/admin/*`), **`GODADDY_CPANEL_DEPLOYMENT_GUIDE.md`**; Gateway + TV branding, Vercel https://kgcmachafi.vercel.app ; doc sync.*

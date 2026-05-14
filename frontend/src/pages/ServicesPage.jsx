@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { useI18n } from '../i18n/I18nProvider';
 import {
   exhibitionsMock,
@@ -6,6 +6,9 @@ import {
   servicesSectionMock,
   suppliersMock,
 } from '../data/services';
+import { useBootstrapList } from '../hooks/useBootstrapList';
+import ListFetchErrorBanner from '../components/ListFetchErrorBanner';
+import { loadServicesCatalog } from '../services';
 
 function pickText(text, language) {
   if (!text) return '';
@@ -207,6 +210,11 @@ export default function ServicesPage() {
   const { t, dir, language } = useI18n();
   const isRTL = dir === 'rtl';
 
+  const loadCatalog = useCallback(() => loadServicesCatalog(language), [language]);
+  const { status, data, error, reload } = useBootstrapList(loadCatalog);
+  const catalog = data ?? servicesMock;
+  const showSkeleton = status === 'loading';
+
   const sectionTitle = pickText(servicesSectionMock.section_title, language);
   const sectionSubtitle = pickText(servicesSectionMock.section_subtitle, language);
 
@@ -214,7 +222,10 @@ export default function ServicesPage() {
   const [selected, setSelected] = useState(null);
   const [exTab, setExTab] = useState('algeria');
 
-  const activeServices = useMemo(() => servicesMock.filter((s) => s.is_active).sort((a, b) => a.sort_order - b.sort_order), []);
+  const activeServices = useMemo(
+    () => catalog.filter((s) => s.is_active).sort((a, b) => a.sort_order - b.sort_order),
+    [catalog],
+  );
 
   const filteredServices = useMemo(() => {
     const q = normalize(query);
@@ -259,6 +270,11 @@ export default function ServicesPage() {
       {/* Hero + directory */}
       <section className="border-y border-cyan-100 bg-gradient-to-b from-cyan-50/70 to-white py-14">
         <div className="container mx-auto px-4">
+          {error ? (
+            <div className="mb-6">
+              <ListFetchErrorBanner message={error.message} onRetry={reload} />
+            </div>
+          ) : null}
           <div className="grid grid-cols-1 lg:grid-cols-[420px_1fr] gap-10 items-start">
             <aside className="rounded-3xl border border-cyan-100 bg-white shadow-lg p-6 lg:sticky lg:top-24">
               <div className="flex items-start gap-3">
@@ -313,7 +329,11 @@ export default function ServicesPage() {
 
             <div className="space-y-6">
               <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
-                {filteredServices.map((s) => (
+                {showSkeleton
+                  ? Array.from({ length: 6 }).map((_, i) => (
+                      <div key={`svc-sk-${i}`} className="h-64 rounded-2xl bg-slate-100 animate-pulse border border-slate-200" aria-hidden="true" />
+                    ))
+                  : filteredServices.map((s) => (
                   <button
                     key={s.id}
                     type="button"
@@ -329,7 +349,8 @@ export default function ServicesPage() {
                       {t('services.request')}
                     </div>
                   </button>
-                ))}
+                ))
+                }
               </div>
 
               {/* How it works */}

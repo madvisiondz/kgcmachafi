@@ -2,6 +2,8 @@
 
 Reference for the **frontend routes** in this repo (`frontend/src/App.tsx`). **Brief content & value** describes what each surface is for; **recommended columns** suggest a normalized schema for CMS / API / admin (extend with `created_at`, `updated_at`, `created_by`, `published_at`, `status` as needed).
 
+**Implemented PHP ↔ route map:** **`PROJECT-EXPLAINER/API_ENDPOINT_REGISTRY.md`** and each tracker’s **§12 Implemented HTTP map** under **`TRACKERS/`**.
+
 ---
 
 ## `/` — Home

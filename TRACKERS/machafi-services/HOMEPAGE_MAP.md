@@ -267,4 +267,17 @@ CREATE TABLE home_feed_items (
 
 ---
 
+## 12) Implemented HTTP map (2026-05-14)
+
+**Full catalog:** `PROJECT-EXPLAINER/API_ENDPOINT_REGISTRY.md`.
+
+| Role | Method | PHP | Notes | SPA flag |
+|------|--------|-----|-------|----------|
+| Public home bundle | GET | `api/public/home.php` | `lang` → hero stats, sections, latest news | `VITE_HOME_API` |
+| Admin — hero | GET POST PUT DELETE | `api/admin/hero-stats.php` | CSRF on writes | Desk |
+| Admin — sections | GET POST PUT DELETE | `api/admin/homepage-sections.php` | CSRF on writes | Desk |
+| News detail (optional) | GET | `api/public/news.php?id=` | Same as newsroom | `VITE_NEWS_API` |
+
+---
+
 *Last updated: **2026-05-14** — Gateway + TV branding (Machafi TV logo in shell and gateway strip), Services masthead mint/grid, `frontend/public/branding/`, Vercel https://kgcmachafi.vercel.app ; doc sync.*

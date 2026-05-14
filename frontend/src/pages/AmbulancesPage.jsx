@@ -7,6 +7,7 @@ import ListGridSkeleton from '../components/ListGridSkeleton';
 import ListFetchErrorBanner from '../components/ListFetchErrorBanner';
 import { getCommunes, wilayas } from '../data/algeria-data';
 import { ambulanceListingsMock } from '../data/ambulances';
+import { loadAmbulancesForList } from '../services';
 
 function Icon({ children, className = '' }) {
   return (
@@ -96,7 +97,7 @@ export default function AmbulancesPage() {
   const { t, dir } = useI18n();
   const isRTL = dir === 'rtl';
 
-  const loadListings = useCallback(() => Promise.resolve(ambulanceListingsMock), []);
+  const loadListings = useCallback(() => loadAmbulancesForList(), []);
   const { status, data, error, reload } = useBootstrapList(loadListings);
   const listings = data ?? ambulanceListingsMock;
   const showSkeleton = status === 'loading';

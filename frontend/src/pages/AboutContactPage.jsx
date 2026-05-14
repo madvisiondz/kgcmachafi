@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useI18n } from '../i18n/I18nProvider';
 import { servicesPath } from '../routes/paths';
+import { ApiError, submitContactMessage } from '../services';
 
 function Icon({ children, className = '' }) {
   return (
@@ -50,9 +51,11 @@ const Icons = {
 };
 
 export default function AboutContactPage() {
-  const { t, dir } = useI18n();
+  const { t, dir, language } = useI18n();
   const location = useLocation();
   const [sent, setSent] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [formError, setFormError] = useState(null);
 
   useEffect(() => {
     if (location.hash === '#contact') {
@@ -67,10 +70,39 @@ export default function AboutContactPage() {
     }
   }, [location.hash, location.pathname]);
 
-  function onSubmit(e) {
+  async function onSubmit(e) {
     e.preventDefault();
-    setSent(true);
-    window.setTimeout(() => setSent(false), 4000);
+    setFormError(null);
+    const form = e.currentTarget;
+    const fd = new FormData(form);
+    const name = String(fd.get('name') ?? '').trim();
+    const email = String(fd.get('email') ?? '').trim();
+    const phone = String(fd.get('phone') ?? '').trim();
+    const message = String(fd.get('message') ?? '').trim();
+    const subject = String(fd.get('subject') ?? '').trim() || t('about.contact.defaultSubject');
+    const company = String(fd.get('company') ?? '').trim();
+
+    if (import.meta.env.VITE_SETTINGS_API !== 'true') {
+      setSent(true);
+      window.setTimeout(() => setSent(false), 4000);
+      return;
+    }
+
+    setSubmitting(true);
+    try {
+      await submitContactMessage({ name, email, phone, subject, message, company });
+      setSent(true);
+      form.reset();
+      window.setTimeout(() => setSent(false), 6000);
+    } catch (err) {
+      let msg = err instanceof Error ? err.message : String(err);
+      if (err instanceof ApiError && err.body && typeof err.body === 'object' && err.body.error && typeof err.body.error.message === 'string') {
+        msg = err.body.error.message;
+      }
+      setFormError(msg);
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   return (
@@ -155,7 +187,16 @@ export default function AboutContactPage() {
             </div>
 
             <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-              <form className="space-y-4" onSubmit={onSubmit}>
+              <form className="space-y-4 relative" onSubmit={onSubmit}>
+                <input
+                  type="text"
+                  name="company"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  className="absolute start-0 top-0 h-px w-px overflow-hidden opacity-0"
+                  aria-hidden="true"
+                />
+                <input type="hidden" name="subject" key={language} defaultValue={t('about.contact.defaultSubject')} />
                 <div>
                   <label htmlFor="ac-name" className="block text-xs font-bold text-slate-600 mb-1">
                     {t('about.contact.formName')}
@@ -181,6 +222,18 @@ export default function AboutContactPage() {
                   />
                 </div>
                 <div>
+                  <label htmlFor="ac-phone" className="block text-xs font-bold text-slate-600 mb-1">
+                    {t('about.contact.formPhone')}
+                  </label>
+                  <input
+                    id="ac-phone"
+                    name="phone"
+                    type="tel"
+                    className="w-full rounded-xl border border-slate-200 px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500"
+                    dir="ltr"
+                  />
+                </div>
+                <div>
                   <label htmlFor="ac-msg" className="block text-xs font-bold text-slate-600 mb-1">
                     {t('about.contact.formMessage')}
                   </label>
@@ -192,16 +245,22 @@ export default function AboutContactPage() {
                     className="w-full rounded-xl border border-slate-200 px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500 resize-y min-h-[120px]"
                   />
                 </div>
+                {formError ? (
+                  <p className="text-center text-sm font-bold text-rose-700" role="alert">
+                    {formError}
+                  </p>
+                ) : null}
                 <button
                   type="submit"
-                  className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-slate-900 px-4 py-3 text-sm font-black text-white hover:bg-slate-800"
+                  disabled={submitting}
+                  className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-slate-900 px-4 py-3 text-sm font-black text-white hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60"
                 >
                   <Icons.send className="h-4 w-4" />
-                  {t('about.contact.formSubmit')}
+                  {submitting ? t('about.contact.formSending') : t('about.contact.formSubmit')}
                 </button>
                 {sent ? (
                   <p className="text-center text-sm font-bold text-emerald-700" role="status">
-                    {t('about.contact.formThanks')}
+                    {import.meta.env.VITE_SETTINGS_API === 'true' ? t('about.contact.formThanksApi') : t('about.contact.formThanks')}
                   </p>
                 ) : (
                   <p className="text-xs text-slate-500 text-center">{t('about.contact.formHint')}</p>

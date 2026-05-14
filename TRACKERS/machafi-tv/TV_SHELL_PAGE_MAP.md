@@ -119,4 +119,12 @@ Optional: **`tv_shell_copy`** table for rare non-i18n strings; prefer **`tvApp.*
 
 ---
 
+## 12) Implemented HTTP map (TV shell — 2026-05-14)
+
+**Breaking ticker** and shell copy are still **`frontend/src/data/tvMock.ts`** (no `GET /api/public/tv/.../ticker` PHP yet). See **§6 Endpoint proposals** for the target contract.
+
+**Machafi Services** JSON that **is** shipped: **`PROJECT-EXPLAINER/API_ENDPOINT_REGISTRY.md`**.
+
+---
+
 *Last updated: **2026-05-14** — TV shell map: masthead/footer Machafi TV logo tile, responsive layout, changelog; see gateway map for site-level strip.*

@@ -406,7 +406,7 @@ Check boxes as you complete them. **Source of truth for execution status:** `NEX
 - [x] **A1** — Environments + `VITE_*` documented in **`frontend/.env.example`**.
 - [x] **A2** — Central **`frontend/src/config.ts`** (+ **`frontend/src/vite-env.d.ts`** typings).
 - [x] **A3** — **`RootErrorBoundary`** in **`frontend/src/components/RootErrorBoundary.tsx`**, wired in **`frontend/src/main.tsx`**; i18n `common.errorTitle` / `errorBody` / `reloadPage` / `backToGateway` (AR/FR/EN).
-- [x] **A4** — Loading / empty / error list UX on **News**, **Pharmacies**, **Hospitals**, **Ambulances** (`ListGridSkeleton`, `ListFetchErrorBanner`, `useBootstrapList`, `common.list*` i18n).
+- [x] **A4** — Loading / empty / error list UX on **News**, **Pharmacies**, **Hospitals**, **Ambulances**, **Accommodations** (`ListGridSkeleton`, `ListFetchErrorBanner`, `useBootstrapList`, `common.list*` i18n).
 - [x] **A5** — Smoke checklist template: **`PROJECT-EXPLAINER/SMOKE_CHECKLIST_PRODUCTION.md`** (fill Pass per release).
 - [x] **A6** — **`frontend/.gitignore`** ignores `.env` / `.env.local` (secrets not committed).
 

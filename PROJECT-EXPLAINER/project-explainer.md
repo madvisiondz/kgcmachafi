@@ -16,6 +16,8 @@ Its main goal is simple:
 
 This means the platform should focus on discovery, navigation, clarity, and usefulness for visitors looking for health resources.
 
+**GoDaddy / PHP / MySQL surface:** canonical route ↔ file ↔ method map — **`PROJECT-EXPLAINER/API_ENDPOINT_REGISTRY.md`**; per-page UX + SQL specs — **`TRACKERS/`** (each tracker includes **§12 Implemented HTTP map**).
+
 ## 2. Core Concept
 
 The platform is built around a simple idea:

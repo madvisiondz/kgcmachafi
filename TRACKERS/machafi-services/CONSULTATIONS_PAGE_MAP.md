@@ -227,4 +227,17 @@ CREATE TABLE consultation_requests (
 
 ---
 
+## 12) Implemented HTTP map (2026-05-14)
+
+**Full catalog:** `PROJECT-EXPLAINER/API_ENDPOINT_REGISTRY.md`.
+
+| Role | Method | PHP | Notes | SPA flag |
+|------|--------|-----|-------|----------|
+| Public roster + booking | GET POST | `api/public/consultations.php` | GET: `lang`. POST: booking JSON; honeypot `fax` empty | `VITE_CONSULTATIONS_API` |
+| Admin specialties | GET POST PUT DELETE | `api/admin/consultation-specialties.php` | CSRF on writes | Desk |
+| Admin doctors | GET POST PUT DELETE | `api/admin/consultation-doctors.php` | CSRF on writes | Desk |
+| Admin bookings | GET PATCH DELETE | `api/admin/consultation-bookings.php` | Queue / status | Desk |
+
+---
+
 *Last updated: **2026-05-14** — Gateway + TV branding (Machafi TV logo in shell and gateway strip), Services masthead mint/grid, `frontend/public/branding/`, Vercel https://kgcmachafi.vercel.app ; doc sync.*

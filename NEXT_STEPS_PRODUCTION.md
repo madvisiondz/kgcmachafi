@@ -10,6 +10,7 @@ Actionable roadmap to take **MACHAFI** from **UI-first + mocks** to **production
 | **`ARCHITECTURE_PRODUCTION_READINESS.md`** | ASCII stack + **% to 100%** per layer (**L1–L13** + cross-cuts). Use it when reprioritising. |
 | **`WORKING_PLAN.md`** | Path-sheet: what is done + unchecked forward rows. |
 | **`PROJECT-EXPLAINER/SMOKE_CHECKLIST_PRODUCTION.md`** | Release smoke matrix (**Phase A5**). |
+| **`PROJECT-EXPLAINER/GODADDY_CPANEL_DEPLOYMENT_GUIDE.md`** | Beginner **GoDaddy cPanel** deploy: MySQL import, `api/` upload, **`admin-config.php`** path note, `npm run build` + **`dist/`** upload, `.htaccess`, admin login URL. |
 
 Keep **`PROJECT-EXPLAINER/PROJECT_STATUS.md`** and **`PROJECT-EXPLAINER/PROMPT_LOG.md`** updated as you complete rows below.
 
@@ -17,7 +18,7 @@ Keep **`PROJECT-EXPLAINER/PROJECT_STATUS.md`** and **`PROJECT-EXPLAINER/PROMPT_L
 
 ## Readiness snapshot (from architecture doc)
 
-**Holistic ~38%** = naive average of architectural layers (UI high, integration/ops rising). Raise **L6, L9, L13** next for “felt” production quality.
+**Holistic ~41%** = naive average of architectural layers (UI high, integration/ops rising). Raise **L6, L9, L13** next for “felt” production quality.
 
 | Layer | ID | ~% | Primary phases that move it |
 |-------|-----|-----|------------------------------|
@@ -26,7 +27,7 @@ Keep **`PROJECT-EXPLAINER/PROJECT_STATUS.md`** and **`PROJECT-EXPLAINER/PROMPT_L
 | Client SPA runtime | L3 | 76% | A3, C3, C4, I1, G2 |
 | Services UI | L4a | 80% | B*, A4 |
 | TV UI / shell | L4b | 41% | B*, E*, A4 |
-| Admin UI | L4c | 12% | D2, E3, C2 |
+| Admin UI | L4c | **~50%** | D2 (v1 shipped), E3, C2, C3 |
 | Client API boundary | L5 | 32% | **C1**, D1 |
 | HTTP API (PHP) | L6 | 44% | D1–D5, I4 |
 | Data tier | L7 | 35% | D5 |
@@ -55,7 +56,7 @@ Track quick wins here; mirror in **`WORKING_PLAN.md`** §10 if you use that as m
 
 **Also done:** `frontend/.gitignore` ignores `.env` / `.env.local` so secrets are not committed by mistake.
 
-**Next execution slice:** run **A5** smoke on a staging build; extend **A4** to **Programs** / **Accommodations** (or TV lists) if desired; **D1** — **`VITE_PHARMACIES_API`** + **`VITE_HOSPITALS_API`** wired; next: **public settings** or another directory + smoke pass.
+**Next execution slice:** run **A5** smoke on a staging build; extend **D1** — wire **`VITE_PROGRAMS_API`**, **`VITE_LIBRARY_API`**, **`VITE_HOME_API`**, **`VITE_LIVE_API`**, **`VITE_SETTINGS_API`**, **`VITE_SERVICES_CATALOG_API`**, **`VITE_CONSULTATIONS_API`**, **`VITE_DONATIONS_API`** using existing `api/public/*.php` (see **`PROJECT-EXPLAINER/API_ENDPOINT_REGISTRY.md`**); **news / pharmacies / hospitals / ambulances / accommodations** flags already have loaders where noted in **`PROJECT_STATUS.md`**.
 
 ---
 
@@ -107,8 +108,8 @@ Track quick wins here; mirror in **`WORKING_PLAN.md`** §10 if you use that as m
 
 | # | Step | Why |
 |---|------|-----|
-| D1 | **First read-only wiring** — settings + directories + news → `api/public/*.php` | Proves **L5–L6** path (**in progress**: news **list + detail** `VITE_NEWS_API` → `news.php`; pharmacies **`VITE_PHARMACIES_API`** → `pharmacies.php`; hospitals **`VITE_HOSPITALS_API`** → `hospitals.php` + `international-hospitals.php`; **settings** or further directories next) |
-| D2 | **RBAC** — real `/healthservices/admin` per **`TRACKERS/machafi-services-admin/`** | **L4c** |
+| D1 | **First read-only wiring** — settings + directories + news → `api/public/*.php` | **In progress / expanded**: news **`VITE_NEWS_API`** → `news.php`; pharmacies **`VITE_PHARMACIES_API`**; hospitals **`VITE_HOSPITALS_API`**; **ambulances** **`VITE_AMBULANCES_API`**; **accommodations** **`VITE_ACCOMMODATIONS_API`**. **Implemented PHP not yet SPA-wired:** programs, books/library, services, home, live, donations (GET), settings, consultations (GET), contact (POST) — matrix **`API_ENDPOINT_REGISTRY.md`**. |
+| D2 | **Health Services admin** — nested **`/healthservices/admin/*`** SPA (login, CSRF, CRUD modules, dashboard) + PHP hardening (`auth` envelopes, optional columns). **Remaining:** envelope parity on every legacy admin PHP file, stricter RBAC UX for `editor` vs `admin`, **`React.lazy`** split (**C3**). Tracker: **`TRACKERS/machafi-services-admin/HEALTHSERVICES_ADMIN_PANEL_MAP.md`**. | **L4c** (**v1 done**) |
 | D3 | **Rate limits + validation** on writes | **L9** |
 | D4 | **CORS + `SameSite`** if SPA/API origins differ | Session reliability |
 | D5 | **Migrations discipline** | **L7** |
@@ -200,7 +201,7 @@ Track quick wins here; mirror in **`WORKING_PLAN.md`** §10 if you use that as m
 2. **I1** — CI is live in GitHub Actions; keep green on every push touching `frontend/`.  
 3. **B** + **B5** — UX and RTL before widening surface area.  
 4. **C1** + **D1** — **`NewsDetailPage`** + news list use **`VITE_NEWS_API`**; **Pharmacies** uses **`VITE_PHARMACIES_API`**; **Hospitals** uses **`VITE_HOSPITALS_API`**; next: **settings** or tighten DTO types; keep **`config.apiBaseUrl`** as the single origin.
-5. **C2** + **D2** — admin RBAC before exposing panels.  
+5. **C2** + **D2** — tighten **RBAC** + **admin PHP envelope** parity (Health Services admin **v1** is live under **`/healthservices/admin`**; sensitive actions already use **`require_role('admin')`** where noted in PHP).  
 6. **F1–F3** in parallel as traffic approaches.  
 7. **G** + **H** when marketing/SEO matters.  
 8. **E** when TV is no longer “shell only.”  
@@ -220,6 +221,7 @@ Track quick wins here; mirror in **`WORKING_PLAN.md`** §10 if you use that as m
 | Release smoke | **`PROJECT-EXPLAINER/SMOKE_CHECKLIST_PRODUCTION.md`** |
 | Routing truth | **`frontend/src/App.tsx`**, **`PROJECT-EXPLAINER/WEBAPP_PAGES_OVERVIEW.md`** |
 | Platform map | **`PROJECT-EXPLAINER/PLATFORM_SHELL_LAYOUT.md`** |
+| GoDaddy / cPanel deploy | **`PROJECT-EXPLAINER/GODADDY_CPANEL_DEPLOYMENT_GUIDE.md`** |
 | Env template | **`frontend/.env.example`** |
 | Runtime config | **`frontend/src/config.ts`** |
 | HTTP client (`services/`) | **`frontend/src/services/http.ts`**, **`frontend/src/services/news.ts`**, **`frontend/src/services/pharmacies.ts`**, **`frontend/src/services/hospitals.ts`** |
@@ -231,4 +233,4 @@ Track quick wins here; mirror in **`WORKING_PLAN.md`** §10 if you use that as m
 
 ---
 
-*Last updated: **2026-05-14** — Gateway + TV branding (Machafi TV logo in shell and gateway strip), Services masthead mint/grid, `frontend/public/branding/`, Vercel https://kgcmachafi.vercel.app ; doc sync.*
+*Last updated: **2026-05-14** — Health Services **admin SPA v1** (`/healthservices/admin/*`), **`GODADDY_CPANEL_DEPLOYMENT_GUIDE.md`**, auth/envelope PHP updates; Gateway + TV branding, Vercel https://kgcmachafi.vercel.app ; doc sync.*

@@ -207,4 +207,15 @@ CREATE TABLE program_schedule_slots (
 
 ---
 
+## 12) Implemented HTTP map (2026-05-14)
+
+**Full catalog:** `PROJECT-EXPLAINER/API_ENDPOINT_REGISTRY.md`.
+
+| Role | Method | PHP | Notes | SPA flag |
+|------|--------|-----|-------|----------|
+| Public schedule | GET | `api/public/programs.php` | Active rows only; pagination | `VITE_PROGRAMS_API` (wire loader) |
+| Admin CRUD | GET POST PUT DELETE | `api/admin/programs.php` | CSRF on writes; requires `is_active` column | Desk |
+
+---
+
 *Last updated: **2026-05-14** — Gateway + TV branding (Machafi TV logo in shell and gateway strip), Services masthead mint/grid, `frontend/public/branding/`, Vercel https://kgcmachafi.vercel.app ; doc sync.*

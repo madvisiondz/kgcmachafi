@@ -32,7 +32,10 @@ $_SESSION['admin'] = [
     'role' => $admin['role'],
 ];
 
+$csrf = csrf_issue_token();
+
 json_response([
     'message' => 'تم تسجيل الدخول بنجاح.',
     'admin' => $_SESSION['admin'],
+    'csrf_token' => $csrf,
 ]);

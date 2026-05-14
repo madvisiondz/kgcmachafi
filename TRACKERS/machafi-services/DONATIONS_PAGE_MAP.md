@@ -438,13 +438,13 @@ CREATE TABLE donation_intents (
 
 Headline stats (early rollout): JSON blob on **`site_settings`** key `donations_stats` (see §8.3 above).
 
-### HTTP — public / admin (PHP file names align with §7)
+### HTTP — public / admin (implemented PHP)
 
-| §7 logical | PHP on GoDaddy | SQL |
+| Logical | PHP on GoDaddy | SQL |
 |------------|----------------|-----|
-| `GET /api/public/donations` | **`api/public/donations.php`** | Read campaigns + i18n + optional `site_settings.donations_stats` |
-| `POST /api/public/donations/intents` | **`api/public/donation-intent.php`** | `INSERT donation_intents` |
-| Admin campaigns / intents | **`api/admin/donations-campaigns.php`**, **`api/admin/donations-intents.php`** | CRUD + export |
+| `GET` campaigns + stats | **`api/public/donations.php`** | `donation_stats`, `donation_campaigns` |
+| `POST` donation intent | **`api/public/donations.php`** (POST branch) | `INSERT donation_intents` |
+| Admin campaigns | **`api/admin/donation-campaigns.php`** | CRUD + CSRF on writes |
 
 ---
 
@@ -454,6 +454,18 @@ Headline stats (early rollout): JSON blob on **`site_settings`** key `donations_
 - **Site chrome** (header, desktop nav gradient `.kgc-main-nav-gradient`, partner logo rules) is global; details in `../../PROJECT-EXPLAINER/PROMPT_LOG.md` under **2026-04-30**.
 - Endpoint contracts in this tracker stay aligned with **`../../PROJECT-EXPLAINER/API_STANDARD_GODADDY_MYSQL.md`** unless product scope changes.
 
+
+---
+
+## 12) Implemented HTTP map (2026-05-14)
+
+**Full catalog:** `PROJECT-EXPLAINER/API_ENDPOINT_REGISTRY.md`.
+
+| Role | Method | PHP | Notes | SPA flag |
+|------|--------|-----|-------|----------|
+| Public read | GET | `api/public/donations.php` | `stats` + `campaigns` | `VITE_DONATIONS_API` |
+| Public intent | POST | `api/public/donations.php` | Same file; honeypot `website` empty | same |
+| Admin campaigns | GET POST DELETE | `api/admin/donation-campaigns.php` | CSRF on writes | Desk |
 
 ---
 

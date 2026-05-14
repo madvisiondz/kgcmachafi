@@ -27,8 +27,11 @@ At the repo root (next to **`README.md`**):
 - **`PROJECT-EXPLAINER/PROMPT_LOG.md`** — one entry per prompt (keep current)
 - **`PROJECT-EXPLAINER/PLATFORM_SHELL_LAYOUT.md`** — domain → gateway → Machafi Services vs Machafi TV (planned editions, live TV, newsroom)
 - **`PROJECT-EXPLAINER/ROUTING_SWITCH_BRIEFING.md`** — handoff: gateway + `/healthservices` + `/tv` routing switch (what was done)
-- **`PROJECT-EXPLAINER/WEBAPP_PAGES_OVERVIEW.md`** — routes in `frontend/src/App.tsx` (gateway, services, TV, admin placeholders)
+- **`PROJECT-EXPLAINER/WEBAPP_PAGES_OVERVIEW.md`** — routes in `frontend/src/App.tsx` (gateway, services, TV, **Health Services admin v1**, TV admin placeholder)
 - **`PROJECT-EXPLAINER/HOSTING_AND_DATABASE.md`** — GoDaddy + MySQL deploy assumptions for `api/` + SPA
+- **`PROJECT-EXPLAINER/GODADDY_CPANEL_DEPLOYMENT_GUIDE.md`** — **beginner cPanel** walkthrough: database import, `api/` upload, `admin-config.php` path, `npm run build` + `dist/` upload, `.htaccess`, admin URL + checklist
+- **`PROJECT-EXPLAINER/API_ENDPOINT_REGISTRY.md`** — **canonical** list of every `api/public/*.php` and `api/admin/*.php` method, envelopes, honeypots, CSRF, and `VITE_*` flags.
+- **`PROJECT-EXPLAINER/HEALTH_SERVICES_BACKEND.md`** — Health Services backend pass: schema path, smoke checks, deploy notes.
 - **`PROJECT-EXPLAINER/API_STANDARD_GODADDY_MYSQL.md`** — JSON response conventions for PHP on shared hosting
 - **`PROJECT-EXPLAINER/ARCHIVE_LEGACY_*.md`** — archived copies of the former monolith **audit** + **deployment** notes (the `legacy/` tree was removed from the repo on 2026-05-13)
 - **`PROJECT-EXPLAINER/LEGACY_SYSTEM_PROBLEMS_AND_REBUILD_RULES.md`** — why the legacy system blocked UI work + rebuild rules

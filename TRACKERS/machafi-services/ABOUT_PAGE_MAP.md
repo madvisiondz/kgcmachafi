@@ -93,4 +93,17 @@ CREATE TABLE contact_messages (
 
 ---
 
+## 12) Implemented HTTP map (2026-05-14)
+
+**Full catalog:** `PROJECT-EXPLAINER/API_ENDPOINT_REGISTRY.md`.
+
+| Role | Method | PHP | Notes | SPA flag |
+|------|--------|-----|-------|----------|
+| Contact form | POST | `api/public/contact.php` | JSON; honeypot `company` empty | *(wire `postJson` from About page)* |
+| Safe site copy | GET | `api/public/settings.php` | Includes `about` key subset | `VITE_SETTINGS_API` |
+| Admin inbox | GET DELETE | `api/admin/contact-messages.php` | CSRF on DELETE | Desk |
+| Full site blob (legacy) | GET | `api/public/site-content.php` | Composite bundle if still needed | — |
+
+---
+
 *Last updated: **2026-05-14** — Gateway + TV branding (Machafi TV logo in shell and gateway strip), Services masthead mint/grid, `frontend/public/branding/`, Vercel https://kgcmachafi.vercel.app ; doc sync.*

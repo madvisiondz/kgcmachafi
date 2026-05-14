@@ -17,7 +17,7 @@ if ($method === 'GET') {
 }
 
 if ($method === 'POST') {
-    require_admin();
+    require_admin_write();
     $payload = ambulance_payload();
 
     $statement = db()->prepare(
@@ -48,7 +48,7 @@ if ($method === 'POST') {
 }
 
 if ($method === 'PUT') {
-    require_admin();
+    require_admin_write();
     $id = (int) ($_GET['id'] ?? 0);
     $payload = ambulance_payload();
 
@@ -90,7 +90,7 @@ if ($method === 'PUT') {
 }
 
 if ($method === 'DELETE') {
-    require_admin();
+    require_admin_write();
     $id = (int) ($_GET['id'] ?? 0);
     $statement = db()->prepare('DELETE FROM ambulances WHERE id = :id');
     $statement->execute(['id' => $id]);

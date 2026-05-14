@@ -13,7 +13,7 @@ if ($method === 'GET') {
 }
 
 if ($method === 'POST') {
-    require_admin();
+    require_admin_write();
     $payload = read_json_input();
 
     $title = trim((string) ($payload['title'] ?? ''));
@@ -53,7 +53,7 @@ if ($method === 'POST') {
 }
 
 if ($method === 'PUT') {
-    require_admin();
+    require_admin_write();
     $id = (int) ($_GET['id'] ?? 0);
     $payload = read_json_input();
 
@@ -105,7 +105,7 @@ if ($method === 'PUT') {
 }
 
 if ($method === 'DELETE') {
-    require_admin();
+    require_admin_write();
     $id = (int) ($_GET['id'] ?? 0);
 
     if ($id <= 0) {

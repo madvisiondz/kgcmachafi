@@ -104,7 +104,7 @@ if ($method === 'GET') {
 }
 
 if ($method === 'POST') {
-    require_admin();
+    require_admin_write();
     $id = (int) ($_GET['id'] ?? 0);
     $payload = programs_payload();
     $overrideMethod = strtoupper(trim((string) ($payload['_method'] ?? '')));
@@ -238,12 +238,12 @@ if ($method === 'POST') {
 }
 
 if ($method === 'PUT') {
-    require_admin();
+    require_admin_write();
     json_response(['message' => 'استخدم النموذج لرفع الفيديو وتحديث البرنامج.'], 405);
 }
 
 if ($method === 'DELETE') {
-    require_admin();
+    require_admin_write();
     $id = (int) ($_GET['id'] ?? 0);
 
     if ($id <= 0) {

@@ -1,7 +1,10 @@
-import React, { useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { useI18n } from '../i18n/I18nProvider';
 import { getCommunes, wilayas } from '../data/algeria-data';
 import { consultationDoctorsMock, consultationSpecialtiesMock } from '../data/consultations';
+import { useBootstrapList } from '../hooks/useBootstrapList';
+import ListFetchErrorBanner from '../components/ListFetchErrorBanner';
+import { ApiError, loadConsultationsBundle, submitConsultationBooking } from '../services';
 
 function Icon({ children, className = '' }) {
   return (
@@ -78,8 +81,14 @@ function normalize(s) {
 }
 
 export default function ConsultationsPage() {
-  const { t, dir } = useI18n();
+  const { t, dir, language } = useI18n();
   const isRTL = dir === 'rtl';
+
+  const loadBundle = useCallback(() => loadConsultationsBundle(language), [language]);
+  const { status, data, error, reload } = useBootstrapList(loadBundle);
+  const specialties = data?.specialties ?? consultationSpecialtiesMock;
+  const doctors = data?.doctors ?? consultationDoctorsMock;
+  const showSkeleton = status === 'loading';
 
   const [specialtyKey, setSpecialtyKey] = useState('');
   const [wilaya, setWilaya] = useState('');
@@ -91,6 +100,7 @@ export default function ConsultationsPage() {
   const [selectedDoctorId, setSelectedDoctorId] = useState(null);
   const [bookingOpen, setBookingOpen] = useState(false);
   const [feedback, setFeedback] = useState(null);
+  const [bookingBusy, setBookingBusy] = useState(false);
 
   const communeOptions = useMemo(() => {
     if (!wilaya) return [];
@@ -100,17 +110,17 @@ export default function ConsultationsPage() {
   }, [isRTL, wilaya]);
 
   const specialtyOptions = useMemo(() => {
-    return consultationSpecialtiesMock.map((s) => ({
+    return specialties.map((s) => ({
       key: s.key,
-      label: t(`consultations.specialties.${s.key}`),
+      label: s.apiName && s.apiName.trim() !== '' ? s.apiName : t(`consultations.specialties.${s.key}`),
       iconEmoji: s.iconEmoji,
       colorClass: s.colorClass,
     }));
-  }, [t]);
+  }, [specialties, t]);
 
   const filtered = useMemo(() => {
     const q = normalize(query);
-    return consultationDoctorsMock.filter((d) => {
+    return doctors.filter((d) => {
       if (!d.isActive) return false;
       if (specialtyKey && d.specialtyKey !== specialtyKey) return false;
       if (wilaya && d.wilayaCode !== wilaya) return false;
@@ -121,7 +131,7 @@ export default function ConsultationsPage() {
       const hay = normalize([d.name, d.clinicName ?? '', d.phone, d.wilayaCode].join(' '));
       return hay.includes(q);
     });
-  }, [communeId, query, remoteOnly, specialtyKey, verifiedOnly, wilaya]);
+  }, [communeId, doctors, query, remoteOnly, specialtyKey, verifiedOnly, wilaya]);
 
   const selectedDoctor = useMemo(() => filtered.find((d) => d.id === selectedDoctorId) || null, [filtered, selectedDoctorId]);
 
@@ -135,13 +145,60 @@ export default function ConsultationsPage() {
   const closeModal = () => {
     setBookingOpen(false);
     setSelectedDoctorId(null);
+    setBookingBusy(false);
   };
 
-  const submitBooking = (e) => {
+  const submitBooking = async (e) => {
     e.preventDefault();
-    closeModal();
-    setFeedback({ tone: 'success', title: t('consultations.bookingSuccessTitle'), desc: t('consultations.bookingSuccessDesc') });
-    window.setTimeout(() => setFeedback(null), 4000);
+    const fd = new FormData(e.currentTarget);
+    const patient_name = String(fd.get('patient_name') ?? '').trim();
+    const patient_phone = String(fd.get('patient_phone') ?? '').trim();
+    const notes = String(fd.get('notes') ?? '').trim();
+    const fax = String(fd.get('fax') ?? '');
+
+    if (import.meta.env.VITE_CONSULTATIONS_API !== 'true') {
+      closeModal();
+      setFeedback({ tone: 'success', title: t('consultations.bookingSuccessTitle'), desc: t('consultations.bookingSuccessDesc') });
+      window.setTimeout(() => setFeedback(null), 4000);
+      return;
+    }
+
+    const doctorId = Number(selectedDoctor?.id);
+    if (!selectedDoctor || !Number.isFinite(doctorId) || doctorId <= 0) {
+      setFeedback({
+        tone: 'error',
+        title: t('consultations.bookingDemoDoctorTitle'),
+        desc: t('consultations.bookingDemoDoctorDesc'),
+      });
+      window.setTimeout(() => setFeedback(null), 6000);
+      return;
+    }
+
+    setBookingBusy(true);
+    try {
+      await submitConsultationBooking({
+        doctor_id: doctorId,
+        patient_name,
+        patient_phone,
+        notes,
+        fax,
+      });
+      closeModal();
+      setFeedback({
+        tone: 'success',
+        title: t('consultations.bookingSuccessTitle'),
+        desc: t('consultations.bookingReceivedDesc'),
+      });
+    } catch (err) {
+      let msg = err instanceof Error ? err.message : String(err);
+      if (err instanceof ApiError && err.body && typeof err.body === 'object' && err.body.error && typeof err.body.error.message === 'string') {
+        msg = err.body.error.message;
+      }
+      setFeedback({ tone: 'error', title: t('consultations.bookingErrorTitle'), desc: msg });
+    } finally {
+      setBookingBusy(false);
+    }
+    window.setTimeout(() => setFeedback(null), 6000);
   };
 
   return (
@@ -154,11 +211,19 @@ export default function ConsultationsPage() {
               className={`mb-8 rounded-2xl border px-4 py-3 text-sm ${
                 feedback.tone === 'success'
                   ? 'border-emerald-200 bg-emerald-50 text-emerald-900'
-                  : 'border-slate-200 bg-white text-slate-900'
+                  : feedback.tone === 'error'
+                    ? 'border-rose-200 bg-rose-50 text-rose-900'
+                    : 'border-slate-200 bg-white text-slate-900'
               }`}
             >
               <div className="font-extrabold">{feedback.title}</div>
               <div className="opacity-90">{feedback.desc}</div>
+            </div>
+          ) : null}
+
+          {error ? (
+            <div className="mb-6">
+              <ListFetchErrorBanner message={error.message} onRetry={reload} />
             </div>
           ) : null}
 
@@ -364,7 +429,11 @@ export default function ConsultationsPage() {
 
           {/* Results */}
           <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-            {filtered.length === 0 ? (
+            {showSkeleton ? (
+              Array.from({ length: 6 }).map((_, i) => (
+                <div key={`c-sk-${i}`} className="h-[380px] rounded-[28px] bg-slate-100 animate-pulse border border-slate-200" aria-hidden="true" />
+              ))
+            ) : filtered.length === 0 ? (
               <EmptyState title={t('consultations.emptyTitle')} desc={t('consultations.emptyDesc')} />
             ) : (
               filtered.map((d) => (
@@ -372,6 +441,7 @@ export default function ConsultationsPage() {
                   key={d.id}
                   item={d}
                   t={t}
+                  specialtyLabel={d.specialtyLabel ?? t(`consultations.specialties.${d.specialtyKey}`)}
                   onBook={() => {
                     setSelectedDoctorId(d.id);
                     setBookingOpen(true);
@@ -385,13 +455,22 @@ export default function ConsultationsPage() {
 
       {bookingOpen && selectedDoctor ? (
         <Modal onClose={closeModal} title={t('consultations.bookWith').replace('{name}', selectedDoctor.name)} dir={dir}>
-          <form className="space-y-4" onSubmit={submitBooking}>
+          <form className="relative space-y-4" onSubmit={submitBooking}>
+            <input
+              type="text"
+              name="fax"
+              tabIndex={-1}
+              autoComplete="off"
+              className="absolute h-0 w-0 overflow-hidden opacity-0"
+              aria-hidden="true"
+            />
             <div>
               <label className="text-sm font-bold text-slate-700" htmlFor="bk-name">
                 {t('consultations.fullName')}
               </label>
               <input
                 id="bk-name"
+                name="patient_name"
                 required
                 className="mt-2 w-full rounded-xl border border-slate-200 bg-white px-3 py-3 text-sm text-slate-900 outline-none focus:ring-2 focus:ring-emerald-500"
                 placeholder={t('consultations.fullNamePlaceholder')}
@@ -403,6 +482,7 @@ export default function ConsultationsPage() {
               </label>
               <input
                 id="bk-phone"
+                name="patient_phone"
                 type="tel"
                 required
                 dir="ltr"
@@ -416,13 +496,18 @@ export default function ConsultationsPage() {
               </label>
               <textarea
                 id="bk-notes"
+                name="notes"
                 className="mt-2 w-full rounded-xl border border-slate-200 bg-white px-3 py-3 text-sm text-slate-900 outline-none focus:ring-2 focus:ring-emerald-500"
                 rows={4}
                 placeholder={t('consultations.notesPlaceholder')}
               />
             </div>
-            <button type="submit" className="w-full rounded-xl bg-emerald-600 px-4 py-3 text-sm font-extrabold text-white hover:bg-emerald-700">
-              {t('consultations.confirmBooking')}
+            <button
+              type="submit"
+              disabled={bookingBusy}
+              className="w-full rounded-xl bg-emerald-600 px-4 py-3 text-sm font-extrabold text-white hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              {bookingBusy ? t('consultations.bookingSending') : t('consultations.confirmBooking')}
             </button>
           </form>
         </Modal>
@@ -467,7 +552,7 @@ function ValueCard({ icon, title, desc, tone }) {
   );
 }
 
-function DoctorCard({ item, t, onBook }) {
+function DoctorCard({ item, t, specialtyLabel, onBook }) {
   return (
     <div className="overflow-hidden rounded-[28px] border border-slate-200 bg-white shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl">
       <div className="relative p-5 bg-gradient-to-br from-emerald-700 via-green-600 to-teal-600 text-white">
@@ -475,7 +560,7 @@ function DoctorCard({ item, t, onBook }) {
           <div className="min-w-0">
             <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs font-extrabold text-white">
               {Icons.steth({ className: 'h-4 w-4' })}
-              {t(`consultations.specialties.${item.specialtyKey}`)}
+              {specialtyLabel}
             </div>
             <h3 className="mt-4 text-xl font-black leading-tight">{item.name}</h3>
             <div className="mt-1 text-sm text-white/90">{item.clinicName ? item.clinicName : t('consultations.privatePractice')}</div>

@@ -1,18 +1,65 @@
-import { Link } from 'react-router-dom';
-import { useI18n } from '../../i18n/I18nProvider';
-import { SERVICES_BASE } from '../../routes/paths';
+import React from 'react';
+import { Navigate, Route, Routes } from 'react-router-dom';
+import CrudResourcePage from '../../components/admin/healthservices/CrudResourcePage';
+import { HealthAdminAuthProvider } from './healthservices/HealthAdminAuthContext';
+import { HealthAdminToastProvider } from './healthservices/HealthAdminToastContext';
+import RequireHealthAdmin from './healthservices/RequireHealthAdmin';
+import AdminLayout from './healthservices/AdminLayout';
+import LoginPage from './healthservices/LoginPage';
+import DashboardPage from './healthservices/DashboardPage';
+import SettingsPage from './healthservices/SettingsPage';
+import LiveAdminPage from './healthservices/LiveAdminPage';
+import HomepageAdminPage from './healthservices/HomepageAdminPage';
+import DonationCampaignsAdminPage from './healthservices/DonationCampaignsAdminPage';
+import MessagesAdminPage from './healthservices/MessagesAdminPage';
+import BookingsAdminPage from './healthservices/BookingsAdminPage';
+import IntentsAdminPage from './healthservices/IntentsAdminPage';
+import {
+  newsCrud,
+  pharmaciesCrud,
+  hospitalsCrud,
+  intlHospitalsCrud,
+  ambulancesCrud,
+  accommodationsCrud,
+  servicesCrud,
+  programsCrud,
+  booksCrud,
+  consultationSpecialtiesCrud,
+  consultationDoctorsCrud,
+} from './healthservices/healthAdminCrudConfigs';
 
 export default function HealthServicesAdminPage() {
-  const { t } = useI18n();
   return (
-    <div className="min-h-screen bg-slate-100 flex flex-col items-center justify-center p-6">
-      <div className="max-w-md w-full rounded-2xl bg-white shadow-lg border border-slate-200 p-8 text-center">
-        <h1 className="text-xl font-bold text-slate-900">{t('admin.healthTitle')}</h1>
-        <p className="mt-2 text-sm text-slate-600">{t('admin.healthSub')}</p>
-        <Link className="mt-6 inline-block text-emerald-700 font-semibold hover:underline" to={SERVICES_BASE}>
-          ← {t('admin.backToSite')}
-        </Link>
-      </div>
-    </div>
+    <HealthAdminAuthProvider>
+      <HealthAdminToastProvider>
+        <Routes>
+          <Route path="login" element={<LoginPage />} />
+          <Route element={<RequireHealthAdmin />}>
+            <Route element={<AdminLayout />}>
+              <Route index element={<DashboardPage />} />
+              <Route path="news" element={<CrudResourcePage {...newsCrud} />} />
+              <Route path="pharmacies" element={<CrudResourcePage {...pharmaciesCrud} />} />
+              <Route path="hospitals" element={<CrudResourcePage {...hospitalsCrud} />} />
+              <Route path="international-hospitals" element={<CrudResourcePage {...intlHospitalsCrud} />} />
+              <Route path="ambulances" element={<CrudResourcePage {...ambulancesCrud} />} />
+              <Route path="accommodations" element={<CrudResourcePage {...accommodationsCrud} />} />
+              <Route path="services" element={<CrudResourcePage {...servicesCrud} />} />
+              <Route path="programs" element={<CrudResourcePage {...programsCrud} />} />
+              <Route path="library" element={<CrudResourcePage {...booksCrud} />} />
+              <Route path="live" element={<LiveAdminPage />} />
+              <Route path="homepage" element={<HomepageAdminPage />} />
+              <Route path="settings" element={<SettingsPage />} />
+              <Route path="consultations/specialties" element={<CrudResourcePage {...consultationSpecialtiesCrud} />} />
+              <Route path="consultations/doctors" element={<CrudResourcePage {...consultationDoctorsCrud} />} />
+              <Route path="consultations/bookings" element={<BookingsAdminPage />} />
+              <Route path="donations/campaigns" element={<DonationCampaignsAdminPage />} />
+              <Route path="donations/intents" element={<IntentsAdminPage />} />
+              <Route path="messages" element={<MessagesAdminPage />} />
+            </Route>
+          </Route>
+          <Route path="*" element={<Navigate to="/healthservices/admin" replace />} />
+        </Routes>
+      </HealthAdminToastProvider>
+    </HealthAdminAuthProvider>
   );
 }

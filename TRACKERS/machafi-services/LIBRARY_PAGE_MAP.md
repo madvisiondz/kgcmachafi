@@ -159,4 +159,15 @@ CREATE TABLE library_book_i18n (
 
 ---
 
+## 12) Implemented HTTP map (2026-05-14)
+
+**Full catalog:** `PROJECT-EXPLAINER/API_ENDPOINT_REGISTRY.md`.
+
+| Role | Method | PHP | Notes | SPA flag |
+|------|--------|-----|-------|----------|
+| Public books | GET | `api/public/books.php` or `api/public/library.php` | Same data; `library.php` aliases books | `VITE_LIBRARY_API` (wire loader) |
+| Admin CRUD | GET POST PUT DELETE | `api/admin/books.php` | CSRF on writes | Desk |
+
+---
+
 *Last updated: **2026-05-14** — Gateway + TV branding (Machafi TV logo in shell and gateway strip), Services masthead mint/grid, `frontend/public/branding/`, Vercel https://kgcmachafi.vercel.app ; doc sync.*

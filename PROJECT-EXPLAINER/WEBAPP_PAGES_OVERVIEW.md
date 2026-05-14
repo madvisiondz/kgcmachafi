@@ -12,7 +12,7 @@ This document tracks **`frontend/src/App.tsx`** routing on **[https://kgc-machaf
 | **JSON API rules** | **`API_STANDARD_GODADDY_MYSQL.md`** |
 | **SPA → API** | Same origin **`VITE_API_BASE_URL=/api`** → `https://kgc-machafi.net/api/...` (see `frontend/src/config.ts`, `frontend/.env.example`) |
 
-**Endpoint source of truth per page:** each data-backed route has a tracker under **`TRACKERS/`** with a section **“Full endpoint design — GoDaddy + MySQL (SQL)”** where APIs apply. **25** tracker files total: **gateway** (`../TRACKERS/gateway/GATEWAY_PAGE_MAP.md`), **13** Services maps, **9** TV maps, **2** admin maps. The gateway page is **UI + routing only** (no SQL section).
+**Endpoint source of truth:** **`PROJECT-EXPLAINER/API_ENDPOINT_REGISTRY.md`** (all `api/public` + `api/admin` files). Each data-backed route also has a tracker under **`TRACKERS/`** with **§12 Implemented HTTP map** (per-page subset) plus legacy **“Full endpoint design — GoDaddy + MySQL (SQL)”** for SQL shapes. **25** tracker files total: **gateway** (`../TRACKERS/gateway/GATEWAY_PAGE_MAP.md`), **13** Services maps, **9** TV maps, **2** admin maps. The gateway page is **UI + routing only** (no SQL section).
 
 ---
 
@@ -65,8 +65,8 @@ Canonical paths (legacy URLs without `/healthservices` **redirect**). **PHP** pa
 | 7 | `/healthservices/news/:id` | `NewsDetailPage.jsx` | detail by id/slug | same |
 | 8 | `/healthservices/live` | `LivePage.jsx` | stream + VOD meta | `../TRACKERS/machafi-services/LIVE_PAGE_MAP.md` |
 | 9 | `/healthservices/pharmacies` | `PharmaciesPage.jsx` | `pharmacies` + night week | `../TRACKERS/machafi-services/PHARMACIES_PAGE_MAP.md` |
-| 10 | `/healthservices/ambulances` | `AmbulancesPage.jsx` | `ambulance_providers` | `../TRACKERS/machafi-services/AMBULANCES_PAGE_MAP.md` |
-| 11 | `/healthservices/accommodations` | `AccommodationsPage.jsx` | `housing_listings` | `../TRACKERS/machafi-services/HOUSING_PAGE_MAP.md` |
+| 10 | `/healthservices/ambulances` | `AmbulancesPage.jsx` | `ambulances` | `../TRACKERS/machafi-services/AMBULANCES_PAGE_MAP.md` |
+| 11 | `/healthservices/accommodations` | `AccommodationsPage.jsx` | `patient_accommodations` | `../TRACKERS/machafi-services/HOUSING_PAGE_MAP.md` |
 | 12 | `/healthservices/programs` | `ProgramsPage.jsx` | `programs` / schedule | `../TRACKERS/machafi-services/PROGRAMS_PAGE_MAP.md` |
 | 13 | `/healthservices/hospitals` | `HospitalsPage.jsx` | `hospitals` | `../TRACKERS/machafi-services/HOSPITALS_PAGE_MAP.md` |
 | 14 | `/healthservices/consultations` | `ConsultationsPage.jsx` | doctors + specialties | `../TRACKERS/machafi-services/CONSULTATIONS_PAGE_MAP.md` |
@@ -108,8 +108,8 @@ Admin JSON remains under **`/api/admin/...`** with **session + RBAC** (see **`AP
 | Layer | State |
 |-------|--------|
 | **UI** | Services + TV shells largely built (`frontend/src/pages/**`). |
-| **HTTP client** | Planned `frontend/src/services/*` — use `appConfig.apiBaseUrl`. |
-| **PHP + MySQL** | Specified per **tracker** “Full endpoint design” sections; implement on GoDaddy host. |
+| **HTTP client** | `frontend/src/services/http.ts` (`getJson`, `postJson`) + per-domain loaders (`news.ts`, `pharmacies.ts`, `hospitals.ts`, `ambulances.ts`, `accommodations.ts`, …). |
+| **PHP + MySQL** | Many **Machafi Services** public + admin endpoints **implemented** in `api/` — matrix **`API_ENDPOINT_REGISTRY.md`**; iteration notes **`HEALTH_SERVICES_BACKEND.md`**. TV `/api/public/tv/*` not in repo yet. |
 
 ### Practical order (aligned with `NEXT_MOVES.md`)
 

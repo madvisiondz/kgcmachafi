@@ -19,7 +19,7 @@ if ($method === 'GET') {
 }
 
 if ($method === 'PUT') {
-    require_admin();
+    require_admin_write();
     $payload = read_json_input();
     $settings = $payload['settings'] ?? null;
 

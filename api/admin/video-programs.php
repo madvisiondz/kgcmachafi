@@ -12,7 +12,7 @@ if ($method === 'GET') {
 }
 
 if ($method === 'POST') {
-    require_admin();
+    require_admin_write();
     $payload = read_json_input();
     $statement = db()->prepare(
         'INSERT INTO video_programs (title, duration, specialty, image_url, video_url, sort_order, is_active)
@@ -34,7 +34,7 @@ if ($method === 'POST') {
 }
 
 if ($method === 'PUT') {
-    require_admin();
+    require_admin_write();
     $id = (int) ($_GET['id'] ?? 0);
     $payload = read_json_input();
     $statement = db()->prepare(
@@ -64,7 +64,7 @@ if ($method === 'PUT') {
 }
 
 if ($method === 'DELETE') {
-    require_admin();
+    require_admin_write();
     $id = (int) ($_GET['id'] ?? 0);
     $statement = db()->prepare('DELETE FROM video_programs WHERE id = :id');
     $statement->execute(['id' => $id]);

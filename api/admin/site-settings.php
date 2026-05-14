@@ -15,16 +15,16 @@ if ($method === 'GET') {
         $settings[$row['setting_key']] = json_decode($row['setting_value'], true) ?? [];
     }
 
-    json_response(['settings' => $settings]);
+    api_envelope_ok(['settings' => $settings]);
 }
 
 if ($method === 'PUT') {
-    require_admin();
+    require_admin_write();
     $payload = read_json_input();
     $settings = $payload['settings'] ?? null;
 
     if (!is_array($settings) || $settings === []) {
-        json_response(['message' => 'بيانات الإعدادات غير صالحة.'], 422);
+        api_envelope_error('validation', 'بيانات الإعدادات غير صالحة.', 422);
     }
 
     $statement = db()->prepare(
@@ -40,7 +40,7 @@ if ($method === 'PUT') {
         ]);
     }
 
-    json_response(['message' => 'تم حفظ إعدادات الموقع.']);
+    api_envelope_ok(['message' => 'تم حفظ إعدادات الموقع.']);
 }
 
-json_response(['message' => 'الطريقة غير مدعومة.'], 405);
+api_envelope_error('method_not_allowed', 'الطريقة غير مدعومة.', 405);

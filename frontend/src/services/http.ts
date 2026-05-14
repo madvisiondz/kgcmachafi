@@ -67,3 +67,48 @@ export async function getJson<T>(input: string, init?: GetJsonOptions): Promise<
     window.clearTimeout(timer)
   }
 }
+
+export type PostJsonOptions = RequestInit & {
+  timeoutMs?: number
+}
+
+/**
+ * JSON POST with timeout. Server may return `{ ok, data }` or `{ ok, error }` (HTTP 4xx).
+ */
+export async function postJson<T>(input: string, body: unknown, init?: PostJsonOptions): Promise<T> {
+  const { timeoutMs = 12_000, ...rest } = init ?? {}
+  const ctrl = new AbortController()
+  const timer = window.setTimeout(() => ctrl.abort(), timeoutMs)
+
+  try {
+    const res = await fetch(input, {
+      ...rest,
+      method: 'POST',
+      signal: ctrl.signal,
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        ...(rest.headers as Record<string, string> | undefined),
+      },
+      body: JSON.stringify(body ?? {}),
+    })
+
+    const text = await res.text()
+    let parsed: unknown = null
+    if (text) {
+      try {
+        parsed = JSON.parse(text) as unknown
+      } catch {
+        throw new ApiError('Response was not valid JSON', res.status, text)
+      }
+    }
+
+    if (!res.ok) {
+      throw new ApiError(`HTTP ${res.status}`, res.status, parsed)
+    }
+
+    return parsed as T
+  } finally {
+    window.clearTimeout(timer)
+  }
+}

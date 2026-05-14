@@ -3,6 +3,9 @@ import { Link } from 'react-router-dom';
 import { useI18n } from '../i18n/I18nProvider';
 import { servicesPath } from '../routes/paths';
 import { livePlayerSettingsMock, liveRecordedMock, liveUpNextMock } from '../data/live';
+import { useBootstrapList } from '../hooks/useBootstrapList';
+import ListFetchErrorBanner from '../components/ListFetchErrorBanner';
+import { loadLivePageBundle } from '../services';
 
 function formatTpl(template, vars) {
   return template.replace(/\{(\w+)\}/g, (_, key) => (vars[key] !== undefined ? String(vars[key]) : `{${key}}`));
@@ -89,7 +92,18 @@ function programDesc(t, programKey) {
 
 export default function LivePage() {
   const { t, dir } = useI18n();
-  const cfg = livePlayerSettingsMock;
+  const loadLive = useCallback(() => loadLivePageBundle(), []);
+  const { status, data, error, reload } = useBootstrapList(loadLive);
+  const bundle = data ?? {
+    player: livePlayerSettingsMock,
+    recorded: liveRecordedMock,
+    upNext: liveUpNextMock,
+  };
+  const cfg = bundle.player;
+  const recordedItems = bundle.recorded;
+  const upNextItems = bundle.upNext;
+  const showSkeleton = status === 'loading';
+
   const [tab, setTab] = useState('stream');
   /** Once true, keep the `<video>` mounted (native pause must not tear down the stage). */
   const [playerStarted, setPlayerStarted] = useState(false);
@@ -155,6 +169,11 @@ export default function LivePage() {
   return (
     <div className="bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 text-white" dir={dir}>
       <div className={`mx-auto px-4 py-8 transition-[max-width] duration-300 ${theater ? 'max-w-[min(1600px,100%)]' : 'max-w-6xl'}`}>
+        {error ? (
+          <div className="mb-6">
+            <ListFetchErrorBanner message={error.message} onRetry={reload} />
+          </div>
+        ) : null}
         {/* Top meta row — pro apps: status + signal strip */}
         <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4 mb-6">
           <div>
@@ -321,7 +340,11 @@ export default function LivePage() {
 
             {tab === 'recorded' && (
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {liveRecordedMock.map((item) => (
+                {showSkeleton
+                  ? Array.from({ length: 4 }).map((_, i) => (
+                      <div key={`lr-sk-${i}`} className="h-56 rounded-2xl bg-slate-800/80 animate-pulse border border-white/10" aria-hidden="true" />
+                    ))
+                  : recordedItems.map((item) => (
                   <button
                     key={item.id}
                     type="button"
@@ -350,7 +373,8 @@ export default function LivePage() {
                       <p className="mt-1 text-xs text-slate-400 line-clamp-2">{programDesc(t, item.programKey)}</p>
                     </div>
                   </button>
-                ))}
+                ))
+                }
               </div>
             )}
 
@@ -364,7 +388,11 @@ export default function LivePage() {
             <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
               <h3 className="text-sm font-black uppercase tracking-wide text-emerald-300/90">{t('live.sidebar.upNext')}</h3>
               <ul className="mt-4 space-y-3">
-                {liveUpNextMock.map((row) => (
+                {showSkeleton
+                  ? Array.from({ length: 4 }).map((_, i) => (
+                      <li key={`un-sk-${i}`} className="h-16 rounded-xl bg-black/30 animate-pulse border border-white/10" aria-hidden="true" />
+                    ))
+                  : upNextItems.map((row) => (
                   <li
                     key={row.id}
                     className="flex items-start justify-between gap-3 rounded-xl border border-white/10 bg-black/30 px-3 py-3"
@@ -377,7 +405,8 @@ export default function LivePage() {
                       {row.startTime}
                     </span>
                   </li>
-                ))}
+                ))
+                }
               </ul>
               <Link
                 to={servicesPath('/programs')}

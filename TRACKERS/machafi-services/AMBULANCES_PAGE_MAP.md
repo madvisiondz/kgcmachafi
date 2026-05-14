@@ -224,4 +224,15 @@ CREATE TABLE ambulance_providers (
 
 ---
 
+## 12) Implemented HTTP map (2026-05-14)
+
+**Full catalog:** `PROJECT-EXPLAINER/API_ENDPOINT_REGISTRY.md`.
+
+| Role | Method | PHP | Query / body | SPA flag |
+|------|--------|-----|--------------|----------|
+| Public directory | GET | `api/public/ambulances.php` | `wilaya?`, `page`, `limit` (read-only; **no public POST**) | `VITE_AMBULANCES_API` |
+| Admin CRUD | GET POST PUT DELETE | `api/admin/ambulances.php` | JSON + CSRF on writes | Desk |
+
+---
+
 *Last updated: **2026-05-14** — Gateway + TV branding (Machafi TV logo in shell and gateway strip), Services masthead mint/grid, `frontend/public/branding/`, Vercel https://kgcmachafi.vercel.app ; doc sync.*

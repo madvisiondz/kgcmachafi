@@ -3,12 +3,16 @@ export type ConsultationSpecialty = {
   key: string;
   iconEmoji: string;
   colorClass: string; // tailwind gradient
+  /** Localized label from API when present (preferred over i18n). */
+  apiName?: string;
 };
 
 export type ConsultationDoctor = {
   id: string;
   name: string;
   specialtyKey: string;
+  /** Localized specialty line from API join when present. */
+  specialtyLabel?: string;
   wilayaCode: string; // "16"
   communeId: string;
   clinicName?: string;

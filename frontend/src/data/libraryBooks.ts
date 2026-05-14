@@ -5,7 +5,7 @@
 
 export type LibraryBookRecord = {
   id: string;
-  /** Key under `library.books` in translations */
+  /** Key under `library.books` in translations (ignored when `apiTitle` is set). */
   bookKey: 'b1' | 'b2' | 'b3' | 'b4';
   /** Key under `library.categories` */
   categoryKey: 'nutrition' | 'psychology' | 'general' | 'kids';
@@ -14,6 +14,10 @@ export type LibraryBookRecord = {
   imageUrl: string;
   /** Use '#' for “no file” (shows i18n notice). Sample PDF for one ebook for preview UX. */
   filePath: string;
+  /** From `books.php` — plain title for display/search */
+  apiTitle?: string;
+  apiAuthor?: string;
+  apiCategory?: string;
 };
 
 const FALLBACK_IMG = 'https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&w=800&q=80';

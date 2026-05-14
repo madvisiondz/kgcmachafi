@@ -37,7 +37,7 @@ Traffic flows **top → bottom**. Each box is one **layer**; the right column is
               │                            │                         │
               ▼                            ▼                         ▼
     ┌─────────────────────────┐  ┌─────────────────────────┐  ┌─────────────────────────┐
-    │ L4a Machafi Services UI │  │ L4b Machafi TV shell    │  │ L4c Admin shells        │
+    │ L4a Machafi Services UI │  │ L4b Machafi TV shell    │  │ L4c Admin (HS v1 / TV stub) │
     │ /healthservices/*       │  │ /tv/:edition/*          │  │ placeholders only       │
     │ mocks + full page set   │  │ tvMock + routes         │  │ /healthservices/admin   │
     │ prod readiness:  78%    │  │ prod readiness:  41%    │  │ /machafitv/admin        │
@@ -63,7 +63,7 @@ Traffic flows **top → bottom**. Each box is one **layer**; the right column is
     └────────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
-**Reading the stack:** today the SPA is **strong in L3 + L4a UI**; **L5 is underway** (`services/http.ts`, `services/news.ts`, list hooks — still no auth headers / full DTO coverage); **L6 exists** but is **not fully aligned** with the new router and product split; **L7–L8** are assumed from the legacy era — treat % as **“confidence for new product on prod”**, not “database exists.”
+**Reading the stack:** today the SPA is **strong in L3 + L4a UI**; **L5 is underway** (`services/http.ts`, env-gated loaders for news/pharmacies/hospitals/ambulances/accommodations — still partial DTO coverage); **L6** has a **documented matrix** in **`PROJECT-EXPLAINER/API_ENDPOINT_REGISTRY.md`** (many Machafi Services `public/` + `admin/` handlers; admin CSRF on writes) but needs contract tests + rate limits; **L7–L8** are assumed from the legacy era — treat % as **“confidence for new product on prod”**, not “database exists.”
 
 ---
 
@@ -110,7 +110,7 @@ Traffic flows **top → bottom**. Each box is one **layer**; the right column is
 | **L3** | Client SPA runtime (build, router, shell) | **76%** | Vite + React 19 + RR7 + `App.tsx` + layouts | Error boundaries, lazy routes, env-based config, bundle budget in CI |
 | **L4a** | Machafi Services UI | **80%** | Full page set under `/healthservices/*`, trackers, i18n, list skeleton/error on News/Pharmacies/Hospitals | Pixel pass, RTL audit, extend async states to remaining lists |
 | **L4b** | Machafi TV UI & editorial shell | **41%** | `/tv/ar|fr|en/*`, `TvShellLayout`, desk/activity/search/live/schedule/article | HLS player, real feeds, edition CMS, stream admin |
-| **L4c** | Admin UI (both products) | **12%** | Placeholder routes only | Real panels + RBAC per `TRACKERS/*-admin/` |
+| **L4c** | Admin UI (both products) | **~50%** | **Health Services** admin v1 (nested `/healthservices/admin/*`, CSRF); **Machafi TV** admin still placeholder | Envelope parity on all admin PHP + RBAC UX + TV CMS (**`TRACKERS/*-admin/`**) |
 | **L5** | Client API boundary (`services/`) | **32%** | `frontend/src/services/http.ts`, `news.ts`, `hooks/useBootstrapList.ts` | Auth headers, DTO coverage, no raw `fetch` in pages |
 | **L6** | HTTP API (`api/` PHP) | **44%** | Many `public/` + `admin/` endpoints | Contract tests with SPA, versioning, rate limits, CORS/cookie policy |
 | **L7** | Data tier | **35%** | Implied by legacy PHP | Migrations discipline, backup/restore runbooks, PII handling |
@@ -145,7 +145,7 @@ These span several layers; track them in `NEXT_STEPS_PRODUCTION.md`.
 
 ## 5. Composite “how far is the whole webapp?”
 
-**Naive average** of all **fifteen** numeric rows in §3 (L1–L4c + L5–L13): **~38%** holistic production readiness.
+**Naive average** of all **fifteen** numeric rows in §3 (L1–L4c + L5–L13): **~41%** holistic production readiness.
 
 **Interpretation:** the project is **front-loaded** (UI + docs **high**); **integration, security, and ops** are **low** — typical for a deliberate **UI-first rebuild**. As **`L5` + `L6` + `L9` + `L12` + `L13`** rise, the **felt** production % climbs fastest for real users.
 
@@ -175,8 +175,8 @@ Recompute your **weighted %** whenever you change weights or layer %.
   │  · /              GatewayPage                         72%    │
   │  · /healthservices/*   ServicesLayout + pages       78%    │
   │  · /tv/:edition/*     TvShellLayout + pages        41%    │
-  │  · /healthservices/admin/*  placeholder             12%    │
-  │  · /machafitv/admin/*       placeholder             12%    │
+  │  · /healthservices/admin/*  Health Services admin v1   ~50%    │
+  │  · /machafitv/admin/*       placeholder               ~12%    │
   └──────────────────────────────┬──────────────────────────────┘
                                  │
   ┌──────────────────────────────▼──────────────────────────────┐
@@ -205,4 +205,4 @@ Recompute your **weighted %** whenever you change weights or layer %.
 
 ---
 
-*Last updated: **2026-05-14** — Gateway + TV branding (Machafi TV logo in shell and gateway strip), Services masthead mint/grid, `frontend/public/branding/`, Vercel https://kgcmachafi.vercel.app ; doc sync.*
+*Last updated: **2026-05-14** — **L4c ~50%** (Health Services admin v1); holistic **~41%**; **`GODADDY_CPANEL_DEPLOYMENT_GUIDE.md`**; Gateway + TV branding, Vercel https://kgcmachafi.vercel.app ; doc sync.*

@@ -1,9 +1,12 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Circle, CircleMarker, MapContainer, Popup, TileLayer, useMap } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import { useI18n } from '../i18n/I18nProvider';
 import { getCommunes, wilayas } from '../data/algeria-data';
 import { housingListingsMock } from '../data/housing';
+import { useBootstrapList } from '../hooks/useBootstrapList';
+import ListFetchErrorBanner from '../components/ListFetchErrorBanner';
+import { loadAccommodationsForList } from '../services';
 
 function Icon({ children, className = '' }) {
   return (
@@ -163,6 +166,10 @@ export default function AccommodationsPage() {
   const [locationStatus, setLocationStatus] = useState('idle'); // idle|loading|success|denied|unsupported
   const [focusedId, setFocusedId] = useState(null);
 
+  const loadListings = useCallback(() => loadAccommodationsForList(), []);
+  const { data, error, reload } = useBootstrapList(loadListings);
+  const sourceListings = data ?? housingListingsMock;
+
   const communeOptions = useMemo(() => {
     if (!wilaya) return [];
     return getCommunes(wilaya)
@@ -173,7 +180,7 @@ export default function AccommodationsPage() {
   const filtered = useMemo(() => {
     const q = normalize(query);
     const cap = Math.max(1, Number(minCapacity || 1));
-    return housingListingsMock.filter((h) => {
+    return sourceListings.filter((h) => {
       if (!h.isActive) return false;
       if (wilaya && h.wilayaCode !== wilaya) return false;
       if (communeId && h.communeId !== communeId) return false;
@@ -184,7 +191,7 @@ export default function AccommodationsPage() {
       const hay = normalize([h.title, h.hostName, h.phone, h.address ?? '', h.wilayaCode].join(' '));
       return hay.includes(q);
     });
-  }, [communeId, freeOnly, minCapacity, query, verifiedOnly, wilaya]);
+  }, [communeId, freeOnly, minCapacity, query, verifiedOnly, sourceListings, wilaya]);
 
   useEffect(() => {
     if (!navigator.geolocation) {
@@ -243,6 +250,7 @@ export default function AccommodationsPage() {
 
   return (
     <div className="space-y-12" dir={dir}>
+      <ListFetchErrorBanner message={error?.message} onRetry={reload} />
       <section className="border-y border-blue-100 bg-gradient-to-b from-blue-50/70 via-white to-white py-14">
         <div className="container mx-auto px-4">
           {/* Hero */}

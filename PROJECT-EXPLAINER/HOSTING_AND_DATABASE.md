@@ -16,7 +16,7 @@ This document records the **authoritative deployment assumption** for Machafi ba
 
 ## 2) SQL database — role
 
-- **Single primary OLTP database** (MySQL/MariaDB) backing **`api/public/*`** and **`api/admin/*`**.
+- **Single primary OLTP database** (MySQL/MariaDB) backing **`api/public/*`** and **`api/admin/*`** — file-level map: **`PROJECT-EXPLAINER/API_ENDPOINT_REGISTRY.md`**.
 - **UTF8MB4** charset for Arabic and emoji in user content.
 - Prefer **explicit tables** per domain (news, pharmacies, tv_*, …) over one giant JSON blob — aligns with **`project-explainer.md`** (6–8 essential columns per public “card” where possible).
 

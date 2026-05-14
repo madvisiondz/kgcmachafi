@@ -343,4 +343,15 @@ The **logical REST contract** is **§6 Endpoint proposals** above. Implement as 
 
 ---
 
+## 12) Implemented HTTP map (2026-05-14)
+
+**Full catalog:** `PROJECT-EXPLAINER/API_ENDPOINT_REGISTRY.md`. Public responses use `{ ok, data }` from `api_envelope_*`. Admin writes require session + `X-CSRF-Token` (see `api/admin/bootstrap.php`).
+
+| Role | Method | PHP | Query / body | SPA flag |
+|------|--------|-----|--------------|----------|
+| Public list / detail | GET | `api/public/news.php` | List: `archived`, `page`, `limit`. Detail: `id` | `VITE_NEWS_API` |
+| Admin CRUD | GET POST PUT DELETE | `api/admin/news.php` | JSON body; `id` on update/delete | Desk / future admin SPA |
+
+---
+
 *Last updated: **2026-05-14** — Gateway + TV branding (Machafi TV logo in shell and gateway strip), Services masthead mint/grid, `frontend/public/branding/`, Vercel https://kgcmachafi.vercel.app ; doc sync.*

@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useI18n } from '../i18n/I18nProvider';
 import {
   campaignsMock,
@@ -6,6 +6,9 @@ import {
   donationStatsMock,
   donationsSectionMock,
 } from '../data/donations';
+import { useBootstrapList } from '../hooks/useBootstrapList';
+import ListFetchErrorBanner from '../components/ListFetchErrorBanner';
+import { ApiError, loadDonationsPageData, submitDonationIntent } from '../services';
 
 function Icon({ children, className = '' }) {
   return (
@@ -119,10 +122,20 @@ export default function DonationsPage() {
   const { t, dir, language } = useI18n();
   const isRTL = dir === 'rtl';
 
+  const loadData = useCallback(() => loadDonationsPageData(), []);
+  const { status, data, error, reload } = useBootstrapList(loadData);
+  const pageData = data ?? { stats: donationStatsMock, campaigns: campaignsMock };
+  const donationStats = pageData.stats;
+  const campaigns = pageData.campaigns;
+  const showSkeleton = status === 'loading';
+
   const [currency, setCurrency] = useState('EUR');
   const [mode, setMode] = useState('one-time'); // one-time | monthly
   const [amount, setAmount] = useState(20);
   const [activeCampaignId, setActiveCampaignId] = useState(null);
+  const [intentFeedback, setIntentFeedback] = useState(null);
+  const [intentBusy, setIntentBusy] = useState(false);
+  const donationHpRef = useRef(null);
 
   const currencyConfig = currenciesMock[currency] ?? currenciesMock.EUR;
   const presets = mode === 'monthly' ? currencyConfig.subPresets : currencyConfig.presets;
@@ -132,8 +145,6 @@ export default function DonationsPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currency, mode]);
 
-  const campaigns = useMemo(() => campaignsMock, []);
-
   const sectionTitle = pickText(donationsSectionMock.title, language);
   const sectionSubtitle = pickText(donationsSectionMock.subtitle, language);
 
@@ -142,8 +153,8 @@ export default function DonationsPage() {
       {
         tone: 'red',
         icon: Icons.heart({ className: 'w-7 h-7' }),
-        value: donationStatsMock.helpedValue,
-        label: pickText(donationStatsMock.helpedLabel, language),
+        value: donationStats.helpedValue,
+        label: pickText(donationStats.helpedLabel, language),
       },
       {
         tone: 'green',
@@ -152,23 +163,23 @@ export default function DonationsPage() {
             €
           </span>
         ),
-        value: `${donationStatsMock.totalValueEur} €`,
-        label: pickText(donationStatsMock.totalLabel, language),
+        value: `${donationStats.totalValueEur} €`,
+        label: pickText(donationStats.totalLabel, language),
       },
       {
         tone: 'blue',
         icon: Icons.users({ className: 'w-7 h-7' }),
-        value: donationStatsMock.donorsValue,
-        label: pickText(donationStatsMock.donorsLabel, language),
+        value: donationStats.donorsValue,
+        label: pickText(donationStats.donorsLabel, language),
       },
       {
         tone: 'emerald',
         icon: Icons.trendingUp({ className: 'w-7 h-7' }),
-        value: donationStatsMock.successValue,
-        label: pickText(donationStatsMock.successLabel, language),
+        value: donationStats.successValue,
+        label: pickText(donationStats.successLabel, language),
       },
     ];
-  }, [language]);
+  }, [donationStats, language]);
 
   const handleContributeToCampaign = (campaignId) => {
     setActiveCampaignId(campaignId);
@@ -196,10 +207,73 @@ export default function DonationsPage() {
 
   const payLabel = mode === 'monthly' ? t('donations.form.confirmMonthly') : t('donations.form.confirmOneTime');
 
+  const submitIntent = async () => {
+    if (import.meta.env.VITE_DONATIONS_API !== 'true') {
+      const footer = document.getElementById('footer');
+      if (footer) footer.scrollIntoView({ behavior: 'smooth' });
+      return;
+    }
+    const campaignId = activeCampaignId ?? campaigns[0]?.id;
+    if (!campaignId) {
+      setIntentFeedback({
+        tone: 'error',
+        title: t('donations.form.errorNoCampaignTitle'),
+        desc: t('donations.form.errorNoCampaignDesc'),
+      });
+      window.setTimeout(() => setIntentFeedback(null), 6000);
+      return;
+    }
+    setIntentBusy(true);
+    try {
+      await submitDonationIntent({
+        campaign_id: String(campaignId),
+        amount,
+        currency,
+        is_monthly: mode === 'monthly',
+        donor_name: '',
+        donor_email: '',
+        message: '',
+        website: donationHpRef.current?.value?.trim() ?? '',
+      });
+      setIntentFeedback({
+        tone: 'success',
+        title: t('donations.form.intentSuccessTitle'),
+        desc: t('donations.form.intentSuccessDesc'),
+      });
+    } catch (e) {
+      let msg = e instanceof Error ? e.message : String(e);
+      if (e instanceof ApiError && e.body && typeof e.body === 'object' && e.body.error && typeof e.body.error.message === 'string') {
+        msg = e.body.error.message;
+      }
+      setIntentFeedback({ tone: 'error', title: t('donations.form.intentErrorTitle'), desc: msg });
+    } finally {
+      setIntentBusy(false);
+    }
+    window.setTimeout(() => setIntentFeedback(null), 7000);
+  };
+
   return (
     <div className="space-y-12" dir={dir}>
       <section className="py-12">
         <div className="container mx-auto px-4">
+          {error ? (
+            <div className="mb-6">
+              <ListFetchErrorBanner message={error.message} onRetry={reload} />
+            </div>
+          ) : null}
+          {intentFeedback ? (
+            <div
+              role="status"
+              className={`mb-6 rounded-2xl border px-4 py-3 text-sm ${
+                intentFeedback.tone === 'success'
+                  ? 'border-emerald-200 bg-emerald-50 text-emerald-900'
+                  : 'border-rose-200 bg-rose-50 text-rose-900'
+              }`}
+            >
+              <div className="font-extrabold">{intentFeedback.title}</div>
+              <div className="mt-1 opacity-90">{intentFeedback.desc}</div>
+            </div>
+          ) : null}
           {/* Header */}
           <div className="text-center mb-10">
             <h1 className="text-3xl lg:text-4xl font-extrabold mb-3">
@@ -238,7 +312,11 @@ export default function DonationsPage() {
 
           {/* Campaigns */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
-            {campaigns.map((c) => {
+            {showSkeleton
+              ? Array.from({ length: 3 }).map((_, i) => (
+                  <div key={`dc-sk-${i}`} className="h-96 rounded-2xl bg-gray-100 animate-pulse border border-gray-200" aria-hidden="true" />
+                ))
+              : campaigns.map((c) => {
               const progress = clamp((c.raisedEur / c.goalEur) * 100, 0, 100);
               const raised = convertFromEur(c.raisedEur);
               const goal = convertFromEur(c.goalEur);
@@ -295,7 +373,8 @@ export default function DonationsPage() {
                   </div>
                 </div>
               );
-            })}
+            })
+            }
           </div>
 
           {/* Donation form */}
@@ -303,7 +382,15 @@ export default function DonationsPage() {
             id="donation-form"
             className="bg-white rounded-3xl shadow-2xl overflow-hidden max-w-4xl mx-auto border border-gray-100"
           >
-            <div className="p-8 lg:p-10">
+            <div className="relative p-8 lg:p-10">
+              <input
+                ref={donationHpRef}
+                type="text"
+                tabIndex={-1}
+                autoComplete="off"
+                className="absolute start-0 top-0 h-px w-px overflow-hidden opacity-0"
+                aria-hidden="true"
+              />
               <div className="text-center mb-8">
                 <h2 className="text-2xl font-extrabold text-gray-900 mb-2">{t('donations.form.title')}</h2>
                 <p className="text-gray-500">{t('donations.form.subtitle')}</p>
@@ -387,16 +474,14 @@ export default function DonationsPage() {
 
               <button
                 type="button"
+                disabled={intentBusy}
                 onClick={() => {
-                  // UI-first: later this triggers payment flow or creates a pledge intent.
-                  // For now: scroll to footer contact as “human confirmation” path (matches project phase).
-                  const footer = document.getElementById('footer');
-                  if (footer) footer.scrollIntoView({ behavior: 'smooth' });
+                  void submitIntent();
                 }}
-                className="w-full h-14 text-lg font-extrabold inline-flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 shadow-xl transition-all"
+                className="w-full h-14 text-lg font-extrabold inline-flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 shadow-xl transition-all disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {mode === 'one-time' ? Icons.heart({ className: 'w-5 h-5 text-white' }) : Icons.check({ className: 'w-5 h-5 text-white' })}
-                <span className="text-white">{payLabel}</span>
+                <span className="text-white">{intentBusy ? t('donations.form.intentSending') : payLabel}</span>
                 <span className="ms-auto text-white/90" aria-hidden="true">
                   {isRTL ? '←' : '→'}
                 </span>

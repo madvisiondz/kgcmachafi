@@ -15,7 +15,7 @@
 | **Minimal practical datasets** | `project-explainer.md` — 6–8 essential fields per entity | Backend and admin work should **resist schema creep**; trackers’ endpoint sections should stay **thin JSON contracts**. |
 | **Two public products, one domain** | `PLATFORM_SHELL_LAYOUT.md`, `WEBAPP_PAGES_OVERVIEW.md` | **Gateway** chooses **Services** vs **Machafi TV**; TV is **edition-routed** (`/tv/ar|fr|en`) — not the same i18n model as Services (Rule #1 exception). |
 | **UI-first, then wire** | `LEGACY_SYSTEM_PROBLEMS_AND_REBUILD_RULES.md` | **`services/`** + optional **`VITE_NEWS_API`** are live; extend read paths per trackers before adding heavy client-side fetch in pages. |
-| **Operational credibility** | `ARCHITECTURE_PRODUCTION_READINESS.md` (~**38%** holistic) | Highest ROI is **raising L6, L9, L12, L13** — contract tests, security, smoke discipline, observability — alongside **`services/`** coverage. |
+| **Operational credibility** | `ARCHITECTURE_PRODUCTION_READINESS.md` (~**41%** holistic) | Highest ROI is **raising L6, L9, L12, L13** — contract tests, security, smoke discipline, observability — alongside **`services/`** coverage. |
 
 **One-line value proposition:** MACHAFI is a **trusted health discovery surface** (directories + content) expanding into a **credible dual-brand web presence** (Services + TV) on **https://kgc-machafi.net/** — production value = **correct data + safe admin + stable UX under RTL and mobile**.
 
@@ -222,7 +222,7 @@ Record answers in `PROJECT-EXPLAINER/PROMPT_LOG.md` when decided.
 | 2 | **A5** Smoke | Execute `PROJECT-EXPLAINER/SMOKE_CHECKLIST_PRODUCTION.md` on a **staging** build; fill **Pass** (or log defects). | Checklist reflects one real run, not template-only. |
 | 3 | **B5** RTL / Arabic | Stress **long labels** on **News**, **Pharmacies**, **Hospitals** filters + cards; gateway + TV shell if time. | No clipped nav, no broken filter layout, marquee/ticker acceptable in RTL. |
 | 4 | **B2** Home | Legacy parity + Health-in-Drama embed policy per `TRACKERS/machafi-services/HOMEPAGE_MAP.md` / product. | Home matches agreed “credibility anchor” bar. |
-| 5 | **A4** extend | Same **skeleton + empty + `ListFetchErrorBanner`** on **Ambulances** (`useBootstrapList` + mock resolve today; swap loader when **`api/public/ambulances.php`** exists). **Next:** Programs, Accommodations, or other list-heavy routes. | Same UX class as News/Pharmacies/Hospitals under slow network. |
+| 5 | **A4** extend | **Ambulances** + **Accommodations** use **`useBootstrapList`** + optional **`VITE_AMBULANCES_API`** / **`VITE_ACCOMMODATIONS_API`** loaders (`api/public/ambulances.php`, `accommodations.php`). **Next:** Programs, Library, Home, Live, Donations UI → matching `api/public/*.php`. | Same UX class as News/Pharmacies/Hospitals under slow network. |
 | 6 | **C4** tighten | Optional: stricter types at `services/*` boundaries where PHP JSON is stable. | Fewer `unknown` escapes; safer refactors. |
 
 **After** this sprint (or in parallel if two agents): resume **D1** — **public settings** / **home-feed** client / next directory — per §5 Move **4a** and `NEXT_STEPS_PRODUCTION.md` “next execution slice.”

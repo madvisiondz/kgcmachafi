@@ -118,4 +118,12 @@ Single source of truth for **`MachafiTvAdminPage`** and the **future** Machafi T
 
 ---
 
+## 12) Implemented HTTP map (Machafi TV admin — 2026-05-14)
+
+There are **no** `api/admin/tv-*.php` (or `machafitv-auth-*.php`) files in this repository yet. The **§Full endpoint design** table below remains a **target** layout.
+
+**Implemented today (shared host):** Health Services admin JSON under `api/admin/*` — see **`PROJECT-EXPLAINER/API_ENDPOINT_REGISTRY.md`** (same PHP tree; RBAC scopes are a product concern for when this panel is built).
+
+---
+
 *Last updated: **2026-05-14** — Gateway + TV branding (Machafi TV logo in shell and gateway strip), Services masthead mint/grid, `frontend/public/branding/`, Vercel https://kgcmachafi.vercel.app ; doc sync.*

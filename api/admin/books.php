@@ -128,7 +128,7 @@ if ($method === 'GET') {
 }
 
 if ($method === 'POST') {
-    require_admin();
+    require_admin_write();
     $id = (int) ($_GET['id'] ?? 0);
     $payload = request_payload();
     $overrideMethod = strtoupper(trim((string) ($payload['_method'] ?? '')));
@@ -248,12 +248,12 @@ if ($method === 'POST') {
 }
 
 if ($method === 'PUT') {
-    require_admin();
+    require_admin_write();
     json_response(['message' => 'استخدم الرفع عبر النموذج لإرسال الملفات.'], 405);
 }
 
 if ($method === 'DELETE') {
-    require_admin();
+    require_admin_write();
     $id = (int) ($_GET['id'] ?? 0);
 
     if ($id <= 0) {

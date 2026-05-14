@@ -1,61 +1,47 @@
 <?php
 declare(strict_types=1);
 
+/**
+ * Public read-only. Admin: /api/admin/accommodations.php
+ */
 require dirname(__DIR__) . '/admin/bootstrap.php';
 
-$method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
+allow_methods(['GET']);
 
-if ($method === 'GET') {
-    $wilayaId = trim((string) ($_GET['wilaya'] ?? ''));
+$wilayaId = trim((string) ($_GET['wilaya'] ?? ''));
+$p = request_pagination(300, 500);
+$limit = $p['limit'];
+$offset = $p['offset'];
 
-    if ($wilayaId !== '') {
-        $statement = db()->prepare(
-            'SELECT * FROM patient_accommodations
-             WHERE is_active = 1 AND wilaya_id = :wilaya_id
-             ORDER BY is_free DESC, wilaya_id ASC, city ASC, title ASC'
-        );
-        $statement->execute(['wilaya_id' => $wilayaId]);
-        json_response(['items' => $statement->fetchAll()]);
-    }
-
-    $statement = db()->query(
-        'SELECT * FROM patient_accommodations
-         WHERE is_active = 1
-         ORDER BY is_free DESC, wilaya_id ASC, city ASC, title ASC'
-    );
-    json_response(['items' => $statement->fetchAll()]);
+$params = [];
+$where = ['is_active = 1'];
+if ($wilayaId !== '') {
+    $where[] = 'wilaya_id = :wilaya_id';
+    $params['wilaya_id'] = $wilayaId;
 }
+$whereSql = implode(' AND ', $where);
 
-if ($method === 'POST') {
-    $payload = read_json_input();
+$countSql = 'SELECT COUNT(*) AS c FROM patient_accommodations WHERE ' . $whereSql;
+$countStmt = db()->prepare($countSql);
+$countStmt->execute($params);
+$total = (int) ($countStmt->fetch()['c'] ?? 0);
 
-    $statement = db()->prepare(
-        'INSERT INTO patient_accommodations (title, owner_name, phone, wilaya_id, city, address, is_free, price_per_night, capacity, description, latitude, longitude, is_active)
-         VALUES (:title, :owner_name, :phone, :wilaya_id, :city, :address, :is_free, :price_per_night, :capacity, :description, :latitude, :longitude, 1)'
-    );
-    $statement->execute([
-        'title' => trim((string) ($payload['title'] ?? '')),
-        'owner_name' => trim((string) ($payload['owner_name'] ?? '')),
-        'phone' => trim((string) ($payload['phone'] ?? '')),
-        'wilaya_id' => trim((string) ($payload['wilaya_id'] ?? '')),
-        'city' => trim((string) ($payload['city'] ?? '')),
-        'address' => trim((string) ($payload['address'] ?? '')),
-        'is_free' => normalize_flag($payload['is_free'] ?? false),
-        'price_per_night' => ($payload['price_per_night'] ?? '') !== '' ? (float) $payload['price_per_night'] : 0,
-        'capacity' => max(1, (int) ($payload['capacity'] ?? 1)),
-        'description' => trim((string) ($payload['description'] ?? '')),
-        'latitude' => ($payload['latitude'] ?? '') !== '' ? (float) $payload['latitude'] : null,
-        'longitude' => ($payload['longitude'] ?? '') !== '' ? (float) $payload['longitude'] : null,
-    ]);
-
-    $id = (int) db()->lastInsertId();
-    $fetch = db()->prepare('SELECT * FROM patient_accommodations WHERE id = :id');
-    $fetch->execute(['id' => $id]);
-
-    json_response([
-        'message' => 'تمت إضافة مكان الإيواء.',
-        'item' => $fetch->fetch(),
-    ], 201);
+$sql = 'SELECT * FROM patient_accommodations WHERE ' . $whereSql
+    . ' ORDER BY is_free DESC, wilaya_id ASC, city ASC, title ASC LIMIT :limit OFFSET :offset';
+$statement = db()->prepare($sql);
+foreach ($params as $k => $v) {
+    $statement->bindValue(':' . $k, $v);
 }
+$statement->bindValue(':limit', $limit, PDO::PARAM_INT);
+$statement->bindValue(':offset', $offset, PDO::PARAM_INT);
+$statement->execute();
 
-json_response(['message' => 'الطريقة غير مدعومة.'], 405);
+$items = $statement->fetchAll();
+$totalPages = max(1, (int) ceil($total / max(1, $limit)));
+
+api_envelope_list($items, [
+    'page' => $p['page'],
+    'per_page' => $limit,
+    'total' => $total,
+    'total_pages' => $totalPages,
+]);

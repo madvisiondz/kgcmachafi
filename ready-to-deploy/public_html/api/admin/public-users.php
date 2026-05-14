@@ -36,15 +36,12 @@ if ($method === 'GET') {
 }
 
 if ($method === 'PUT') {
-    $admin = require_admin();
-
-    if (($admin['role'] ?? '') !== 'admin') {
-        json_response(['message' => 'غير مصرح بتعديل أدوار المستخدمين.'], 403);
-    }
+    require_admin_write();
+    require_role('admin');
 
     $id = (int) ($_GET['id'] ?? 0);
     if ($id <= 0) {
-        json_response(['message' => 'معرّف المستخدم غير صالح.'], 422);
+        api_envelope_error('validation', 'معرّف المستخدم غير صالح.', 422);
     }
 
     $payload = read_json_input();
@@ -53,7 +50,7 @@ if ($method === 'PUT') {
     // Allowed roles for public users in this feature.
     $allowedRoles = ['member', 'editor', 'moderator'];
     if (!in_array($role, $allowedRoles, true)) {
-        json_response(['message' => 'الدور غير صالح.'], 422);
+        api_envelope_error('validation', 'الدور غير صالح.', 422);
     }
 
     $update = db()->prepare('UPDATE public_users SET role = :role WHERE id = :id');
@@ -67,7 +64,7 @@ if ($method === 'PUT') {
     );
     $fetch->execute(['id' => $id]);
 
-    json_response([
+    api_envelope_ok([
         'message' => 'تم تحديث دور المستخدم.',
         'user' => $fetch->fetch(),
     ]);

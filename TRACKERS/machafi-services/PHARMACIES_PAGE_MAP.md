@@ -347,4 +347,15 @@ CREATE TABLE pharmacy_night_assignments (
 
 ---
 
+## 12) Implemented HTTP map (2026-05-14)
+
+**Full catalog:** `PROJECT-EXPLAINER/API_ENDPOINT_REGISTRY.md`.
+
+| Role | Method | PHP | Query / body | SPA flag |
+|------|--------|-----|--------------|----------|
+| Public directory | GET | `api/public/pharmacies.php` | Pagination (`page`, `limit`) | `VITE_PHARMACIES_API` |
+| Admin CRUD | GET POST PUT DELETE | `api/admin/pharmacies.php` | JSON + CSRF on writes | Desk |
+
+---
+
 *Last updated: **2026-05-14** — Gateway + TV branding (Machafi TV logo in shell and gateway strip), Services masthead mint/grid, `frontend/public/branding/`, Vercel https://kgcmachafi.vercel.app ; doc sync.*

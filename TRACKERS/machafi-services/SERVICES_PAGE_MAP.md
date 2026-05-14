@@ -215,4 +215,15 @@ Section hero copy may live in **`site_settings`** JSON (`services_content`) keye
 
 ---
 
+## 12) Implemented HTTP map (2026-05-14)
+
+**Full catalog:** `PROJECT-EXPLAINER/API_ENDPOINT_REGISTRY.md`.
+
+| Role | Method | PHP | Notes | SPA flag |
+|------|--------|-----|-------|----------|
+| Public catalog | GET | `api/public/services.php` | `lang=ar|fr|en` | `VITE_SERVICES_CATALOG_API` |
+| Admin copy | GET PUT | `api/admin/services-content.php` | CSRF on writes | Desk |
+
+---
+
 *Last updated: **2026-05-14** — Gateway + TV branding (Machafi TV logo in shell and gateway strip), Services masthead mint/grid, `frontend/public/branding/`, Vercel https://kgcmachafi.vercel.app ; doc sync.*

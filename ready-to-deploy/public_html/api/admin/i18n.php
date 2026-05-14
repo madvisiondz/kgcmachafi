@@ -14,7 +14,7 @@ if ($method === 'GET') {
     $lang = trim((string) ($_GET['lang'] ?? ''));
 
     if ($entityType === '' || $entityId < 0 || $lang === '') {
-        json_response(['message' => 'بيانات الطلب غير صالحة.'], 422);
+        api_envelope_error('validation', 'بيانات الطلب غير صالحة.', 422);
     }
 
     $stmt = db()->prepare('SELECT field, text FROM content_i18n WHERE entity_type = :t AND entity_id = :id AND lang = :lang');
@@ -24,11 +24,12 @@ if ($method === 'GET') {
         $fields[(string) $row['field']] = (string) $row['text'];
     }
 
-    json_response(['fields' => $fields]);
+    api_envelope_ok(['fields' => $fields]);
 }
 
 if ($method === 'PUT') {
-    require_admin();
+    require_admin_write();
+    require_role('admin');
     ensure_i18n_schema();
 
     $payload = read_json_input();
@@ -38,7 +39,7 @@ if ($method === 'PUT') {
     $fields = $payload['fields'] ?? null;
 
     if ($entityType === '' || $entityId < 0 || $lang === '' || !is_array($fields)) {
-        json_response(['message' => 'بيانات الطلب غير صالحة.'], 422);
+        api_envelope_error('validation', 'بيانات الطلب غير صالحة.', 422);
     }
 
     $stmt = db()->prepare(
@@ -50,7 +51,9 @@ if ($method === 'PUT') {
     $count = 0;
     foreach ($fields as $field => $text) {
         $field = trim((string) $field);
-        if ($field === '') continue;
+        if ($field === '') {
+            continue;
+        }
         $stmt->execute([
             't' => $entityType,
             'id' => $entityId,
@@ -61,8 +64,7 @@ if ($method === 'PUT') {
         $count += 1;
     }
 
-    json_response(['message' => 'تم حفظ الترجمات.', 'saved' => $count]);
+    api_envelope_ok(['saved' => $count, 'message' => 'تم حفظ الترجمات.']);
 }
 
-json_response(['message' => 'الطريقة غير مدعومة.'], 405);
-
+api_envelope_error('method_not_allowed', 'الطريقة غير مدعومة.', 405);

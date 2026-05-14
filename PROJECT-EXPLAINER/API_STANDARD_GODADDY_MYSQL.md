@@ -57,7 +57,7 @@ Physical files remain under repo **`api/public/*.php`**, **`api/admin/*.php`** (
 | `cursor` | Opaque keyset cursor (preferred) | — | — |
 | `offset` | Numeric offset (only if needed) | `0` | cap with `limit` |
 
-Every `SELECT` used by a public list endpoint must be **bounded**.
+Every `SELECT` used by a public list endpoint must be **bounded**. **Implemented** public lists in this repo often return **`data.pagination`** with numeric `page` / `per_page` / `total` / `total_pages` (see `api_envelope_list` in `api/admin/bootstrap.php`) rather than cursor `meta`.
 
 ## 4) Language / edition
 
@@ -75,6 +75,12 @@ Every `SELECT` used by a public list endpoint must be **bounded**.
 ## 6) CORS
 
 If SPA is ever served from a **different hostname** than API, set **specific** `Access-Control-Allow-Origin` — not `*`. Prefer **same origin** on GoDaddy to avoid preflight complexity.
+
+---
+
+## 7) Canonical endpoint list
+
+All PHP paths, methods, honeypots, CSRF rules, and `VITE_*` flags are maintained in **`API_ENDPOINT_REGISTRY.md`**. **Trackers** (`TRACKERS/**`) include **§12 Implemented HTTP map** per surface plus SQL-oriented “Full endpoint design” sections.
 
 ---
 

@@ -83,4 +83,12 @@ Catch-all in `App.tsx` sends unknown paths → **`/`** (back to gateway).
 
 ---
 
+## 12) Implemented HTTP map (gateway — 2026-05-14)
+
+This route performs **no** Health Services or TV JSON reads. All **`/healthservices/*`** PHP endpoints live under **`api/public/`** and **`api/admin/`** — full matrix: **`PROJECT-EXPLAINER/API_ENDPOINT_REGISTRY.md`**.
+
+**Machafi TV** `/api/public/tv/*` files are **not** in the repo yet; **`TRACKERS/machafi-tv/`** hold proposed contracts.
+
+---
+
 *Last updated: **2026-05-14** — Gateway map: identity strip (Machafi + KGC + Komas + TV logo), TV card lockup, segmented edition picker; Vercel deploy note.*

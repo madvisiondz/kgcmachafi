@@ -1,8 +1,11 @@
-import React, { useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useI18n } from '../i18n/I18nProvider';
 import { servicesPath } from '../routes/paths';
 import { programScheduleMock } from '../data/programs';
+import { useBootstrapList } from '../hooks/useBootstrapList';
+import ListFetchErrorBanner from '../components/ListFetchErrorBanner';
+import { loadProgramsForList } from '../services';
 
 function Icon({ children, className = '' }) {
   return (
@@ -104,6 +107,11 @@ function addMinutesToTimeLabel(timeHHMM, minutesToAdd) {
 export default function ProgramsPage() {
   const { t, dir } = useI18n();
 
+  const loadPrograms = useCallback(() => loadProgramsForList(), []);
+  const { status, data, error, reload } = useBootstrapList(loadPrograms);
+  const schedule = data ?? programScheduleMock;
+  const showSkeleton = status === 'loading';
+
   const [day, setDay] = useState(getTodayKey());
   const [category, setCategory] = useState('all');
   const [query, setQuery] = useState('');
@@ -112,18 +120,18 @@ export default function ProgramsPage() {
 
   const filtered = useMemo(() => {
     const q = normalize(query);
-    return programScheduleMock.filter((row) => {
+    return schedule.filter((row) => {
       if (day && row.day !== day) return false;
       if (category !== 'all' && row.category !== category) return false;
       if (!q) return true;
 
-      const title = t(`programs.items.${row.programKey}.title`);
+      const title = row.title?.trim() || t(`programs.items.${row.programKey}.title`);
       const host = t(`programs.hosts.${row.hostKey}`);
       const cat = t(`programs.categories.${row.category}`);
       const hay = normalize([title, host, cat, row.startTime].join(' '));
       return hay.includes(q);
     });
-  }, [category, day, query, t]);
+  }, [category, day, query, schedule, t]);
 
   const stats = useMemo(() => {
     const total = filtered.length;
@@ -137,7 +145,7 @@ export default function ProgramsPage() {
     const now = new Date();
     const nowMinutes = now.getHours() * 60 + now.getMinutes();
 
-    const todayRows = programScheduleMock
+    const todayRows = schedule
       .filter((r) => r.day === todayKey)
       .map((r) => {
         const [hh, mm] = String(r.startTime).slice(0, 5).split(':').map((x) => Number(x));
@@ -153,7 +161,7 @@ export default function ProgramsPage() {
       todayRows.find((r) => nowMinutes >= r.startMinutes && nowMinutes < r.startMinutes + Math.max(1, Number(r.durationMin) || 1)) || null;
     const next = todayRows.find((r) => r.startMinutes > nowMinutes) || null;
     return { now: current, next };
-  }, [todayKey]);
+  }, [schedule, todayKey]);
 
   const navDayLabel = useMemo(() => t(`programs.days.${day}`), [day, t]);
 
@@ -161,6 +169,11 @@ export default function ProgramsPage() {
     <div className="space-y-12" dir={dir}>
       <section className="border-y border-amber-100 bg-gradient-to-b from-amber-50/70 via-white to-white py-14">
         <div className="container mx-auto px-4">
+          {error ? (
+            <div className="mb-6">
+              <ListFetchErrorBanner message={error.message} onRetry={reload} />
+            </div>
+          ) : null}
           {/* Hero */}
           <div className="mb-10">
             <div className="inline-flex items-center gap-2 rounded-full border border-amber-200 bg-white px-4 py-2 text-sm font-extrabold text-amber-700">
@@ -304,7 +317,15 @@ export default function ProgramsPage() {
 
           {/* Results */}
           <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-            {filtered.length === 0 ? (
+            {showSkeleton ? (
+              Array.from({ length: 6 }).map((_, i) => (
+                <div
+                  key={`sk-${i}`}
+                  className="h-[420px] rounded-[28px] border border-slate-200 bg-slate-100 animate-pulse"
+                  aria-hidden="true"
+                />
+              ))
+            ) : filtered.length === 0 ? (
               <div className="rounded-3xl border border-dashed border-slate-200 bg-white py-12 text-center">
                 <div className="mx-auto mb-4 grid h-16 w-16 place-items-center rounded-full bg-slate-100 text-slate-500">
                   {Icons.calendar({ className: 'h-7 w-7' })}
@@ -356,8 +377,8 @@ function StatPill({ label, value, tone }) {
 }
 
 function ProgramRow({ row, t }) {
-  const title = t(`programs.items.${row.programKey}.title`);
-  const desc = t(`programs.items.${row.programKey}.desc`);
+  const title = row.title?.trim() ? row.title : t(`programs.items.${row.programKey}.title`);
+  const desc = row.description?.trim() ? row.description : t(`programs.items.${row.programKey}.desc`);
   const host = t(`programs.hosts.${row.hostKey}`);
   const category = t(`programs.categories.${row.category}`);
 
@@ -417,7 +438,7 @@ function ProgramRow({ row, t }) {
 
 function FeaturedCard({ kind, row, t }) {
   const isNow = kind === 'now';
-  const title = row ? t(`programs.items.${row.programKey}.title`) : '';
+  const title = row ? (row.title?.trim() ? row.title : t(`programs.items.${row.programKey}.title`)) : '';
   const host = row ? t(`programs.hosts.${row.hostKey}`) : '';
   const category = row ? t(`programs.categories.${row.category}`) : '';
 

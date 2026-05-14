@@ -10,7 +10,7 @@ $username = trim((string) ($payload['username'] ?? ''));
 $password = (string) ($payload['password'] ?? '');
 
 if ($username === '' || $password === '') {
-    json_response(['message' => 'اسم المستخدم وكلمة المرور مطلوبان.'], 422);
+    api_envelope_error('validation', 'اسم المستخدم وكلمة المرور مطلوبان.', 422);
 }
 
 $statement = db()->prepare(
@@ -20,7 +20,7 @@ $statement->execute(['username' => $username]);
 $admin = $statement->fetch();
 
 if (!$admin || (int) $admin['is_active'] !== 1 || !password_verify($password, $admin['password_hash'])) {
-    json_response(['message' => 'بيانات الدخول غير صحيحة.'], 401);
+    api_envelope_error('auth', 'بيانات الدخول غير صحيحة.', 401);
 }
 
 session_regenerate_id(true);
@@ -32,7 +32,10 @@ $_SESSION['admin'] = [
     'role' => $admin['role'],
 ];
 
-json_response([
+$csrf = csrf_issue_token();
+
+api_envelope_ok([
     'message' => 'تم تسجيل الدخول بنجاح.',
     'admin' => $_SESSION['admin'],
+    'csrf_token' => $csrf,
 ]);

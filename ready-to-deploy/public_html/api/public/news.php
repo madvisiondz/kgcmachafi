@@ -6,8 +6,11 @@ require dirname(__DIR__) . '/admin/bootstrap.php';
 allow_methods(['GET']);
 
 $id = (int) ($_GET['id'] ?? 0);
-$limit = max(0, (int) ($_GET['limit'] ?? 0));
 $archived = normalize_flag($_GET['archived'] ?? false);
+$p = request_pagination(50, 100);
+$limit = $p['limit'];
+$offset = $p['offset'];
+$page = $p['page'];
 
 if ($id > 0) {
     $statement = db()->prepare('SELECT * FROM news_articles WHERE id = :id LIMIT 1');
@@ -15,24 +18,29 @@ if ($id > 0) {
     $item = $statement->fetch();
 
     if (!$item) {
-        json_response(['message' => 'الخبر غير موجود.'], 404);
+        api_envelope_error('not_found', 'Article not found.', 404);
     }
 
-    json_response(['item' => $item]);
+    api_envelope_ok(['item' => $item]);
 }
 
-$sql = 'SELECT * FROM news_articles WHERE is_archived = :is_archived ORDER BY date DESC, created_at DESC';
-if ($limit > 0) {
-    $sql .= ' LIMIT :limit_value';
-}
+$countStmt = db()->prepare('SELECT COUNT(*) AS c FROM news_articles WHERE is_archived = :a');
+$countStmt->execute(['a' => $archived]);
+$total = (int) ($countStmt->fetch()['c'] ?? 0);
 
+$sql = 'SELECT * FROM news_articles WHERE is_archived = :is_archived ORDER BY date DESC, created_at DESC LIMIT :limit OFFSET :offset';
 $statement = db()->prepare($sql);
 $statement->bindValue(':is_archived', $archived, PDO::PARAM_INT);
-
-if ($limit > 0) {
-    $statement->bindValue(':limit_value', $limit, PDO::PARAM_INT);
-}
-
+$statement->bindValue(':limit', $limit, PDO::PARAM_INT);
+$statement->bindValue(':offset', $offset, PDO::PARAM_INT);
 $statement->execute();
 
-json_response(['items' => $statement->fetchAll()]);
+$items = $statement->fetchAll();
+$totalPages = max(1, (int) ceil($total / $limit));
+
+api_envelope_list($items, [
+    'page' => $page,
+    'per_page' => $limit,
+    'total' => $total,
+    'total_pages' => $totalPages,
+]);

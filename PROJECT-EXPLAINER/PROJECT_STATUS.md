@@ -3,6 +3,8 @@
 This file is kept current throughout the rebuild.
 
 ## Done
+- **Health Services admin v1 + deploy guide (2026-05-14):** **`frontend/src/pages/admin/HealthServicesAdminPage.jsx`** — nested **`/healthservices/admin/*`** routes (login, dashboard, CRUD for news/directories/services/programs/library/live/homepage/settings/consultations/donations/messages). **`frontend/src/pages/admin/healthservices/`** (auth + toast contexts, layout, modules), **`frontend/src/components/admin/healthservices/`** (**`CrudResourcePage`**, modals, toasts), **`frontend/src/services/admin/healthAdminApi.js`**. PHP: **`api/admin/auth/*`** (login/session/logout envelopes; logout CSRF), **`api/admin/bootstrap.php`** (envelope errors for auth/JSON/method), **`contact-messages.php`** PATCH, **`donation-intents.php`** PATCH (note + status), **`site-settings.php`** / **`live-page.php`** envelopes, **`live-recorded-items.php`** + **`live-up-next.php`**, **`database/health_services_admin_optional.sql`** extended. **`PROJECT-EXPLAINER/GODADDY_CPANEL_DEPLOYMENT_GUIDE.md`** — cPanel MySQL + API + SPA + checklist. **`admin.hsvc.*`** i18n (en/fr/ar). **`npm run lint`** + **`npm run build`** pass.
+- **Documentation — API registry + trackers (2026-05-14):** **`PROJECT-EXPLAINER/API_ENDPOINT_REGISTRY.md`** lists every **`api/public/*.php`** and **`api/admin/*.php`** (methods, envelopes, honeypots, CSRF, `VITE_*`). All **25** files under **`TRACKERS/**`** now include **§12 Implemented HTTP map** (per-route subset) plus existing SQL/UX sections; **`WEBAPP_PAGES_OVERVIEW.md`** points at the registry.
 - **Legacy tree removed (2026-05-13):** the old `legacy/` and `backupp/` directories were deleted from the repo. High-value markdown from legacy was copied into **`PROJECT-EXPLAINER/ARCHIVE_LEGACY_*.md`**.
 - **New app scaffolded**: `frontend/` (Vite + React).
 - **Tailwind added**: minimal Tailwind setup for pixel-aligned UI work.
@@ -13,7 +15,7 @@ This file is kept current throughout the rebuild.
   - **GitHub Actions**: **`.github/workflows/frontend-ci.yml`** runs `npm ci`, `npm run lint`, and `npm run build` in **`frontend/`** when `frontend/**` or the workflow file changes.
   - **`frontend/src/services/`** — `http.ts`, `news.ts` (news list + detail), **`pharmacies.ts`** (`loadPharmaciesForList`, PHP → `Pharmacy` mapper), **`hospitals.ts`** (`loadHospitalDatasets`, PHP → `HospitalListing` / `InternationalHospitalListing` mappers), `index.ts` re-exports (Phase **C1** / **D1** slice per **`NEXT_STEPS_PRODUCTION.md`**).
   - **List UX (Phase A4 slice)**: **News**, **Pharmacies**, **Hospitals**, **Ambulances** use **`useBootstrapList`**, **`ListGridSkeleton`**, **`ListFetchErrorBanner`**, and **`common.list*`** i18n keys for loading/error + retry.
-  - **Optional env**: **`VITE_NEWS_API=true`** → **`/public/news.php`** (list + detail); **`VITE_PHARMACIES_API=true`** → **`/public/pharmacies.php`** (directory + map); **`VITE_HOSPITALS_API=true`** → **`/public/hospitals.php`** + **`/public/international-hospitals.php`**; **`VITE_LIST_BOOTSTRAP_MS`** can delay loaders in dev (`frontend/.env.example`).
+  - **Optional env**: **`VITE_NEWS_API=true`** → **`/public/news.php`** (list + detail); **`VITE_PHARMACIES_API=true`** → **`/public/pharmacies.php`** (directory + map); **`VITE_HOSPITALS_API=true`** → **`/public/hospitals.php`** + **`/public/international-hospitals.php`**; **`VITE_AMBULANCES_API=true`** → **`/public/ambulances.php`**; **`VITE_ACCOMMODATIONS_API=true`** → **`/public/accommodations.php`**; **`VITE_LIST_BOOTSTRAP_MS`** can delay loaders in dev (`frontend/.env.example`).
   - **`frontend/.env.example`** — documents `VITE_*` variables for dev/staging/prod lanes.
   - **`frontend/src/config.ts`** + **`frontend/src/vite-env.d.ts`** — single import for public site URL, API base, optional TV stream URL, HLS feature flag.
   - **`frontend/src/components/RootErrorBoundary.tsx`** — shell error UI with AR/FR/EN copy (`common.error*` keys); wired in **`frontend/src/main.tsx`** inside **`BrowserRouter`** so `Link` works.
@@ -80,13 +82,13 @@ This file is kept current throughout the rebuild.
   - Build verified: `npm run build` OK.
 - **Ambulances page (UI-first, emergency-first directory)**:
   - Tracker: `../TRACKERS/machafi-services/AMBULANCES_PAGE_MAP.md`.
-  - Page: `frontend/src/pages/AmbulancesPage.jsx`; mock data: `frontend/src/data/ambulances.ts`; **`useBootstrapList`** + loading skeleton + fetch error banner (mock `Promise.resolve` until public API); route **`/ambulances`**.
+  - Page: `frontend/src/pages/AmbulancesPage.jsx`; mock data: `frontend/src/data/ambulances.ts`; **`useBootstrapList`** + loading skeleton + fetch error banner; optional live **`loadAmbulancesForList`** when **`VITE_AMBULANCES_API=true`**; route **`/ambulances`**.
   - UX variation: top filter bar + quick chips (not a Pharmacies clone); cards optimized for “Call now”; **map at bottom** for filtered results.
   - Location lists: canonical `Map.json` + `algeria-data.js`.
   - Build verified: `npm run build` OK.
 - **Housing page (UI-only, care/support directory)**:
   - Tracker: `../TRACKERS/machafi-services/HOUSING_PAGE_MAP.md`.
-  - Page: `frontend/src/pages/AccommodationsPage.jsx`; mock data: `frontend/src/data/housing.ts`; route **`/accommodations`**.
+  - Page: `frontend/src/pages/AccommodationsPage.jsx`; mock data: `frontend/src/data/housing.ts`; optional live list when **`VITE_ACCOMMODATIONS_API=true`**; route **`/accommodations`**.
   - UX variation: filters + call-first cards + “How it works” strip + verified emphasis + conditions (companion/long stay) + **map at bottom** (pins + popups + optional nearest) for filtered results.
   - Location lists: canonical `Map.json` + `algeria-data.js` (69 wilayas).
   - Build verified: `npm run build` OK.
@@ -100,6 +102,7 @@ This file is kept current throughout the rebuild.
 - **Consultations page (UI-only, remote-first + local private doctors)**:
   - Tracker: `../TRACKERS/machafi-services/CONSULTATIONS_PAGE_MAP.md`.
   - Page: `frontend/src/pages/ConsultationsPage.jsx`; mock data: `frontend/src/data/consultations.ts`; route **`/consultations`**.
+  - **Backend:** `api/public/consultations.php` (GET roster + POST booking with honeypot) and matching admin modules exist; SPA loader behind **`VITE_CONSULTATIONS_API`** is not wired yet in this status slice.
   - UX: value highlight (remote + local) + specialty tiles + filters (wilaya/city/remote/verified) + cards with call + booking modal.
   - Location lists: canonical `Map.json` + `algeria-data.js` (69 wilayas).
   - i18n: `consultations.*` keys (AR/FR/EN) in `frontend/src/i18n/translations.ts` (Rule #1).
@@ -159,7 +162,7 @@ This file is kept current throughout the rebuild.
   - **`/healthservices/*`** → `ServicesLayout` (existing directory platform pages); **`servicesPath()`** in `frontend/src/routes/paths.ts`; **`DocumentTitle`** handles gateway + services + TV + admin titles.
   - **Legacy URLs** (`/about`, `/live`, `/news`, …) → **`Navigate`** to `/healthservices/...`.
   - **`/tv/:edition`** (`ar` \| `fr` \| `en`) → **`TvShellLayout`** + nested routes: index home, **`desk`**, **`activity`**, **`topics/:topicId`**, **`search`**, **`live`**, **`schedule`**, **`article/:slug`** (edition syncs i18n language).
-  - **Admin placeholders**: **`/healthservices/admin/*`**, **`/machafitv/admin/*`** (copy-only shells until backend).
+  - **Admin:** **`/healthservices/admin/*`** → **Health Services admin SPA** (nested routes; see Done above). **`/machafitv/admin/*`** → placeholder shell until TV CMS.
   - **`npm run build`** verified after changes.
 
 ## In progress
@@ -172,7 +175,7 @@ This file is kept current throughout the rebuild.
 ## Remaining (planned)
 - **Rebuild remaining UI pages** (UI only, no backend): (none — primary directory pages + Services + Donations + News are now scaffolded in the new frontend).
 - **Machafi TV (beyond UI mocks)**: BBC/CNN-style rails are partially shipped under `/tv/:edition/*`; next: real article feeds per edition, **HLS player** wired to CDN/admin, **journalist CMS** + auth. **Page trackers**: `../TRACKERS/machafi-tv/TV_SHELL_PAGE_MAP.md`, `../TRACKERS/machafi-tv/TV_HOME_PAGE_MAP.md`, `../TRACKERS/machafi-tv/TV_LIVE_PAGE_MAP.md`, `../TRACKERS/machafi-tv/TV_SCHEDULE_PAGE_MAP.md`, `../TRACKERS/machafi-tv/TV_ARTICLE_PAGE_MAP.md`, `../TRACKERS/machafi-tv/TV_DESK_PAGE_MAP.md`, `../TRACKERS/machafi-tv/TV_ACTIVITY_PAGE_MAP.md`, `../TRACKERS/machafi-tv/TV_TOPIC_PAGE_MAP.md`, `../TRACKERS/machafi-tv/TV_SEARCH_PAGE_MAP.md`. **TV admin panel tracker**: `../TRACKERS/machafi-tv-admin/MACHAFITV_ADMIN_PANEL_MAP.md`. PHP namespaces when wiring **`/machafitv/admin`**.
-- **Health Services admin**: replace placeholder under **`/healthservices/admin`** with real panel + **`/api/admin`** RBAC (existing PHP patterns). **Tracker**: `../TRACKERS/machafi-services-admin/HEALTHSERVICES_ADMIN_PANEL_MAP.md`.
+- **Health Services admin — follow-ups:** full **`{ ok, data|error }`** on every legacy **`api/admin/*.php`**; clearer **RBAC** UX (`editor` vs `admin`); optional **`React.lazy`** for admin routes (**`NEXT_STEPS_PRODUCTION.md`** C3). **Tracker**: `../TRACKERS/machafi-services-admin/HEALTHSERVICES_ADMIN_PANEL_MAP.md`.
 - **Reusable UI kit**: Card, buttons, inputs, selects, filter panels (clean separation UI vs data).
 - **Layouts**: page shells, containers, responsive grid patterns.
 
@@ -233,4 +236,4 @@ This file is kept current throughout the rebuild.
 
 ---
 
-*Last updated: **2026-05-14** — Project status note: branding + Vercel deploy; refresh trackers as needed.*
+*Last updated: **2026-05-14** — Health Services **admin v1** + **`GODADDY_CPANEL_DEPLOYMENT_GUIDE.md`**; doc sync.*
