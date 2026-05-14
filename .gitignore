@@ -2,3 +2,7 @@
 .env
 .env.local
 .env.*.local
+
+# Local deploy artifacts
+*.zip
+vercel-deploy.log

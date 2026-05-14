@@ -302,26 +302,36 @@ export default function Header() {
               </div>
 
               <div
-                className={`flex-shrink-0 hidden lg:block transition-[width,opacity] duration-200 ${
-                  isCompact ? 'w-0 opacity-0 overflow-hidden' : 'w-20 md:w-28 lg:w-36 opacity-100'
+                className={`flex-shrink-0 hidden md:block transition-[width,opacity] duration-200 ${
+                  isCompact ? 'w-0 opacity-0 overflow-hidden' : 'w-[4.5rem] sm:w-20 md:w-24 lg:w-28 opacity-100'
                 }`}
               >
                 <img
-                  src="https://horizons-cdn.hostinger.com/0aa384d7-6fea-4830-83ee-bd56f39e3500/9daf0b6f4bdc8f5236150e485de0cc7b.png"
+                  src="/branding/kgc.png"
                   alt={t('header.partnerKgcAlt')}
-                  className="w-full h-auto object-contain drop-shadow-sm"
+                  width={160}
+                  height={64}
+                  loading="lazy"
+                  decoding="async"
+                  className="h-8 w-full max-h-9 object-contain object-left md:h-9 md:max-h-10 lg:max-h-11 drop-shadow-sm"
+                  draggable="false"
                 />
               </div>
 
               <div
-                className={`flex-shrink-0 hidden lg:block transition-[width,opacity] duration-200 ${
-                  isCompact ? 'w-0 opacity-0 overflow-hidden' : 'w-24 md:w-32 opacity-100'
+                className={`flex-shrink-0 hidden md:block transition-[width,opacity] duration-200 ${
+                  isCompact ? 'w-0 opacity-0 overflow-hidden' : 'w-[5rem] sm:w-24 md:w-28 lg:w-32 opacity-100'
                 }`}
               >
                 <img
-                  src="https://horizons-cdn.hostinger.com/0aa384d7-6fea-4830-83ee-bd56f39e3500/komas-group-logo-transparant-officiel-cfD7b.png"
+                  src="/branding/komas.png"
                   alt={t('header.partnerKomasAlt')}
-                  className="w-full h-auto object-contain drop-shadow-sm"
+                  width={180}
+                  height={72}
+                  loading="lazy"
+                  decoding="async"
+                  className="h-8 w-full max-h-9 object-contain object-left md:h-9 md:max-h-10 lg:max-h-11 drop-shadow-sm"
+                  draggable="false"
                 />
               </div>
 

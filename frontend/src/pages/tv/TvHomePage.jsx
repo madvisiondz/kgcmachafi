@@ -21,26 +21,44 @@ export default function TvHomePage() {
   ];
 
   return (
-    <div className="bg-slate-100/80">
-      {/* Live strip */}
-      <section className="border-b border-slate-200 bg-slate-900 text-white">
-        <div className="container mx-auto px-4 py-4 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-          <div>
-            <div className="text-[10px] font-black uppercase tracking-[0.2em] text-red-400">{t('tvApp.homeLiveStrip')}</div>
-            <p className="mt-1 text-sm text-slate-200 max-w-xl">{t('tvApp.homeLiveStripSub')}</p>
+    <div>
+      {/* ── Live strip ───────────────────────────────────────────── */}
+      <section className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-slate-900 to-slate-950 text-white">
+        <div
+          className="absolute inset-0 opacity-50"
+          style={{
+            background:
+              'radial-gradient(ellipse 60% 80% at 0% 50%, rgba(239,68,68,0.18), transparent 60%),' +
+              'radial-gradient(ellipse 50% 80% at 100% 50%, rgba(56,189,248,0.10), transparent 60%)',
+          }}
+          aria-hidden="true"
+        />
+        <div className="relative container mx-auto px-4 py-6 md:py-7 flex flex-col md:flex-row md:items-center md:justify-between gap-5">
+          <div className="max-w-2xl">
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-red-500/15 px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-[0.18em] text-red-300 ring-1 ring-inset ring-red-400/20">
+              <span className="h-1.5 w-1.5 rounded-full bg-red-500 animate-pulse" aria-hidden="true" />
+              {t('tvApp.homeLiveStrip')}
+            </span>
+            <p className="mt-3 text-sm md:text-[15px] text-slate-300 leading-relaxed">
+              {t('tvApp.homeLiveStripSub')}
+            </p>
           </div>
           <Link
             to={tvEditionPath(edition, '/live')}
-            className="inline-flex items-center justify-center rounded-lg bg-red-600 hover:bg-red-500 px-5 py-2.5 text-sm font-black uppercase tracking-wide shrink-0"
+            className="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl bg-red-600 px-5 py-2.5 text-sm font-semibold text-white shadow-[0_8px_24px_-8px_rgba(239,68,68,0.6)] transition-all hover:bg-red-500 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900"
           >
             {t('tvApp.homeLiveCta')}
+            <svg viewBox="0 0 20 20" fill="none" className="h-4 w-4 rtl:rotate-180" aria-hidden="true">
+              <path d="M4 10h12m0 0-4-4m4 4-4 4" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
           </Link>
         </div>
       </section>
 
-      <div className="container mx-auto px-4 py-8 grid gap-8 lg:grid-cols-12">
+      {/* ── Main grid ────────────────────────────────────────────── */}
+      <div className="container mx-auto px-4 py-10 md:py-14 grid gap-10 lg:grid-cols-12">
         {/* Main column */}
-        <div className="lg:col-span-8 space-y-8">
+        <div className="lg:col-span-8 space-y-10">
           {/* Hero */}
           {hero ? (
             <TvStoryCard
@@ -79,20 +97,31 @@ export default function TvHomePage() {
             ))}
           </div>
 
-          {/* Topic rails */}
+          {/* Topics */}
           <section>
-            <div className="flex items-end justify-between gap-4 mb-4">
-              <h2 className="text-lg font-black text-slate-900 uppercase tracking-tight">{t('tvApp.homeSectionsTitle')}</h2>
-              <Link to={tvEditionPath(edition, '/activity')} className="text-xs font-bold text-red-800 hover:underline">
+            <div className="flex items-end justify-between gap-4 mb-5">
+              <div>
+                <span className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">
+                  Sections
+                </span>
+                <h2 className="mt-1 text-lg md:text-xl font-semibold text-slate-900 tracking-tight">
+                  {t('tvApp.homeSectionsTitle')}
+                </h2>
+              </div>
+              <Link
+                to={tvEditionPath(edition, '/activity')}
+                className="text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors inline-flex items-center gap-1"
+              >
                 {t('tvApp.homeSeeWire')}
+                <span aria-hidden="true" className="rtl:rotate-180">→</span>
               </Link>
             </div>
-            <div className="flex flex-wrap gap-2 mb-6">
+            <div className="flex flex-wrap gap-2">
               {topics.map((tp) => (
                 <Link
                   key={tp.id}
                   to={tvEditionPath(edition, `/topics/${tp.id}`)}
-                  className="rounded-full border border-slate-300 bg-white px-4 py-1.5 text-xs font-bold text-slate-800 hover:border-red-400 hover:text-red-900"
+                  className="inline-flex items-center rounded-full border border-slate-200 bg-white px-4 py-1.5 text-sm font-medium text-slate-700 hover:border-slate-300 hover:bg-slate-50 hover:text-slate-900 transition-colors"
                 >
                   {tp.label}
                 </Link>
@@ -102,8 +131,17 @@ export default function TvHomePage() {
 
           {/* River */}
           <section>
-            <h2 className="text-lg font-black text-slate-900 uppercase tracking-tight mb-4">{t('tvApp.homeLatestTitle')}</h2>
-            <div className="space-y-4">
+            <div className="flex items-end justify-between gap-4 mb-5">
+              <div>
+                <span className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">
+                  Wire
+                </span>
+                <h2 className="mt-1 text-lg md:text-xl font-semibold text-slate-900 tracking-tight">
+                  {t('tvApp.homeLatestTitle')}
+                </h2>
+              </div>
+            </div>
+            <div className="space-y-3">
               {river.map(({ story, title, kicker, dek, byline }) => (
                 <TvStoryCard
                   key={story.slug}
@@ -125,15 +163,22 @@ export default function TvHomePage() {
           </section>
         </div>
 
-        {/* Sidebar */}
-        <aside className="lg:col-span-4 space-y-6">
-          <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-            <h3 className="text-xs font-black uppercase tracking-widest text-slate-500">{t('tvApp.homeTrendingTitle')}</h3>
-            <ol className="mt-4 space-y-3">
+        {/* ── Sidebar ──────────────────────────────────────────── */}
+        <aside className="lg:col-span-4 space-y-5 lg:sticky lg:top-[10.5rem] lg:self-start">
+          <div className="rounded-2xl border border-slate-200/70 bg-white p-5 md:p-6 shadow-[0_1px_2px_rgba(15,23,42,0.04),0_8px_24px_-12px_rgba(15,23,42,0.08)]">
+            <h3 className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">
+              {t('tvApp.homeTrendingTitle')}
+            </h3>
+            <ol className="mt-4 space-y-3.5">
               {trending.map(({ story, title }, i) => (
-                <li key={story.slug} className="flex gap-3">
-                  <span className="text-2xl font-black text-red-200 leading-none w-6 shrink-0">{i + 1}</span>
-                  <Link to={tvEditionPath(edition, `/article/${story.slug}`)} className="text-sm font-bold text-slate-900 hover:text-red-800 leading-snug">
+                <li key={story.slug} className="flex gap-3 items-start group">
+                  <span className="text-[15px] font-semibold text-slate-300 group-hover:text-red-500 transition-colors leading-tight w-5 shrink-0 tabular-nums">
+                    {String(i + 1).padStart(2, '0')}
+                  </span>
+                  <Link
+                    to={tvEditionPath(edition, `/article/${story.slug}`)}
+                    className="text-[14px] font-medium text-slate-800 group-hover:text-slate-950 leading-snug transition-colors"
+                  >
                     {title}
                   </Link>
                 </li>
@@ -141,35 +186,48 @@ export default function TvHomePage() {
             </ol>
           </div>
 
-          <div className="rounded-2xl border border-slate-200 bg-slate-900 text-white p-5">
-            <h3 className="text-xs font-black uppercase tracking-widest text-red-400">{t('tvApp.homeToolsTitle')}</h3>
-            <ul className="mt-4 space-y-2 text-sm">
-              <li>
-                <Link to={tvEditionPath(edition, '/desk')} className="hover:text-red-300 font-semibold">
-                  → {t('tvApp.navDesk')}
-                </Link>
-              </li>
-              <li>
-                <Link to={tvEditionPath(edition, '/activity')} className="hover:text-red-300 font-semibold">
-                  → {t('tvApp.navActivity')}
-                </Link>
-              </li>
-              <li>
-                <Link to={tvEditionPath(edition, '/search')} className="hover:text-red-300 font-semibold">
-                  → {t('tvApp.navSearch')}
-                </Link>
-              </li>
-              <li>
-                <Link to="/machafitv/admin" className="hover:text-red-300 font-semibold">
-                  → {t('tvApp.homeAdminLink')}
-                </Link>
-              </li>
-            </ul>
+          <div className="relative overflow-hidden rounded-2xl bg-slate-950 text-white p-5 md:p-6 shadow-[0_24px_60px_-24px_rgba(15,23,42,0.45)]">
+            <div
+              className="absolute inset-0 opacity-50"
+              style={{
+                background:
+                  'radial-gradient(circle at 20% 0%, rgba(239,68,68,0.18), transparent 50%),' +
+                  'radial-gradient(circle at 90% 100%, rgba(56,189,248,0.12), transparent 50%)',
+              }}
+              aria-hidden="true"
+            />
+            <div className="relative">
+              <h3 className="text-[11px] font-semibold uppercase tracking-[0.18em] text-red-300">
+                {t('tvApp.homeToolsTitle')}
+              </h3>
+              <ul className="mt-4 space-y-2.5 text-sm">
+                {[
+                  { to: tvEditionPath(edition, '/desk'), label: t('tvApp.navDesk') },
+                  { to: tvEditionPath(edition, '/activity'), label: t('tvApp.navActivity') },
+                  { to: tvEditionPath(edition, '/search'), label: t('tvApp.navSearch') },
+                  { to: '/machafitv/admin', label: t('tvApp.homeAdminLink') },
+                ].map((link) => (
+                  <li key={link.to}>
+                    <Link
+                      to={link.to}
+                      className="inline-flex items-center gap-2 text-slate-200 hover:text-white font-medium transition-colors"
+                    >
+                      <span className="h-1 w-1 rounded-full bg-red-400" aria-hidden="true" />
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
 
-          <div className="rounded-2xl border border-emerald-200 bg-emerald-50/50 p-5 text-sm text-emerald-950">
-            <p className="font-bold">{t('tvApp.homeTrustTitle')}</p>
-            <p className="mt-2 text-emerald-900/90 leading-relaxed">{t('tvApp.homeTrustBody')}</p>
+          <div className="rounded-2xl border border-emerald-200/70 bg-emerald-50/60 p-5 md:p-6">
+            <h3 className="text-[11px] font-semibold uppercase tracking-[0.18em] text-emerald-700">
+              {t('tvApp.homeTrustTitle')}
+            </h3>
+            <p className="mt-3 text-[14px] text-emerald-900/85 leading-relaxed">
+              {t('tvApp.homeTrustBody')}
+            </p>
           </div>
         </aside>
       </div>

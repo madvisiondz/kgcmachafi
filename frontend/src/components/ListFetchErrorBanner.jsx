@@ -5,14 +5,14 @@ export default function ListFetchErrorBanner({ message, onRetry }) {
   const { t, dir } = useI18n()
   return (
     <div
-      className="rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-rose-950 shadow-sm"
+      className="rounded-2xl border border-rose-200/80 bg-rose-50/90 px-4 py-4 text-rose-950 shadow-[0_1px_2px_rgba(15,23,42,0.04),0_8px_24px_-12px_rgba(15,23,42,0.08)]"
       dir={dir}
       role="alert"
     >
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <div className="text-sm font-extrabold">{t('common.listErrorTitle')}</div>
-          <div className="text-xs mt-1 text-rose-900/90 leading-relaxed">
+        <div className="min-w-0">
+          <div className="text-sm font-semibold text-rose-950">{t('common.listErrorTitle')}</div>
+          <div className="mt-1 text-xs text-rose-900/85 leading-relaxed">
             {message || t('common.listErrorDesc')}
           </div>
         </div>
@@ -20,7 +20,7 @@ export default function ListFetchErrorBanner({ message, onRetry }) {
           <button
             type="button"
             onClick={onRetry}
-            className="inline-flex items-center justify-center rounded-xl bg-rose-700 px-4 py-2 text-xs font-black text-white hover:bg-rose-800 transition-colors shrink-0"
+            className="inline-flex shrink-0 items-center justify-center rounded-xl bg-rose-700 px-4 py-2.5 text-xs font-semibold text-white shadow-sm transition-colors hover:bg-rose-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-600 focus-visible:ring-offset-2"
           >
             {t('common.listRetry')}
           </button>
