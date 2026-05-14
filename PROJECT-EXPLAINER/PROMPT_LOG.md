@@ -34,6 +34,14 @@ This file is updated after every user prompt.
 
 ## 2026-05-14
 
+### Markdown doc sweep — gateway/TV branding + Vercel
+- **Prompt**: Update all md files.
+- **What I did**: Refreshed `Last updated` footers dated **2026-05-14** across **52** repo markdown files (root, **`PROJECT-EXPLAINER/`**, **`TRACKERS/`**, `WORKING_PLAN.md`, etc.; **`node_modules`** excluded). **`TRACKERS/gateway/GATEWAY_PAGE_MAP.md`** — route table + behaviour for **segmented edition** controls, **identity strip** (Machafi + KGC + Komas + **`machafi-tv-logo.png`**), TV card lockup, changelog. **`TRACKERS/machafi-tv/TV_SHELL_PAGE_MAP.md`** — new **§4 Masthead + footer branding**, renumbered sections, changelog. **`PROJECT-EXPLAINER/PLATFORM_SHELL_LAYOUT.md`** — **Vercel** preview URL. **`ARCHITECTURE_PRODUCTION_READINESS.md`** — Vercel callout in §2. **`TRACKERS/machafi-services/HOMEPAGE_MAP.md`** — zinc panels vs **ServicesLayout** grid note. **`frontend/README.md`** — replaced Vite boilerplate with **KGC Machafi** frontend overview (scripts, branding paths, Vercel link).
+
+### Git push — markdown documentation to origin
+- **Prompt**: Push to repo.
+- **What I did**: Staged all modified project markdown (`TRACKERS/`, `PROJECT-EXPLAINER/`, root explainers, `frontend/README.md`), committed, pushed **`main`** → **`origin/main`**.
+
 ### Git push policy + chat log before push (standing)
 - **Prompt**: Do not ask about size issues anymore; always push everything so another PC can clone and work immediately; before every push, update the chat-tracking **`.md`** then push.
 - **Standing rule (recorded for assistants)**:
@@ -621,4 +629,4 @@ This file is updated after every user prompt.
 
 ---
 
-*Last updated: **2026-05-11** — doc sync + push (emerald UI, gateway art, Vite 5173 strict, visual-eval MDs).*
+*Last updated: **2026-05-14** — Doc sync: gateway/TV branding, Vercel production URL, tracker footers.*

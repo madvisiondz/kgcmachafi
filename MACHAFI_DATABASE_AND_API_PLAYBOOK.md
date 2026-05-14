@@ -264,4 +264,4 @@ If those are true, you are ready for the next build day without feeling lost.
 *This playbook is yours to edit when reality changes. Keep examples pointing at real paths in this repo.*
 
 ---
-*Last updated: **2026-05-11** — full repo doc sync (emerald Services UI, gateway art + tracker, Vite 5173 strictPort, Header TV/portal, visual eval logs) + GitHub push.*
+*Last updated: **2026-05-14** — Gateway + TV branding (Machafi TV logo in shell and gateway strip), Services masthead mint/grid, `frontend/public/branding/`, Vercel https://kgcmachafi.vercel.app ; doc sync.*

@@ -69,6 +69,8 @@ Traffic flows **top → bottom**. Each box is one **layer**; the right column is
 
 ## 2. Horizontal view — two products on one domain
 
+**SPA today:** also deployed at **https://kgcmachafi.vercel.app** (Vercel) with the same route tree as below; custom domain **kgc-machafi.net** remains the long-term production target.
+
 ```
   https://kgc-machafi.net/
            │
@@ -203,4 +205,4 @@ Recompute your **weighted %** whenever you change weights or layer %.
 
 ---
 
-*Last updated: **2026-05-11** — full repo doc sync (emerald Services UI, gateway art + tracker, Vite 5173 strictPort, Header TV/portal, visual eval logs) + GitHub push.*
+*Last updated: **2026-05-14** — Gateway + TV branding (Machafi TV logo in shell and gateway strip), Services masthead mint/grid, `frontend/public/branding/`, Vercel https://kgcmachafi.vercel.app ; doc sync.*

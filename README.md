@@ -128,4 +128,4 @@ After every prompt/work session, update:
 
 ---
 
-*Last updated: **2026-05-11** — full doc footer sync + emerald/gateway/Vite/Header work + `git push`.*
+*Last updated: **2026-05-14** — Root README sync: gateway/TV branding, Vercel, GitHub main.*

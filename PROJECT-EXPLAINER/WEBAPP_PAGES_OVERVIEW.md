@@ -1,6 +1,6 @@
 # Webapp pages overview
 
-This document tracks **`frontend/src/App.tsx`** routing on **[https://kgc-machafi.net/](https://kgc-machafi.net/)**: **gateway**, **Machafi Services** under **`/healthservices/*`**, **Machafi TV** under **`/tv/:edition/*`**, and **admin placeholders**. Full product map: **`PLATFORM_SHELL_LAYOUT.md`**. Historical `legacy/` / `backupp/` trees were **removed** from the repo (2026-05-13); routing truth is **`frontend/`** only.
+This document tracks **`frontend/src/App.tsx`** routing on **[https://kgc-machafi.net/](https://kgc-machafi.net/)** (and the live **Vercel** build **[https://kgcmachafi.vercel.app](https://kgcmachafi.vercel.app/)**): **gateway**, **Machafi Services** under **`/healthservices/*`**, **Machafi TV** under **`/tv/:edition/*`**, and **admin placeholders**. Full product map: **`PLATFORM_SHELL_LAYOUT.md`**. Historical `legacy/` / `backupp/` trees were **removed** from the repo (2026-05-13); routing truth is **`frontend/`** only.
 
 ## Hosting & database (memorized constraint)
 
@@ -124,4 +124,4 @@ Admin JSON remains under **`/api/admin/...`** with **session + RBAC** (see **`AP
 
 ---
 
-*Last updated: **2026-05-11** — full repo doc sync (emerald Services UI, gateway art + tracker, Vite 5173 strictPort, Header TV/portal, visual eval logs) + GitHub push.*
+*Last updated: **2026-05-14** — Gateway + TV branding (Machafi TV logo in shell and gateway strip), Services masthead mint/grid, `frontend/public/branding/`, Vercel https://kgcmachafi.vercel.app ; doc sync.*

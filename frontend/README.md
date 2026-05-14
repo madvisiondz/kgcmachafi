@@ -1,78 +1,37 @@
-# React + TypeScript + Vite
+# KGC Machafi — frontend (Vite + React)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Single-page app for **site gateway** (`/`), **Machafi Services** (`/healthservices/*`), and **Machafi TV** (`/tv/:edition/*`).
 
-Currently, two official plugins are available:
+## Scripts
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+| Command | Description |
+|--------|-------------|
+| `npm install` | Install dependencies |
+| `npm run dev` | Local dev server (Vite) |
+| `npm run build` | Typecheck + production build → `dist/` |
+| `npm run preview` | Serve `dist` locally |
+| `npm run lint` | ESLint |
 
-## React Compiler
+## Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- React 19, React Router 7, TypeScript, Vite 8, Tailwind CSS 3
+- i18n: `src/i18n/` (EN / FR / AR; Rule #1 in repo docs)
 
-## Expanding the ESLint configuration
+## Deploy
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- **Vercel (current production SPA):** [https://kgcmachafi.vercel.app](https://kgcmachafi.vercel.app)  
+- Project config: `vercel.json`, `.vercelignore` in this folder.
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## Brand assets (public)
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+- `public/machafi-logo.svg` — Services header / gateway (invert on dark gateway)
+- `public/branding/kgc.png`, `public/branding/komas.png` — partner marks
+- `public/branding/machafi-tv-logo.png` — Machafi TV lockup (gateway strip, TV shell, gateway TV card)
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## Docs (repo root)
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
-
+See `TRACKERS/`, `PROJECT-EXPLAINER/`, and root `README.md` for routing maps and architecture.
 
 ---
 
-*Last updated: **2026-05-11** — full repo doc sync (emerald Services UI, gateway art + tracker, Vite 5173 strictPort, Header TV/portal, visual eval logs) + GitHub push.*
+*Last updated: **2026-05-14** — Replaced default Vite template README with Machafi frontend overview + deploy and branding paths.*

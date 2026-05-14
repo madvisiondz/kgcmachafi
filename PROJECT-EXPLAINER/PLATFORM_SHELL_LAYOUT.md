@@ -2,6 +2,8 @@
 
 **Production domain:** [https://kgc-machafi.net/](https://kgc-machafi.net/)
 
+**Current SPA preview (Vercel):** [https://kgcmachafi.vercel.app](https://kgcmachafi.vercel.app) — same router tree; use for stakeholder demos until the custom domain points at this build.
+
 One place for **domain → gateway → Machafi Services vs Machafi TV** (editions, live broadcast web, journalist desk). Same ASCII style as `WEBAPP_PAGES_OVERVIEW.md`.  
 Implementation is **one Vite SPA** in **`frontend/`** (`BrowserRouter` without basename). This doc stays the **logical + URL** map.
 
@@ -82,4 +84,4 @@ Admin/API later: sanitized stream URL, schedule row, “on air” flag — align
 
 ---
 
-*Last updated: **2026-05-11** — full repo doc sync (emerald Services UI, gateway art + tracker, Vite 5173 strictPort, Header TV/portal, visual eval logs) + GitHub push.*
+*Last updated: **2026-05-14** — Gateway + TV branding (Machafi TV logo in shell and gateway strip), Services masthead mint/grid, `frontend/public/branding/`, Vercel https://kgcmachafi.vercel.app ; doc sync.*

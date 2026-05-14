@@ -5,6 +5,8 @@ Purpose: keep a **precise, engineer-friendly map** of the homepage sections and 
 **File location (repo):** `TRACKERS/machafi-services/HOMEPAGE_MAP.md`
 
 > **Note (2026-05-13):** The old `legacy/` tree was removed from the repository. Paths below that look like `…/src/components/Foo.jsx` refer to **former monolith filenames** for section parity only. The live homepage is **`frontend/src/pages/HomePage.jsx`**.
+>
+> **Note (2026-05-14):** Home sections use **zinc-tinted panels** (not flat white) so they read against the **`ServicesLayout`** drifting grid + warm base (`index.css` + layout shell).
 
 Reference order (former monolith): `HomePage.jsx`
 
@@ -265,4 +267,4 @@ CREATE TABLE home_feed_items (
 
 ---
 
-*Last updated: **2026-05-11** — full repo doc sync (emerald Services UI, gateway art + tracker, Vite 5173 strictPort, Header TV/portal, visual eval logs) + GitHub push.*
+*Last updated: **2026-05-14** — Gateway + TV branding (Machafi TV logo in shell and gateway strip), Services masthead mint/grid, `frontend/public/branding/`, Vercel https://kgcmachafi.vercel.app ; doc sync.*

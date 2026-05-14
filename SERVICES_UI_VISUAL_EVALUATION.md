@@ -48,4 +48,4 @@ _Add dated bullets: problem → proposed direction → optional screenshot link 
 
 ---
 
-*Last updated: **2026-05-11** — Services visual evaluation log + repo doc sync + push.*
+*Last updated: **2026-05-14** — Services visual eval sync; Services shell uses animated mint header strip + drifting grid.*

@@ -234,4 +234,4 @@ Record answers in `PROJECT-EXPLAINER/PROMPT_LOG.md` when decided.
 
 ---
 
-*Last updated: **2026-05-11** — §10 sprint (A4 Ambulances, B1 header) + repo-wide doc sync + push.*
+*Last updated: **2026-05-14** — Next moves doc sync (gateway/TV branding, Vercel).*

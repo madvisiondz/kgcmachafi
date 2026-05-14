@@ -26,12 +26,19 @@ All nested routes under **`/tv/:edition`** (invalid edition → redirect **`/tv/
 2. **TvBreakingBar** shows edition-specific ticker lines (CSS marquee).
 3. Primary nav: Home, four topics, Activity, Desk, Live, Schedule; masthead links include **Search**.
 
-## 4) Data contracts (UI-first)
+## 4) Masthead + footer branding
+
+- **Logo tile**: `Link` to edition home wraps **`/branding/machafi-tv-logo.png`** inside a rounded **`bg-slate-950`** panel (ring + shadow) on the white masthead; image scales from **`h-9` / `max-w-[5.5rem]`** on phones to **`md:h-11` / `max-w-[7.75rem]`** on desktop.
+- **Copy row**: red **Live** pill (`t('tvApp.navLive')`) + edition prefix; **headline** `t('tvApp.homeHeadline')` remains a second link to home for hierarchy and accessibility.
+- **Masthead layout**: stacked **`flex-col`** on very narrow widths, then **`sm:flex-row`** with quick actions aligned to the trailing edge (`dir` respects RTL for `ar`).
+- **Footer**: first column shows the same **`machafi-tv-logo.png`** beside the “Machafi TV” word line + tagline on the dark footer slab.
+
+## 5) Data contracts (UI-first)
 
 - **`frontend/src/data/tvMock.ts`** — `tvBreakingLines` keyed by `TvEdition`.
 - **Target production**: ticker copy and “on/off” state from CMS; optional geo-specific ticker variants.
 
-## 5) Endpoint proposals
+## 6) Endpoint proposals
 
 ### Public
 
@@ -44,27 +51,29 @@ All nested routes under **`/tv/:edition`** (invalid edition → redirect **`/tv/
 
 Map to PHP: settings JSON or `tv_ticker_lines` table with `edition`, `sort`, `body`, `active`.
 
-## 6) i18n (Rule #1)
+## 7) i18n (Rule #1)
 
 Shell strings under **`tvApp.*`** (nav, footer, utility, masthead). Ticker **body** is currently **per-edition static arrays** in `tvMock.ts` (editorial voice per tree).
 
-## 7) File map
+## 8) File map
 
 - `frontend/src/layouts/TvShellLayout.jsx`
+- `frontend/public/branding/machafi-tv-logo.png` — masthead + footer raster lockup
 - `frontend/src/components/tv/TvBreakingBar.jsx`
 - `frontend/src/routes/paths.ts` — `tvEditionPath`, `isTvEdition`, `TV_EDITIONS`
 - `frontend/src/data/tvMock.ts` — `tvBreakingLines`
 - `frontend/src/components/DocumentTitle.jsx` — segment keys for TV subpaths
 
-## 8) Safeguards
+## 9) Safeguards
 
 - **Invalid `:edition`**: always redirect to a known edition; never render with unknown param.
 - **RTL**: `dir="rtl"` for `ar` only; verify nav overflow scroll does not clip focus rings.
 - **Ticker**: avoid seizure-inducing flash rates; marquee speed tunable.
 
-## 9) Changelog
+## 10) Changelog
 
 - **2026-05-12**: Tracker added; shell + breaking bar documented (matches current `TvShellLayout` / `TvBreakingBar`).
+- **2026-05-14**: Masthead + footer use **`/branding/machafi-tv-logo.png`**; LIVE chip label sourced from `tvApp.navLive`; responsive masthead stack documented.
 
 ---
 
@@ -110,4 +119,4 @@ Optional: **`tv_shell_copy`** table for rare non-i18n strings; prefer **`tvApp.*
 
 ---
 
-*Last updated: **2026-05-11** — full repo doc sync (emerald Services UI, gateway art + tracker, Vite 5173 strictPort, Header TV/portal, visual eval logs) + GitHub push.*
+*Last updated: **2026-05-14** — TV shell map: masthead/footer Machafi TV logo tile, responsive layout, changelog; see gateway map for site-level strip.*

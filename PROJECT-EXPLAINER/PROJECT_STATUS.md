@@ -233,4 +233,4 @@ This file is kept current throughout the rebuild.
 
 ---
 
-*Last updated: **2026-05-11** — emerald Services UI, gateway art + tracker, Vite 5173 strictPort, Header TV/portal, visual-eval MDs; GitHub push.*
+*Last updated: **2026-05-14** — Project status note: branding + Vercel deploy; refresh trackers as needed.*
