@@ -241,9 +241,14 @@ body {
   z-index: 1;
 }
 
-.machafi-soft-grid > * {
+/* Only stack main content above grid — do NOT override header (fixed) or footer */
+.machafi-soft-grid > main {
   position: relative;
   z-index: 1;
+}
+
+.machafi-soft-grid > header {
+  z-index: 50;
 }
 
 /** Optional floating orb (decorative children inside shells) */
