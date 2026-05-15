@@ -7,13 +7,15 @@ $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 
 if ($method === 'GET') {
     require_admin();
+    require_editor_or_admin();
 
     $statement = db()->query('SELECT * FROM news_articles ORDER BY date DESC, created_at DESC');
-    json_response(['items' => $statement->fetchAll()]);
+    api_envelope_ok(['items' => $statement->fetchAll()]);
 }
 
 if ($method === 'POST') {
     require_admin_write();
+    require_editor_or_admin();
     $payload = read_json_input();
 
     $title = trim((string) ($payload['title'] ?? ''));
@@ -25,7 +27,7 @@ if ($method === 'POST') {
     $isArchived = normalize_flag($payload['is_archived'] ?? false);
 
     if ($title === '' || $description === '' || $date === '') {
-        json_response(['message' => 'العنوان والوصف والتاريخ حقول مطلوبة.'], 422);
+        api_envelope_error('validation', 'العنوان والوصف والتاريخ حقول مطلوبة.', 422);
     }
 
     $statement = db()->prepare(
@@ -46,7 +48,7 @@ if ($method === 'POST') {
     $fetchStatement = db()->prepare('SELECT * FROM news_articles WHERE id = :id');
     $fetchStatement->execute(['id' => $id]);
 
-    json_response([
+    api_envelope_ok([
         'message' => 'تمت إضافة الخبر.',
         'item' => $fetchStatement->fetch(),
     ], 201);
@@ -54,11 +56,12 @@ if ($method === 'POST') {
 
 if ($method === 'PUT') {
     require_admin_write();
+    require_editor_or_admin();
     $id = (int) ($_GET['id'] ?? 0);
     $payload = read_json_input();
 
     if ($id <= 0) {
-        json_response(['message' => 'معرّف الخبر غير صالح.'], 422);
+        api_envelope_error('validation', 'معرّف الخبر غير صالح.', 422);
     }
 
     $title = trim((string) ($payload['title'] ?? ''));
@@ -70,7 +73,7 @@ if ($method === 'PUT') {
     $isArchived = normalize_flag($payload['is_archived'] ?? false);
 
     if ($title === '' || $description === '' || $date === '') {
-        json_response(['message' => 'العنوان والوصف والتاريخ حقول مطلوبة.'], 422);
+        api_envelope_error('validation', 'العنوان والوصف والتاريخ حقول مطلوبة.', 422);
     }
 
     $statement = db()->prepare(
@@ -98,7 +101,7 @@ if ($method === 'PUT') {
     $fetchStatement = db()->prepare('SELECT * FROM news_articles WHERE id = :id');
     $fetchStatement->execute(['id' => $id]);
 
-    json_response([
+    api_envelope_ok([
         'message' => 'تم تحديث الخبر.',
         'item' => $fetchStatement->fetch(),
     ]);
@@ -106,16 +109,17 @@ if ($method === 'PUT') {
 
 if ($method === 'DELETE') {
     require_admin_write();
+    require_editor_or_admin();
     $id = (int) ($_GET['id'] ?? 0);
 
     if ($id <= 0) {
-        json_response(['message' => 'معرّف الخبر غير صالح.'], 422);
+        api_envelope_error('validation', 'معرّف الخبر غير صالح.', 422);
     }
 
     $statement = db()->prepare('DELETE FROM news_articles WHERE id = :id');
     $statement->execute(['id' => $id]);
 
-    json_response(['message' => 'تم حذف الخبر.']);
+    api_envelope_ok(['message' => 'تم حذف الخبر.']);
 }
 
-json_response(['message' => 'الطريقة غير مدعومة.'], 405);
+api_envelope_error('method_not_allowed', 'الطريقة غير مدعومة.', 405);

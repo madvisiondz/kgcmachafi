@@ -23,7 +23,7 @@ function filesystem_program_upload_path(string $type, string $filename): string
 function ensure_programs_directory(string $path): void
 {
     if (!is_dir($path) && !mkdir($path, 0775, true) && !is_dir($path)) {
-        json_response(['message' => 'تعذر إنشاء مجلد الرفع.'], 500);
+        api_envelope_error('server', 'تعذر إنشاء مجلد الرفع.', 500);
     }
 }
 
@@ -44,14 +44,14 @@ function sanitize_program_filename(string $originalName, string $fallbackBase = 
 function upload_program_file(array $file, string $type, array $allowedExtensions, string $message, string $fallbackBase): string
 {
     if (($file['error'] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_OK) {
-        json_response(['message' => $message], 422);
+        api_envelope_error('validation', $message, 422);
     }
 
     $filename = sanitize_program_filename((string) ($file['name'] ?? ''), $fallbackBase);
     $extension = strtolower((string) pathinfo($filename, PATHINFO_EXTENSION));
 
     if (!in_array($extension, $allowedExtensions, true)) {
-        json_response(['message' => $message], 422);
+        api_envelope_error('validation', $message, 422);
     }
 
     $targetDir = programs_upload_root() . '/' . $type;
@@ -59,7 +59,7 @@ function upload_program_file(array $file, string $type, array $allowedExtensions
     $targetPath = filesystem_program_upload_path($type, $filename);
 
     if (!move_uploaded_file((string) $file['tmp_name'], $targetPath)) {
-        json_response(['message' => 'تعذر حفظ الملف المرفوع.'], 500);
+        api_envelope_error('server', 'تعذر حفظ الملف المرفوع.', 500);
     }
 
     return public_program_upload_path($type, $filename);
@@ -98,13 +98,15 @@ function programs_payload(): array
 
 if ($method === 'GET') {
     require_admin();
+    require_editor_or_admin();
 
     $statement = db()->query('SELECT * FROM programs ORDER BY time_slot ASC, created_at DESC');
-    json_response(['items' => $statement->fetchAll()]);
+    api_envelope_ok(['items' => $statement->fetchAll()]);
 }
 
 if ($method === 'POST') {
     require_admin_write();
+    require_editor_or_admin();
     $id = (int) ($_GET['id'] ?? 0);
     $payload = programs_payload();
     $overrideMethod = strtoupper(trim((string) ($payload['_method'] ?? '')));
@@ -122,7 +124,7 @@ if ($method === 'POST') {
     $daysOfWeek = trim((string) ($payload['days_of_week'] ?? ''));
 
     if ($title === '' || $timeSlot === '') {
-        json_response(['message' => 'اسم البرنامج والتوقيت مطلوبان.'], 422);
+        api_envelope_error('validation', 'اسم البرنامج والتوقيت مطلوبان.', 422);
     }
 
     if (isset($_FILES['video_file']) && ($_FILES['video_file']['error'] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_NO_FILE) {
@@ -168,7 +170,7 @@ if ($method === 'POST') {
         $fetchStatement = db()->prepare('SELECT * FROM programs WHERE id = :id');
         $fetchStatement->execute(['id' => $newId]);
 
-        json_response([
+        api_envelope_ok([
             'message' => 'تمت إضافة البرنامج.',
             'item' => $fetchStatement->fetch(),
         ], 201);
@@ -179,7 +181,7 @@ if ($method === 'POST') {
     $currentProgram = $fetchCurrent->fetch();
 
     if (!$currentProgram) {
-        json_response(['message' => 'البرنامج غير موجود.'], 404);
+        api_envelope_error('not_found', 'البرنامج غير موجود.', 404);
     }
 
     if (
@@ -231,7 +233,7 @@ if ($method === 'POST') {
     $fetchStatement = db()->prepare('SELECT * FROM programs WHERE id = :id');
     $fetchStatement->execute(['id' => $id]);
 
-    json_response([
+    api_envelope_ok([
         'message' => 'تم تحديث البرنامج.',
         'item' => $fetchStatement->fetch(),
     ]);
@@ -239,15 +241,16 @@ if ($method === 'POST') {
 
 if ($method === 'PUT') {
     require_admin_write();
-    json_response(['message' => 'استخدم النموذج لرفع الفيديو وتحديث البرنامج.'], 405);
+    api_envelope_error('method_not_allowed', 'استخدم النموذج لرفع الفيديو وتحديث البرنامج.', 405);
 }
 
 if ($method === 'DELETE') {
     require_admin_write();
+    require_editor_or_admin();
     $id = (int) ($_GET['id'] ?? 0);
 
     if ($id <= 0) {
-        json_response(['message' => 'معرّف البرنامج غير صالح.'], 422);
+        api_envelope_error('validation', 'معرّف البرنامج غير صالح.', 422);
     }
 
     $fetchStatement = db()->prepare('SELECT * FROM programs WHERE id = :id');
@@ -262,7 +265,7 @@ if ($method === 'DELETE') {
         remove_program_asset($program['image_url'] ?? null);
     }
 
-    json_response(['message' => 'تم حذف البرنامج.']);
+    api_envelope_ok(['message' => 'تم حذف البرنامج.']);
 }
 
-json_response(['message' => 'الطريقة غير مدعومة.'], 405);
+api_envelope_error('method_not_allowed', 'الطريقة غير مدعومة.', 405);

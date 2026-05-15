@@ -126,10 +126,13 @@ CREATE TABLE IF NOT EXISTS patient_accommodations (
 
 CREATE TABLE IF NOT EXISTS services (
   id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  icon_key VARCHAR(64) NOT NULL DEFAULT 'heart',
   title VARCHAR(255) NOT NULL,
   description TEXT NULL,
   details TEXT NULL,
   features_json JSON NULL,
+  color_class VARCHAR(128) NOT NULL DEFAULT 'from-green-500 to-emerald-600',
+  bg_class VARCHAR(128) NOT NULL DEFAULT 'bg-green-50',
   sort_order INT NOT NULL DEFAULT 0,
   is_active TINYINT(1) NOT NULL DEFAULT 1,
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
@@ -270,6 +273,8 @@ CREATE TABLE IF NOT EXISTS donation_intents (
   donor_email VARCHAR(255) NULL,
   is_monthly TINYINT(1) NOT NULL DEFAULT 0,
   message TEXT NULL,
+  admin_note VARCHAR(512) NULL DEFAULT NULL,
+  status VARCHAR(32) NOT NULL DEFAULT 'new',
   honeypot VARCHAR(64) NULL,
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   KEY idx_intent_campaign (campaign_id)
@@ -291,6 +296,7 @@ CREATE TABLE IF NOT EXISTS contact_messages (
   phone VARCHAR(64) NULL,
   subject VARCHAR(255) NOT NULL,
   message TEXT NOT NULL,
+  is_read TINYINT(1) NOT NULL DEFAULT 0,
   honeypot VARCHAR(64) NULL,
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   KEY idx_contact_created (created_at)

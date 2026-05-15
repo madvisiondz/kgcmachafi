@@ -22,7 +22,7 @@ export default function DashboardPage() {
         if (res.response.status === 401) {
           toast.error(t('admin.hsvc.sessionExpired'));
           await refreshSession();
-        } else toast.error(res.errorMessage || 'Error');
+        } else toast.error(res.errorMessage || t('admin.hsvc.dashLoadError'));
         setLoading(false);
         return;
       }
@@ -40,14 +40,14 @@ export default function DashboardPage() {
 
   const cards = counts
     ? [
-        ['News', counts.news, '/healthservices/admin/news'],
-        ['Pharmacies', counts.pharmacies, '/healthservices/admin/pharmacies'],
-        ['Hospitals', counts.hospitals, '/healthservices/admin/hospitals'],
-        ['Intl hospitals', counts.international_hospitals, '/healthservices/admin/international-hospitals'],
-        ['Ambulances', counts.ambulances, '/healthservices/admin/ambulances'],
-        ['Accommodations', counts.accommodations, '/healthservices/admin/accommodations'],
-        ['Bookings', counts.consultation_bookings, '/healthservices/admin/consultations/bookings'],
-        ['Donation intents', counts.donation_intents, '/healthservices/admin/donations/intents'],
+        [t('admin.hsvc.dashNews'), counts.news, '/healthservices/admin/news'],
+        [t('admin.hsvc.dashPharmacies'), counts.pharmacies, '/healthservices/admin/pharmacies'],
+        [t('admin.hsvc.dashHospitals'), counts.hospitals, '/healthservices/admin/hospitals'],
+        [t('admin.hsvc.dashIntlHospitals'), counts.international_hospitals, '/healthservices/admin/international-hospitals'],
+        [t('admin.hsvc.dashAmbulances'), counts.ambulances, '/healthservices/admin/ambulances'],
+        [t('admin.hsvc.dashAccommodations'), counts.accommodations, '/healthservices/admin/accommodations'],
+        [t('admin.hsvc.dashBookings'), counts.consultation_bookings, '/healthservices/admin/consultations/bookings'],
+        [t('admin.hsvc.dashIntents'), counts.donation_intents, '/healthservices/admin/donations/intents'],
       ]
     : [];
 
@@ -65,7 +65,7 @@ export default function DashboardPage() {
       ) : null}
 
       {loading ? (
-        <p className="text-slate-500 text-sm">Loading…</p>
+        <p className="text-slate-500 text-sm">{t('admin.hsvc.uiLoading')}</p>
       ) : (
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           {cards.map(([label, n, href]) => (

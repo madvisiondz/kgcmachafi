@@ -66,6 +66,9 @@ export default function AdminLayout() {
               <NavLink to="/healthservices/admin/settings" className={navClass} onClick={() => setMenuOpen(false)}>
                 {t('admin.hsvc.navSettings')}
               </NavLink>
+              <NavLink to="/healthservices/admin/i18n" className={navClass} onClick={() => setMenuOpen(false)}>
+                {t('admin.hsvc.navI18n')}
+              </NavLink>
             </NavGroup>
 
             <NavGroup title={t('admin.hsvc.directoriesGroup')}>
@@ -116,7 +119,7 @@ export default function AdminLayout() {
         </aside>
 
         {menuOpen ? (
-          <button type="button" className="fixed inset-0 z-30 bg-black/30 lg:hidden" aria-label="Close menu" onClick={() => setMenuOpen(false)} />
+          <button type="button" className="fixed inset-0 z-30 bg-black/30 lg:hidden" aria-label={t('admin.hsvc.closeMenu')} onClick={() => setMenuOpen(false)} />
         ) : null}
 
         <div className="flex flex-1 flex-col min-w-0 lg:ms-0">
@@ -126,7 +129,7 @@ export default function AdminLayout() {
               className="lg:hidden rounded-lg border border-slate-200 px-2 py-1 text-sm font-bold"
               onClick={() => setMenuOpen(true)}
             >
-              Menu
+              {t('admin.hsvc.menuOpen')}
             </button>
             <div className="flex-1 min-w-0" />
             <div className="hidden sm:flex flex-col items-end text-xs text-slate-600">

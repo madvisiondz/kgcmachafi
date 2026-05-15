@@ -7,17 +7,19 @@ $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 
 if ($method === 'GET') {
     require_admin();
+    require_editor_or_admin();
     $statement = db()->query(
         'SELECT d.*, s.specialty_key, s.name AS specialty_name
          FROM consultation_doctors d
          JOIN consultation_specialties s ON s.id = d.specialty_id
          ORDER BY s.sort_order ASC, d.sort_order ASC, d.id ASC'
     );
-    json_response(['items' => $statement->fetchAll()]);
+    api_envelope_ok(['items' => $statement->fetchAll()]);
 }
 
 if ($method === 'POST') {
     require_admin_write();
+    require_editor_or_admin();
     $payload = read_json_input();
     $statement = db()->prepare(
         'INSERT INTO consultation_doctors (
@@ -53,11 +55,12 @@ if ($method === 'POST') {
     $id = (int) db()->lastInsertId();
     $fetch = db()->prepare('SELECT * FROM consultation_doctors WHERE id = :id');
     $fetch->execute(['id' => $id]);
-    json_response(['message' => 'تمت إضافة الطبيب.', 'item' => $fetch->fetch()], 201);
+    api_envelope_ok(['message' => 'تمت إضافة الطبيب.', 'item' => $fetch->fetch()], 201);
 }
 
 if ($method === 'PUT') {
     require_admin_write();
+    require_editor_or_admin();
     $id = (int) ($_GET['id'] ?? 0);
     $payload = read_json_input();
     $statement = db()->prepare(
@@ -101,15 +104,16 @@ if ($method === 'PUT') {
     ]);
     $fetch = db()->prepare('SELECT * FROM consultation_doctors WHERE id = :id');
     $fetch->execute(['id' => $id]);
-    json_response(['message' => 'تم تحديث الطبيب.', 'item' => $fetch->fetch()]);
+    api_envelope_ok(['message' => 'تم تحديث الطبيب.', 'item' => $fetch->fetch()]);
 }
 
 if ($method === 'DELETE') {
     require_admin_write();
+    require_editor_or_admin();
     $id = (int) ($_GET['id'] ?? 0);
     $statement = db()->prepare('DELETE FROM consultation_doctors WHERE id = :id');
     $statement->execute(['id' => $id]);
-    json_response(['message' => 'تم حذف الطبيب.']);
+    api_envelope_ok(['message' => 'تم حذف الطبيب.']);
 }
 
-json_response(['message' => 'الطريقة غير مدعومة.'], 405);
+api_envelope_error('method_not_allowed', 'الطريقة غير مدعومة.', 405);

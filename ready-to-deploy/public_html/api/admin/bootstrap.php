@@ -64,7 +64,7 @@ function allow_methods(array $allowedMethods): void
 {
     if (!in_array($_SERVER['REQUEST_METHOD'] ?? 'GET', $allowedMethods, true)) {
         header('Allow: ' . implode(', ', $allowedMethods));
-        json_response(['message' => 'الطريقة غير مدعومة.'], 405);
+        api_envelope_error('method_not_allowed', 'الطريقة غير مدعومة.', 405);
     }
 }
 
@@ -79,7 +79,7 @@ function read_json_input(): array
     $decoded = json_decode($rawBody, true);
 
     if (!is_array($decoded)) {
-        json_response(['message' => 'بيانات الطلب غير صالحة.'], 400);
+        api_envelope_error('invalid_json', 'بيانات الطلب غير صالحة.', 400);
     }
 
     return $decoded;
@@ -100,7 +100,7 @@ function require_admin(): array
     $admin = get_admin_session();
 
     if ($admin === null) {
-        json_response(['message' => 'يجب تسجيل الدخول للوصول إلى لوحة التحكم.'], 401);
+        api_envelope_error('auth', 'يجب تسجيل الدخول للوصول إلى لوحة التحكم.', 401);
     }
 
     return $admin;
@@ -213,9 +213,9 @@ function i18n_apply_row(string $entityType, array $row, string $lang, array $ski
  * Public API envelopes (Machafi Services `/api/public/*`)
  * ─────────────────────────────────────────────────────────── */
 
-function api_envelope_ok(mixed $data = null): never
+function api_envelope_ok(mixed $data = null, int $http = 200): never
 {
-    json_response(['ok' => true, 'data' => $data]);
+    json_response(['ok' => true, 'data' => $data], $http);
 }
 
 /**
@@ -289,4 +289,16 @@ function require_role(string ...$roles): void
     if ($roles !== [] && !in_array($role, $roles, true)) {
         api_envelope_error('forbidden', 'Insufficient permissions.', 403);
     }
+}
+
+/** Content editors + super-admins (see PROJECT-EXPLAINER/HEALTH_SERVICES_ADMIN_RBAC.md). */
+function require_editor_or_admin(): void
+{
+    require_role('admin', 'editor');
+}
+
+/** Site configuration and privileged data (users, intents, raw settings writes). */
+function require_super_admin(): void
+{
+    require_role('admin');
 }

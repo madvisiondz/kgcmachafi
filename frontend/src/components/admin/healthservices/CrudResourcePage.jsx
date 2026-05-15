@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { adminFetch, extractItemsList } from '../../../services/admin/healthAdminApi';
+import { useI18n } from '../../../i18n/I18nProvider';
 import { useHealthAdminAuth } from '../../../pages/admin/healthservices/HealthAdminAuthContext';
 import { useHealthAdminToast } from '../../../pages/admin/healthservices/HealthAdminToastContext';
 import AdminModal from './AdminModal';
@@ -72,6 +73,7 @@ function buildBody(form, fields, buildSaveBody) {
 /**
  * @param {{
  *   title: string,
+ *   titleKey?: string,
  *   apiPath: string,
  *   idKey?: string,
  *   columns: { key: string, label: string }[],
@@ -85,6 +87,7 @@ function buildBody(form, fields, buildSaveBody) {
  */
 export default function CrudResourcePage({
   title,
+  titleKey,
   apiPath,
   idKey = 'id',
   columns,
@@ -95,6 +98,8 @@ export default function CrudResourcePage({
   buildSaveBody,
   pageSize = 15,
 }) {
+  const { t } = useI18n();
+  const displayTitle = titleKey ? t(titleKey) : title;
   const { csrfToken, refreshSession } = useHealthAdminAuth();
   const toast = useHealthAdminToast();
   const [items, setItems] = useState(/** @type {unknown[]} */ ([]));
@@ -114,20 +119,20 @@ export default function CrudResourcePage({
     const res = await adminFetch(apiPath, { csrfToken: null });
     if (res.response.status === 401) {
       await refreshSession();
-      toast.error('Session expired. Please sign in again.');
+      toast.error(t('admin.hsvc.sessionExpired'));
       setItems([]);
       setLoading(false);
       return;
     }
     if (!res.ok) {
-      toast.error(res.errorMessage || 'Could not load list.');
+      toast.error(res.errorMessage || t('admin.hsvc.uiLoadError'));
       setItems([]);
       setLoading(false);
       return;
     }
     setItems(extractItemsList(res.data));
     setLoading(false);
-  }, [apiPath, refreshSession, toast]);
+  }, [apiPath, refreshSession, toast, t]);
 
   useEffect(() => {
     void load();
@@ -179,7 +184,7 @@ export default function CrudResourcePage({
       if (!f.required) continue;
       const v = form[f.key];
       if (f.type === 'checkbox') continue;
-      if (v === '' || v === null || v === undefined) err[f.key] = 'Required';
+      if (v === '' || v === null || v === undefined) err[f.key] = t('admin.hsvc.fieldRequired');
     }
     setFormErrors(err);
     return Object.keys(err).length === 0;
@@ -187,7 +192,7 @@ export default function CrudResourcePage({
 
   const save = async () => {
     if (!csrfToken) {
-      toast.error('Missing security token. Reload the page.');
+      toast.error(t('admin.hsvc.uiMissingCsrf'));
       return;
     }
     if (!validate()) return;
@@ -222,15 +227,15 @@ export default function CrudResourcePage({
     const res = await adminFetch(path, { method, body, csrfToken });
     setSaving(false);
     if (res.response.status === 401 || res.response.status === 419) {
-      toast.error('Session expired or security check failed. Sign in again.');
+      toast.error(t('admin.hsvc.uiSessionGuard'));
       await refreshSession();
       return;
     }
     if (!res.ok) {
-      toast.error(res.errorMessage || 'Save failed.');
+      toast.error(res.errorMessage || t('admin.hsvc.uiSaveFailed'));
       return;
     }
-    toast.success(isNew ? 'Added successfully.' : 'Saved successfully.');
+    toast.success(isNew ? t('admin.hsvc.uiAdded') : t('admin.hsvc.uiSaved'));
     setModalOpen(false);
     await load();
   };
@@ -244,7 +249,7 @@ export default function CrudResourcePage({
     setDeleting(false);
     setDeleteTarget(null);
     if (!res.ok) {
-      toast.error(res.errorMessage || 'Delete failed.');
+      toast.error(res.errorMessage || t('admin.hsvc.uiDeleteFailed'));
       return;
     }
     toast.success('Deleted.');
@@ -424,10 +429,10 @@ export default function CrudResourcePage({
 
       <AdminConfirmDialog
         open={Boolean(deleteTarget)}
-        title="Delete this row?"
-        description="This permanently removes the row from the database. This cannot be undone. If you only want to hide it from the public site, use “inactive” or “archive” in the form instead (when available)."
-        confirmLabel="Delete permanently"
-        cancelLabel="Cancel"
+        title={t('admin.hsvc.uiDeleteTitle')}
+        description={t('admin.hsvc.uiDeleteDesc')}
+        confirmLabel={t('admin.hsvc.uiDeleteConfirm')}
+        cancelLabel={t('admin.hsvc.uiCancel')}
         danger
         busy={deleting}
         onClose={() => !deleting && setDeleteTarget(null)}

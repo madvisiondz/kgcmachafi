@@ -21,6 +21,7 @@ function buildServicesBody(form) {
 }
 
 export const servicesCrud = {
+  titleKey: 'admin.hsvc.crudServices',
   title: 'Services catalog',
   apiPath: '/admin/services-content.php',
   buildSaveBody: buildServicesBody,
@@ -50,6 +51,7 @@ export const servicesCrud = {
 };
 
 export const newsCrud = {
+  titleKey: 'admin.hsvc.crudNews',
   title: 'News articles',
   apiPath: '/admin/news.php',
   columns: [
@@ -73,6 +75,7 @@ export const newsCrud = {
 };
 
 export const pharmaciesCrud = {
+  titleKey: 'admin.hsvc.crudPharmacies',
   title: 'Pharmacies',
   apiPath: '/admin/pharmacies.php',
   columns: [
@@ -96,6 +99,7 @@ export const pharmaciesCrud = {
 };
 
 export const hospitalsCrud = {
+  titleKey: 'admin.hsvc.crudHospitals',
   title: 'Hospitals (Algeria)',
   apiPath: '/admin/hospitals.php',
   columns: [
@@ -140,6 +144,7 @@ export const hospitalsCrud = {
 };
 
 export const intlHospitalsCrud = {
+  titleKey: 'admin.hsvc.crudIntlHospitals',
   title: 'International hospitals',
   apiPath: '/admin/international-hospitals.php',
   columns: [
@@ -170,6 +175,7 @@ export const intlHospitalsCrud = {
 };
 
 export const ambulancesCrud = {
+  titleKey: 'admin.hsvc.crudAmbulances',
   title: 'Ambulances',
   apiPath: '/admin/ambulances.php',
   columns: [
@@ -195,6 +201,7 @@ export const ambulancesCrud = {
 };
 
 export const accommodationsCrud = {
+  titleKey: 'admin.hsvc.crudAccommodations',
   title: 'Patient accommodations',
   apiPath: '/admin/accommodations.php',
   columns: [
@@ -223,6 +230,7 @@ export const accommodationsCrud = {
 };
 
 export const programsCrud = {
+  titleKey: 'admin.hsvc.crudPrograms',
   title: 'TV / Programs schedule',
   apiPath: '/admin/programs.php',
   mutator: 'postPut',
@@ -248,6 +256,7 @@ export const programsCrud = {
 };
 
 export const booksCrud = {
+  titleKey: 'admin.hsvc.crudBooks',
   title: 'Library — books',
   apiPath: '/admin/books.php',
   mutator: 'postPut',
@@ -285,6 +294,7 @@ export const booksCrud = {
 };
 
 export const consultationSpecialtiesCrud = {
+  titleKey: 'admin.hsvc.crudSpecialties',
   title: 'Consultation specialties',
   apiPath: '/admin/consultation-specialties.php',
   columns: [
@@ -305,6 +315,7 @@ export const consultationSpecialtiesCrud = {
 };
 
 export const consultationDoctorsCrud = {
+  titleKey: 'admin.hsvc.crudDoctors',
   title: 'Consultation doctors',
   apiPath: '/admin/consultation-doctors.php',
   columns: [
@@ -336,6 +347,7 @@ export const consultationDoctorsCrud = {
 };
 
 export const heroStatsCrud = {
+  titleKey: 'admin.hsvc.crudHeroStats',
   title: 'Homepage — hero numbers',
   apiPath: '/admin/hero-stats.php',
   columns: [
@@ -357,6 +369,7 @@ export const heroStatsCrud = {
 };
 
 export const homepageSectionsCrud = {
+  titleKey: 'admin.hsvc.crudHomepageSections',
   title: 'Homepage — sections',
   apiPath: '/admin/homepage-sections.php',
   columns: [
@@ -383,6 +396,7 @@ export const homepageSectionsCrud = {
 };
 
 export const liveRecordedCrud = {
+  titleKey: 'admin.hsvc.crudLiveRecorded',
   title: 'Live — recorded items',
   apiPath: '/admin/live-recorded-items.php',
   mutator: 'postUpsert',
@@ -405,6 +419,7 @@ export const liveRecordedCrud = {
 };
 
 export const liveUpNextCrud = {
+  titleKey: 'admin.hsvc.crudLiveUpNext',
   title: 'Live — up next',
   apiPath: '/admin/live-up-next.php',
   mutator: 'postUpsert',

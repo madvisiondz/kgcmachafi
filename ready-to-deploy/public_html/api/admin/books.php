@@ -13,7 +13,7 @@ function books_upload_root(): string
 function ensure_directory(string $path): void
 {
     if (!is_dir($path) && !mkdir($path, 0775, true) && !is_dir($path)) {
-        json_response(['message' => 'تعذر إنشاء مجلد الرفع.'], 500);
+        api_envelope_error('server', 'تعذر إنشاء مجلد الرفع.', 500);
     }
 }
 
@@ -44,14 +44,14 @@ function filesystem_upload_path(string $type, string $filename): string
 function upload_file(array $file, string $type, array $allowedExtensions, string $message): string
 {
     if (($file['error'] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_OK) {
-        json_response(['message' => $message], 422);
+        api_envelope_error('validation', $message, 422);
     }
 
     $filename = sanitize_upload_name((string) ($file['name'] ?? ''));
     $extension = strtolower((string) pathinfo($filename, PATHINFO_EXTENSION));
 
     if (!in_array($extension, $allowedExtensions, true)) {
-      json_response(['message' => $message], 422);
+      api_envelope_error('validation', $message, 422);
     }
 
     ensure_directory(books_upload_root() . '/' . $type);
@@ -59,7 +59,7 @@ function upload_file(array $file, string $type, array $allowedExtensions, string
     $targetPath = filesystem_upload_path($type, $filename);
 
     if (!move_uploaded_file((string) $file['tmp_name'], $targetPath)) {
-        json_response(['message' => 'تعذر حفظ الملف المرفوع.'], 500);
+        api_envelope_error('server', 'تعذر حفظ الملف المرفوع.', 500);
     }
 
     return public_upload_path($type, $filename);
@@ -122,13 +122,15 @@ function request_payload(): array
 
 if ($method === 'GET') {
     require_admin();
+    require_editor_or_admin();
 
     $statement = db()->query('SELECT * FROM books ORDER BY created_at DESC');
-    json_response(['items' => $statement->fetchAll()]);
+    api_envelope_ok(['items' => $statement->fetchAll()]);
 }
 
 if ($method === 'POST') {
     require_admin_write();
+    require_editor_or_admin();
     $id = (int) ($_GET['id'] ?? 0);
     $payload = request_payload();
     $overrideMethod = strtoupper(trim((string) ($payload['_method'] ?? '')));
@@ -144,7 +146,7 @@ if ($method === 'POST') {
     $rating = (float) ($payload['rating'] ?? 0);
 
     if ($title === '' || $author === '') {
-        json_response(['message' => 'عنوان الكتاب والمؤلف مطلوبان.'], 422);
+        api_envelope_error('validation', 'عنوان الكتاب والمؤلف مطلوبان.', 422);
     }
 
     if (!in_array($bookType, ['ebook', 'standard'], true)) {
@@ -184,7 +186,7 @@ if ($method === 'POST') {
         $fetchStatement = db()->prepare('SELECT * FROM books WHERE id = :id');
         $fetchStatement->execute(['id' => $newId]);
 
-        json_response([
+        api_envelope_ok([
             'message' => 'تمت إضافة الكتاب.',
             'item' => $fetchStatement->fetch(),
         ], 201);
@@ -195,7 +197,7 @@ if ($method === 'POST') {
     $currentBook = $fetchCurrent->fetch();
 
     if (!$currentBook) {
-        json_response(['message' => 'الكتاب غير موجود.'], 404);
+        api_envelope_error('not_found', 'الكتاب غير موجود.', 404);
     }
 
     if (
@@ -241,7 +243,7 @@ if ($method === 'POST') {
     $fetchStatement = db()->prepare('SELECT * FROM books WHERE id = :id');
     $fetchStatement->execute(['id' => $id]);
 
-    json_response([
+    api_envelope_ok([
         'message' => 'تم تحديث الكتاب.',
         'item' => $fetchStatement->fetch(),
     ]);
@@ -249,15 +251,16 @@ if ($method === 'POST') {
 
 if ($method === 'PUT') {
     require_admin_write();
-    json_response(['message' => 'استخدم الرفع عبر النموذج لإرسال الملفات.'], 405);
+    api_envelope_error('method_not_allowed', 'استخدم الرفع عبر النموذج لإرسال الملفات.', 405);
 }
 
 if ($method === 'DELETE') {
     require_admin_write();
+    require_editor_or_admin();
     $id = (int) ($_GET['id'] ?? 0);
 
     if ($id <= 0) {
-        json_response(['message' => 'معرّف الكتاب غير صالح.'], 422);
+        api_envelope_error('validation', 'معرّف الكتاب غير صالح.', 422);
     }
 
     $fetchStatement = db()->prepare('SELECT * FROM books WHERE id = :id');
@@ -272,7 +275,7 @@ if ($method === 'DELETE') {
         remove_local_book_file($book['image_url'] ?? null);
     }
 
-    json_response(['message' => 'تم حذف الكتاب.']);
+    api_envelope_ok(['message' => 'تم حذف الكتاب.']);
 }
 
-json_response(['message' => 'الطريقة غير مدعومة.'], 405);
+api_envelope_error('method_not_allowed', 'الطريقة غير مدعومة.', 405);

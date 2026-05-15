@@ -7,13 +7,14 @@ $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 
 if ($method === 'GET') {
     require_admin();
+    require_editor_or_admin();
     $rows = db()->query('SELECT * FROM donation_campaigns ORDER BY sort_order ASC')->fetchAll();
     api_envelope_ok(['items' => $rows]);
 }
 
 if ($method === 'POST') {
     require_admin_write();
-    require_role('admin');
+    require_editor_or_admin();
     $p = read_json_input();
     $id = trim((string) ($p['id'] ?? ''));
     if ($id === '') {
@@ -44,7 +45,7 @@ if ($method === 'POST') {
 
 if ($method === 'DELETE') {
     require_admin_write();
-    require_role('admin');
+    require_editor_or_admin();
     $id = trim((string) ($_GET['id'] ?? ''));
     if ($id === '') {
         api_envelope_error('validation', 'id required.', 422);

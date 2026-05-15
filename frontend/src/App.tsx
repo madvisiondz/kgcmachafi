@@ -1,3 +1,4 @@
+import { lazy, Suspense } from 'react';
 import { Navigate, Route, Routes, useParams } from 'react-router-dom';
 import DocumentTitle from './components/DocumentTitle.jsx';
 import GatewayPage from './pages/GatewayPage.jsx';
@@ -25,7 +26,7 @@ import TvDeskPage from './pages/tv/TvDeskPage.jsx';
 import TvActivityPage from './pages/tv/TvActivityPage.jsx';
 import TvTopicPage from './pages/tv/TvTopicPage.jsx';
 import TvSearchPage from './pages/tv/TvSearchPage.jsx';
-import HealthServicesAdminPage from './pages/admin/HealthServicesAdminPage.jsx';
+const HealthServicesAdminPage = lazy(() => import('./pages/admin/HealthServicesAdminPage.jsx'));
 import MachafiTvAdminPage from './pages/admin/MachafiTvAdminPage.jsx';
 import { servicesPath } from './routes/paths';
 
@@ -41,7 +42,14 @@ export default function App() {
       <Routes>
         <Route path="/" element={<GatewayPage />} />
 
-        <Route path="/healthservices/admin/*" element={<HealthServicesAdminPage />} />
+        <Route
+          path="/healthservices/admin/*"
+          element={
+            <Suspense fallback={<div className="min-h-[30vh] flex items-center justify-center text-slate-500 text-sm">Loading…</div>}>
+              <HealthServicesAdminPage />
+            </Suspense>
+          }
+        />
         <Route path="/machafitv/admin/*" element={<MachafiTvAdminPage />} />
 
         <Route path="/tv/:edition" element={<TvShellLayout />}>

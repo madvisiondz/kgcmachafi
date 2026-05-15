@@ -7,6 +7,7 @@ $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 
 if ($method === 'GET') {
     require_admin();
+    require_editor_or_admin();
     $status = trim((string) ($_GET['status'] ?? ''));
     $params = [];
     $where = '1=1';
@@ -22,7 +23,7 @@ if ($method === 'GET') {
 
 if ($method === 'PATCH') {
     require_admin_write();
-    require_role('admin');
+    require_editor_or_admin();
     $id = (int) ($_GET['id'] ?? 0);
     if ($id <= 0) {
         api_envelope_error('validation', 'Invalid id.', 422);
@@ -42,7 +43,7 @@ if ($method === 'PATCH') {
 
 if ($method === 'DELETE') {
     require_admin_write();
-    require_role('admin');
+    require_super_admin();
     $id = (int) ($_GET['id'] ?? 0);
     if ($id <= 0) {
         api_envelope_error('validation', 'Invalid id.', 422);

@@ -7,6 +7,7 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
+    "sync:admin-api": "node ../scripts/sync-admin-api.mjs",
     "preview": "vite preview"
   },
   "dependencies": {

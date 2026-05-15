@@ -5,6 +5,8 @@ require dirname(__DIR__) . '/bootstrap.php';
 
 allow_methods(['POST']);
 
+require_admin_write();
+
 $_SESSION = [];
 
 if (ini_get('session.use_cookies')) {
@@ -14,4 +16,4 @@ if (ini_get('session.use_cookies')) {
 
 session_destroy();
 
-json_response(['message' => 'تم تسجيل الخروج.']);
+api_envelope_ok(['message' => 'تم تسجيل الخروج.']);

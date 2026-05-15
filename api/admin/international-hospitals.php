@@ -41,12 +41,14 @@ function format_international_hospital(array $item): array
 
 if ($method === 'GET') {
     require_admin();
+    require_editor_or_admin();
     $statement = db()->query('SELECT * FROM international_hospitals ORDER BY is_active DESC, sort_order ASC, country ASC, name ASC');
-    json_response(['items' => array_map('format_international_hospital', $statement->fetchAll())]);
+    api_envelope_ok(['items' => array_map('format_international_hospital', $statement->fetchAll())]);
 }
 
 if ($method === 'POST') {
     require_admin_write();
+    require_editor_or_admin();
     $payload = international_hospital_payload();
 
     $statement = db()->prepare(
@@ -75,7 +77,7 @@ if ($method === 'POST') {
     $fetch = db()->prepare('SELECT * FROM international_hospitals WHERE id = :id');
     $fetch->execute(['id' => $id]);
 
-    json_response([
+    api_envelope_ok([
         'message' => 'تمت إضافة المستشفى الخارجي.',
         'item' => format_international_hospital($fetch->fetch() ?: []),
     ], 201);
@@ -83,6 +85,7 @@ if ($method === 'POST') {
 
 if ($method === 'PUT') {
     require_admin_write();
+    require_editor_or_admin();
     $id = (int) ($_GET['id'] ?? 0);
     $payload = international_hospital_payload();
 
@@ -127,7 +130,7 @@ if ($method === 'PUT') {
     $fetch = db()->prepare('SELECT * FROM international_hospitals WHERE id = :id');
     $fetch->execute(['id' => $id]);
 
-    json_response([
+    api_envelope_ok([
         'message' => 'تم تحديث المستشفى الخارجي.',
         'item' => format_international_hospital($fetch->fetch() ?: []),
     ]);
@@ -135,10 +138,11 @@ if ($method === 'PUT') {
 
 if ($method === 'DELETE') {
     require_admin_write();
+    require_editor_or_admin();
     $id = (int) ($_GET['id'] ?? 0);
     $statement = db()->prepare('DELETE FROM international_hospitals WHERE id = :id');
     $statement->execute(['id' => $id]);
-    json_response(['message' => 'تم حذف المستشفى الخارجي.']);
+    api_envelope_ok(['message' => 'تم حذف المستشفى الخارجي.']);
 }
 
-json_response(['message' => 'الطريقة غير مدعومة.'], 405);
+api_envelope_error('method_not_allowed', 'الطريقة غير مدعومة.', 405);

@@ -7,12 +7,14 @@ $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 
 if ($method === 'GET') {
     require_admin();
+    require_editor_or_admin();
     $rows = db()->query('SELECT * FROM homepage_sections ORDER BY sort_order ASC')->fetchAll();
-    json_response(['items' => $rows]);
+    api_envelope_ok(['items' => $rows]);
 }
 
 if ($method === 'POST') {
     require_admin_write();
+    require_editor_or_admin();
     $p = read_json_input();
     $stmt = db()->prepare(
         'INSERT INTO homepage_sections (section_key, title, subtitle, payload_json, sort_order, is_active)
@@ -29,14 +31,15 @@ if ($method === 'POST') {
     $id = (int) db()->lastInsertId();
     $f = db()->prepare('SELECT * FROM homepage_sections WHERE id = :id');
     $f->execute(['id' => $id]);
-    json_response(['item' => $f->fetch()], 201);
+    api_envelope_ok(['item' => $f->fetch()], 201);
 }
 
 if ($method === 'PUT') {
     require_admin_write();
+    require_editor_or_admin();
     $id = (int) ($_GET['id'] ?? 0);
     if ($id <= 0) {
-        json_response(['message' => 'Invalid id.'], 422);
+        api_envelope_error('validation', 'Invalid id.', 422);
     }
     $p = read_json_input();
     $stmt = db()->prepare(
@@ -53,14 +56,15 @@ if ($method === 'PUT') {
     ]);
     $f = db()->prepare('SELECT * FROM homepage_sections WHERE id = :id');
     $f->execute(['id' => $id]);
-    json_response(['item' => $f->fetch()]);
+    api_envelope_ok(['item' => $f->fetch()]);
 }
 
 if ($method === 'DELETE') {
     require_admin_write();
+    require_editor_or_admin();
     $id = (int) ($_GET['id'] ?? 0);
     db()->prepare('DELETE FROM homepage_sections WHERE id = :id')->execute(['id' => $id]);
-    json_response(['message' => 'Deleted.']);
+    api_envelope_ok(['message' => 'Deleted.']);
 }
 
-json_response(['message' => 'Method not allowed.'], 405);
+api_envelope_error('method_not_allowed', 'Method not allowed.', 405);

@@ -7,6 +7,7 @@ $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 
 if ($method === 'GET') {
     require_admin();
+    require_editor_or_admin();
     $statement = db()->query('SELECT setting_key, setting_value, updated_at FROM site_settings ORDER BY setting_key ASC');
     $rows = $statement->fetchAll();
     $settings = [];
@@ -20,6 +21,7 @@ if ($method === 'GET') {
 
 if ($method === 'PUT') {
     require_admin_write();
+    require_super_admin();
     $payload = read_json_input();
     $settings = $payload['settings'] ?? null;
 

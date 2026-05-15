@@ -213,9 +213,9 @@ function i18n_apply_row(string $entityType, array $row, string $lang, array $ski
  * Public API envelopes (Machafi Services `/api/public/*`)
  * ─────────────────────────────────────────────────────────── */
 
-function api_envelope_ok(mixed $data = null): never
+function api_envelope_ok(mixed $data = null, int $http = 200): never
 {
-    json_response(['ok' => true, 'data' => $data]);
+    json_response(['ok' => true, 'data' => $data], $http);
 }
 
 /**
@@ -289,4 +289,16 @@ function require_role(string ...$roles): void
     if ($roles !== [] && !in_array($role, $roles, true)) {
         api_envelope_error('forbidden', 'Insufficient permissions.', 403);
     }
+}
+
+/** Content editors + super-admins (see PROJECT-EXPLAINER/HEALTH_SERVICES_ADMIN_RBAC.md). */
+function require_editor_or_admin(): void
+{
+    require_role('admin', 'editor');
+}
+
+/** Site configuration and privileged data (users, intents, raw settings writes). */
+function require_super_admin(): void
+{
+    require_role('admin');
 }

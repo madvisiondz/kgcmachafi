@@ -1,5 +1,12 @@
--- Optional one-time patches for Health Services admin UI (run in phpMyAdmin after main schema import).
--- Safe to run once; ignore errors if columns already exist (or run each statement manually).
+-- Legacy migration: admin-only columns merged into `health_services_schema.sql` (2026-05-14+).
+-- Use this file ONLY if you imported an older schema before those columns existed.
+-- Import order: (1) `health_services_schema.sql` then (2) this file — or run individual ALTERs
+-- and ignore "Duplicate column name" errors.
+--
+-- Columns covered:
+--   contact_messages.is_read
+--   donation_intents.admin_note, donation_intents.status
+--   services.icon_key, services.color_class, services.bg_class
 
 ALTER TABLE contact_messages
   ADD COLUMN is_read TINYINT(1) NOT NULL DEFAULT 0 AFTER message;
@@ -10,7 +17,6 @@ ALTER TABLE donation_intents
 ALTER TABLE donation_intents
   ADD COLUMN status VARCHAR(32) NOT NULL DEFAULT 'new' AFTER admin_note;
 
--- If services table predates icon/color columns used by admin API:
 ALTER TABLE services
   ADD COLUMN icon_key VARCHAR(64) NOT NULL DEFAULT 'heart' AFTER id;
 

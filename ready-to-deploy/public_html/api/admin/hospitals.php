@@ -45,13 +45,15 @@ function format_hospital(array $item): array
 
 if ($method === 'GET') {
     require_admin();
+    require_editor_or_admin();
     $statement = db()->query('SELECT * FROM hospitals ORDER BY is_active DESC, sort_order ASC, wilaya_id ASC, city ASC, name ASC');
     $items = array_map('format_hospital', $statement->fetchAll());
-    json_response(['items' => $items]);
+    api_envelope_ok(['items' => $items]);
 }
 
 if ($method === 'POST') {
     require_admin_write();
+    require_editor_or_admin();
     $payload = hospital_payload();
 
     $statement = db()->prepare(
@@ -81,7 +83,7 @@ if ($method === 'POST') {
     $fetch = db()->prepare('SELECT * FROM hospitals WHERE id = :id');
     $fetch->execute(['id' => $id]);
 
-    json_response([
+    api_envelope_ok([
         'message' => 'تمت إضافة المستشفى.',
         'item' => format_hospital($fetch->fetch() ?: []),
     ], 201);
@@ -89,6 +91,7 @@ if ($method === 'POST') {
 
 if ($method === 'PUT') {
     require_admin_write();
+    require_editor_or_admin();
     $id = (int) ($_GET['id'] ?? 0);
     $payload = hospital_payload();
 
@@ -135,7 +138,7 @@ if ($method === 'PUT') {
     $fetch = db()->prepare('SELECT * FROM hospitals WHERE id = :id');
     $fetch->execute(['id' => $id]);
 
-    json_response([
+    api_envelope_ok([
         'message' => 'تم تحديث المستشفى.',
         'item' => format_hospital($fetch->fetch() ?: []),
     ]);
@@ -143,10 +146,11 @@ if ($method === 'PUT') {
 
 if ($method === 'DELETE') {
     require_admin_write();
+    require_editor_or_admin();
     $id = (int) ($_GET['id'] ?? 0);
     $statement = db()->prepare('DELETE FROM hospitals WHERE id = :id');
     $statement->execute(['id' => $id]);
-    json_response(['message' => 'تم حذف المستشفى.']);
+    api_envelope_ok(['message' => 'تم حذف المستشفى.']);
 }
 
-json_response(['message' => 'الطريقة غير مدعومة.'], 405);
+api_envelope_error('method_not_allowed', 'الطريقة غير مدعومة.', 405);

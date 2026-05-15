@@ -7,17 +7,19 @@ $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 
 if ($method === 'GET') {
     require_admin();
+    require_editor_or_admin();
     $statement = db()->query('SELECT * FROM services ORDER BY sort_order ASC, id ASC');
     $items = array_map(static function (array $item): array {
         $item['features'] = json_decode((string) ($item['features_json'] ?? '[]'), true) ?? [];
         unset($item['features_json']);
         return $item;
     }, $statement->fetchAll());
-    json_response(['items' => $items]);
+    api_envelope_ok(['items' => $items]);
 }
 
 if ($method === 'POST') {
     require_admin_write();
+    require_editor_or_admin();
     $payload = read_json_input();
     $statement = db()->prepare(
         'INSERT INTO services (icon_key, title, description, details, features_json, color_class, bg_class, sort_order, is_active)
@@ -41,11 +43,12 @@ if ($method === 'POST') {
     $item = $fetch->fetch();
     $item['features'] = json_decode((string) ($item['features_json'] ?? '[]'), true) ?? [];
     unset($item['features_json']);
-    json_response(['message' => 'تمت إضافة الخدمة.', 'item' => $item], 201);
+    api_envelope_ok(['message' => 'تمت إضافة الخدمة.', 'item' => $item], 201);
 }
 
 if ($method === 'PUT') {
     require_admin_write();
+    require_editor_or_admin();
     $id = (int) ($_GET['id'] ?? 0);
     $payload = read_json_input();
     $statement = db()->prepare(
@@ -79,15 +82,16 @@ if ($method === 'PUT') {
     $item = $fetch->fetch();
     $item['features'] = json_decode((string) ($item['features_json'] ?? '[]'), true) ?? [];
     unset($item['features_json']);
-    json_response(['message' => 'تم تحديث الخدمة.', 'item' => $item]);
+    api_envelope_ok(['message' => 'تم تحديث الخدمة.', 'item' => $item]);
 }
 
 if ($method === 'DELETE') {
     require_admin_write();
+    require_editor_or_admin();
     $id = (int) ($_GET['id'] ?? 0);
     $statement = db()->prepare('DELETE FROM services WHERE id = :id');
     $statement->execute(['id' => $id]);
-    json_response(['message' => 'تم حذف الخدمة.']);
+    api_envelope_ok(['message' => 'تم حذف الخدمة.']);
 }
 
-json_response(['message' => 'الطريقة غير مدعومة.'], 405);
+api_envelope_error('method_not_allowed', 'الطريقة غير مدعومة.', 405);

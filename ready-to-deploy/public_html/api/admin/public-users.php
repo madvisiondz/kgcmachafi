@@ -7,6 +7,7 @@ $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 
 if ($method === 'GET') {
     require_admin();
+    require_super_admin();
 
     $query = trim((string) ($_GET['q'] ?? ''));
     $limit = (int) ($_GET['limit'] ?? 200);
@@ -32,12 +33,12 @@ if ($method === 'GET') {
         $statement->execute();
     }
 
-    json_response(['items' => $statement->fetchAll()]);
+    api_envelope_ok(['items' => $statement->fetchAll()]);
 }
 
 if ($method === 'PUT') {
     require_admin_write();
-    require_role('admin');
+    require_super_admin();
 
     $id = (int) ($_GET['id'] ?? 0);
     if ($id <= 0) {
@@ -70,5 +71,5 @@ if ($method === 'PUT') {
     ]);
 }
 
-json_response(['message' => 'الطريقة غير مدعومة.'], 405);
+api_envelope_error('method_not_allowed', 'الطريقة غير مدعومة.', 405);
 

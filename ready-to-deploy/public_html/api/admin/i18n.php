@@ -7,6 +7,7 @@ $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 
 if ($method === 'GET') {
     require_admin();
+    require_editor_or_admin();
     ensure_i18n_schema();
 
     $entityType = trim((string) ($_GET['entity_type'] ?? ''));
@@ -29,7 +30,7 @@ if ($method === 'GET') {
 
 if ($method === 'PUT') {
     require_admin_write();
-    require_role('admin');
+    require_super_admin();
     ensure_i18n_schema();
 
     $payload = read_json_input();

@@ -7,12 +7,14 @@ $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 
 if ($method === 'GET') {
     require_admin();
+    require_editor_or_admin();
     $row = db()->query('SELECT * FROM live_page_settings WHERE id = 1')->fetch();
-    json_response(['item' => $row]);
+    api_envelope_ok(['item' => $row]);
 }
 
 if ($method === 'PUT') {
     require_admin_write();
+    require_editor_or_admin();
     $p = read_json_input();
     $stmt = db()->prepare(
         'INSERT INTO live_page_settings (id, stream_url, poster_url, viewer_count_label, broadcast_state)
@@ -31,7 +33,7 @@ if ($method === 'PUT') {
         'bs' => $bs,
     ]);
     $row = db()->query('SELECT * FROM live_page_settings WHERE id = 1')->fetch();
-    json_response(['message' => 'Saved.', 'item' => $row]);
+    api_envelope_ok(['item' => $row, 'message' => 'Saved.']);
 }
 
-json_response(['message' => 'Method not allowed.'], 405);
+api_envelope_error('method_not_allowed', 'Method not allowed.', 405);

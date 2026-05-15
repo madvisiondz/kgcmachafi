@@ -7,7 +7,16 @@ allow_methods(['GET']);
 
 $admin = get_admin_session();
 
-json_response([
+$csrf = '';
+if ($admin !== null) {
+    $csrf = (string) ($_SESSION['csrf_token'] ?? '');
+    if ($csrf === '') {
+        $csrf = csrf_issue_token();
+    }
+}
+
+api_envelope_ok([
     'authenticated' => $admin !== null,
     'admin' => $admin,
+    'csrf_token' => $csrf !== '' ? $csrf : null,
 ]);
