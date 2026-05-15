@@ -4,6 +4,7 @@ import { useHealthAdminAuth } from './HealthAdminAuthContext';
 import { useHealthAdminToast } from './HealthAdminToastContext';
 import AdminModal from '../../../components/admin/healthservices/AdminModal';
 import AdminConfirmDialog from '../../../components/admin/healthservices/AdminConfirmDialog';
+import * as ui from '../../../components/admin/healthservices/adminUiClasses';
 
 function parseJsonObj(v, fallback = {}) {
   if (v && typeof v === 'object' && !Array.isArray(v)) return v;
@@ -142,25 +143,25 @@ export default function DonationCampaignsAdminPage() {
   return (
     <div className="space-y-4">
       <div className="flex justify-between items-center gap-2">
-        <h1 className="text-2xl font-black text-slate-900">Donation campaigns</h1>
-        <button type="button" onClick={openNew} className="rounded-xl bg-emerald-600 px-4 py-2 text-sm font-bold text-white">
+        <h1 className={ui.pageTitle}>Donation campaigns</h1>
+        <button type="button" onClick={openNew} className={ui.btnPrimary}>
           + Add
         </button>
       </div>
-      <div className="rounded-2xl border border-slate-200 bg-white overflow-x-auto shadow-sm">
-        <table className="min-w-full text-sm">
-          <thead className="bg-slate-50 text-slate-600">
+      <div className={ui.tableWrap}>
+        <table className={ui.table}>
+          <thead className={ui.tableHead}>
             <tr>
-              <th className="text-start px-4 py-2 font-bold">ID</th>
-              <th className="text-start px-4 py-2 font-bold">Title (AR)</th>
-              <th className="text-start px-4 py-2 font-bold">Goal €</th>
-              <th className="text-end px-4 py-2 font-bold">Actions</th>
+              <th className={ui.tableTh}>ID</th>
+              <th className={ui.tableTh}>Title (AR)</th>
+              <th className={ui.tableTh}>Goal €</th>
+              <th className={`${ui.tableTh} text-end`}>Actions</th>
             </tr>
           </thead>
           <tbody>
             {loading ? (
               <tr>
-                <td colSpan={4} className="px-4 py-8 text-center text-slate-500">
+                <td colSpan={4} className={ui.loadingState}>
                   Loading…
                 </td>
               </tr>
@@ -168,15 +169,15 @@ export default function DonationCampaignsAdminPage() {
               items.map((row) => {
                 const tj = parseJsonObj(row.title_json);
                 return (
-                  <tr key={row.id} className="border-t border-slate-100">
-                    <td className="px-4 py-2 font-mono text-xs">{row.id}</td>
-                    <td className="px-4 py-2">{tj.ar || '—'}</td>
-                    <td className="px-4 py-2">{row.goal_eur}</td>
-                    <td className="px-4 py-2 text-end space-x-2">
-                      <button type="button" className="text-emerald-700 font-bold" onClick={() => openEdit(row)}>
+                  <tr key={row.id} className={ui.tableRow}>
+                    <td className={`${ui.tableTd} font-mono text-xs text-slate-300`}>{row.id}</td>
+                    <td className={ui.tableTd}>{tj.ar || '—'}</td>
+                    <td className={ui.tableTd}>{row.goal_eur}</td>
+                    <td className={`${ui.tableTd} text-end space-x-2`}>
+                      <button type="button" className={ui.linkAction} onClick={() => openEdit(row)}>
                         Edit
                       </button>
-                      <button type="button" className="text-red-600 font-bold" onClick={() => setDel(row)}>
+                      <button type="button" className={ui.linkDanger} onClick={() => setDel(row)}>
                         Delete
                       </button>
                     </td>
@@ -194,57 +195,57 @@ export default function DonationCampaignsAdminPage() {
           onClose={() => !busy && setModal(false)}
           footer={
             <>
-              <button type="button" className="rounded-xl border px-4 py-2 text-sm font-semibold" onClick={() => setModal(false)}>
+              <button type="button" className={ui.btnGhost} onClick={() => setModal(false)}>
                 Cancel
               </button>
-              <button type="button" disabled={busy} className="rounded-xl bg-emerald-600 px-4 py-2 text-sm font-bold text-white" onClick={() => void save()}>
+              <button type="button" disabled={busy} className={ui.btnPrimary} onClick={() => void save()}>
                 {busy ? '…' : 'Save'}
               </button>
             </>
           }
         >
           <div className="space-y-3 text-sm max-h-[70vh] overflow-y-auto">
-            <label className="block">
-              <span className="font-bold">Campaign id *</span>
-              <input className="mt-1 w-full rounded-lg border px-2 py-1" value={form.id} onChange={(e) => setForm({ ...form, id: e.target.value })} />
+            <label className="block space-y-1">
+              <span className={ui.fieldLabel}>Campaign id *</span>
+              <input className={ui.input} value={form.id} onChange={(e) => setForm({ ...form, id: e.target.value })} />
             </label>
-            <p className="text-xs text-slate-500">Titles and descriptions for Arabic, French, and English.</p>
+            <p className={ui.fieldHelper}>Titles and descriptions for Arabic, French, and English.</p>
             {['t_ar', 't_fr', 't_en'].map((k, i) => (
-              <label key={k} className="block">
-                <span className="font-bold">Title {['AR', 'FR', 'EN'][i]}</span>
-                <input className="mt-1 w-full rounded-lg border px-2 py-1" value={form[k]} onChange={(e) => setForm({ ...form, [k]: e.target.value })} />
+              <label key={k} className="block space-y-1">
+                <span className={ui.fieldLabel}>Title {['AR', 'FR', 'EN'][i]}</span>
+                <input className={ui.input} value={form[k]} onChange={(e) => setForm({ ...form, [k]: e.target.value })} />
               </label>
             ))}
             {['d_ar', 'd_fr', 'd_en'].map((k, i) => (
-              <label key={k} className="block">
-                <span className="font-bold">Description {['AR', 'FR', 'EN'][i]}</span>
-                <textarea className="mt-1 w-full rounded-lg border px-2 py-1" rows={2} value={form[k]} onChange={(e) => setForm({ ...form, [k]: e.target.value })} />
+              <label key={k} className="block space-y-1">
+                <span className={ui.fieldLabel}>Description {['AR', 'FR', 'EN'][i]}</span>
+                <textarea className={ui.textarea} rows={2} value={form[k]} onChange={(e) => setForm({ ...form, [k]: e.target.value })} />
               </label>
             ))}
             <div className="grid grid-cols-2 gap-2">
-              <label className="block">
-                <span className="font-bold">Raised €</span>
-                <input className="mt-1 w-full rounded-lg border px-2 py-1" value={form.raised_eur} onChange={(e) => setForm({ ...form, raised_eur: e.target.value })} />
+              <label className="block space-y-1">
+                <span className={ui.fieldLabel}>Raised €</span>
+                <input className={ui.input} value={form.raised_eur} onChange={(e) => setForm({ ...form, raised_eur: e.target.value })} />
               </label>
-              <label className="block">
-                <span className="font-bold">Goal €</span>
-                <input className="mt-1 w-full rounded-lg border px-2 py-1" value={form.goal_eur} onChange={(e) => setForm({ ...form, goal_eur: e.target.value })} />
+              <label className="block space-y-1">
+                <span className={ui.fieldLabel}>Goal €</span>
+                <input className={ui.input} value={form.goal_eur} onChange={(e) => setForm({ ...form, goal_eur: e.target.value })} />
               </label>
-              <label className="block">
-                <span className="font-bold">Donors count</span>
-                <input className="mt-1 w-full rounded-lg border px-2 py-1" value={form.donors} onChange={(e) => setForm({ ...form, donors: e.target.value })} />
+              <label className="block space-y-1">
+                <span className={ui.fieldLabel}>Donors count</span>
+                <input className={ui.input} value={form.donors} onChange={(e) => setForm({ ...form, donors: e.target.value })} />
               </label>
-              <label className="block">
-                <span className="font-bold">Theme</span>
-                <input className="mt-1 w-full rounded-lg border px-2 py-1" value={form.theme} onChange={(e) => setForm({ ...form, theme: e.target.value })} />
+              <label className="block space-y-1">
+                <span className={ui.fieldLabel}>Theme</span>
+                <input className={ui.input} value={form.theme} onChange={(e) => setForm({ ...form, theme: e.target.value })} />
               </label>
-              <label className="block">
-                <span className="font-bold">Sort</span>
-                <input className="mt-1 w-full rounded-lg border px-2 py-1" value={form.sort_order} onChange={(e) => setForm({ ...form, sort_order: e.target.value })} />
+              <label className="block space-y-1">
+                <span className={ui.fieldLabel}>Sort</span>
+                <input className={ui.input} value={form.sort_order} onChange={(e) => setForm({ ...form, sort_order: e.target.value })} />
               </label>
-              <label className="flex items-center gap-2 mt-6">
-                <input type="checkbox" checked={form.is_active} onChange={(e) => setForm({ ...form, is_active: e.target.checked })} />
-                <span className="font-bold">Active</span>
+              <label className="flex items-center gap-2 mt-6 text-slate-100">
+                <input type="checkbox" className="h-4 w-4 rounded border-emerald-500/40 bg-slate-900 text-emerald-500" checked={form.is_active} onChange={(e) => setForm({ ...form, is_active: e.target.checked })} />
+                <span className={ui.fieldLabel}>Active</span>
               </label>
             </div>
           </div>

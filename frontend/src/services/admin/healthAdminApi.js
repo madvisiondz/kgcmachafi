@@ -105,3 +105,16 @@ export async function adminFetch(path, opts = {}) {
   const un = unwrapAdminJson(json, res);
   return { response: res, ...un };
 }
+
+/**
+ * Upload image or PDF to `/api/admin/uploads.php`.
+ * @param {File} file
+ * @param {{ category: string, kind?: 'image' | 'pdf', csrfToken: string }} opts
+ */
+export async function uploadAdminFile(file, { category, kind = 'image', csrfToken }) {
+  const fd = new FormData();
+  fd.append('file', file);
+  fd.append('category', category);
+  fd.append('kind', kind);
+  return adminFetch('/admin/uploads.php', { method: 'POST', body: fd, csrfToken });
+}

@@ -62,7 +62,7 @@ Admin/API later: sanitized stream URL, schedule row, “on air” flag — align
 | Piece | Role |
 |--------|------|
 | **Gateway** | On `kgc-machafi.net`, user chooses Services vs TV. |
-| **Services** | **14** routes under **`/healthservices/*`**; i18n via `t()` + legacy URLs redirect (Rule #1). |
+| **Services** | **14** routes under **`/healthservices/*`**; i18n via `t()` + legacy URLs redirect (Rule #1). Shell: subtle emerald gradient + grid (`machafi-*` utilities in `index.css`). |
 | **Machafi TV** | Three **route trees** (`/tv/ar`, `/tv/fr`, `/tv/en`) + shared shell chrome pattern. |
 | **Health Services admin** | **`/healthservices/admin/*`** — session + CSRF, CRUD against **`/api/admin/*`**; deploy: **`GODADDY_CPANEL_DEPLOYMENT_GUIDE.md`**. |
 | **Machafi TV admin** | **`/machafitv/admin/*`** — placeholder until CMS. |
@@ -87,4 +87,4 @@ Admin/API later: sanitized stream URL, schedule row, “on air” flag — align
 
 ---
 
-*Last updated: **2026-05-14** — Health Services **admin SPA** (`/healthservices/admin/*`), **`GODADDY_CPANEL_DEPLOYMENT_GUIDE.md`**; Gateway + TV branding, Vercel https://kgcmachafi.vercel.app ; doc sync.*
+*Last updated: **2026-05-15** — Health Services visual depth (CSS utilities on Services + admin shells); admin SPA unchanged structurally.*

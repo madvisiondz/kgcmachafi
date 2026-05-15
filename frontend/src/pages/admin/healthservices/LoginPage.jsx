@@ -3,6 +3,7 @@ import { Link, Navigate, useLocation } from 'react-router-dom';
 import { useI18n } from '../../../i18n/I18nProvider';
 import { servicesPath } from '../../../routes/paths';
 import { useHealthAdminAuth } from './HealthAdminAuthContext';
+import * as ui from '../../../components/admin/healthservices/adminUiClasses';
 
 export default function LoginPage() {
   const { t, dir } = useI18n();
@@ -24,44 +25,35 @@ export default function LoginPage() {
     setError('');
     const r = await login(username.trim(), password);
     setBusy(false);
-    if (!r.ok) setError(r.error || 'Login failed');
+    if (!r.ok) setError(r.error || t('admin.hsvc.loginFailed'));
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-slate-900 via-emerald-950 to-slate-900 p-4" dir={dir}>
-      <div className="w-full max-w-md rounded-2xl bg-white shadow-2xl border border-slate-200 p-8">
-        <h1 className="text-2xl font-black text-slate-900">{t('admin.hsvc.loginTitle')}</h1>
-        <p className="mt-2 text-sm text-slate-600">{t('admin.hsvc.loginSub')}</p>
+    <div className={`${ui.shell} flex min-h-screen flex-col items-center justify-center p-4`} dir={dir}>
+      <div className={`w-full max-w-md ${ui.glassCard} p-8`}>
+        <h1 className={ui.pageTitle}>{t('admin.hsvc.loginTitle')}</h1>
+        <p className={`${ui.pageSub} mt-2`}>{t('admin.hsvc.loginSub')}</p>
         <form className="mt-6 space-y-4" onSubmit={onSubmit}>
-          <div>
-            <label className="block text-xs font-bold uppercase text-slate-500 mb-1">{t('admin.hsvc.username')}</label>
-            <input
-              autoComplete="username"
-              className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-            />
-          </div>
-          <div>
-            <label className="block text-xs font-bold uppercase text-slate-500 mb-1">{t('admin.hsvc.password')}</label>
+          <label className="block space-y-1">
+            <span className={ui.fieldLabel}>{t('admin.hsvc.username')}</span>
+            <input autoComplete="username" className={ui.input} value={username} onChange={(e) => setUsername(e.target.value)} />
+          </label>
+          <label className="block space-y-1">
+            <span className={ui.fieldLabel}>{t('admin.hsvc.password')}</span>
             <input
               type="password"
               autoComplete="current-password"
-              className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm"
+              className={ui.input}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
-          </div>
-          {error ? <p className="text-sm text-red-600 font-semibold">{error}</p> : null}
-          <button
-            type="submit"
-            disabled={busy}
-            className="w-full rounded-xl bg-emerald-600 py-2.5 text-sm font-black text-white hover:bg-emerald-700 disabled:opacity-50"
-          >
+          </label>
+          {error ? <p className="text-sm text-red-400 font-semibold">{error}</p> : null}
+          <button type="submit" disabled={busy} className={`${ui.btnPrimary} w-full`}>
             {busy ? t('admin.hsvc.signingIn') : t('admin.hsvc.signIn')}
           </button>
         </form>
-        <Link className="mt-6 block text-center text-sm font-semibold text-emerald-700 hover:underline" to={servicesPath('/')}>
+        <Link className={`mt-6 block text-center ${ui.link}`} to={servicesPath('/')}>
           ← {t('admin.backToSite')}
         </Link>
       </div>

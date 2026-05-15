@@ -254,6 +254,29 @@ If your session expires, the admin panel will ask you to sign in again.
 
 ---
 
+## E2. Admin uploads (`/uploads/healthservices`)
+
+The Health Services admin can upload images (5 MB) and PDFs (15 MB) via `POST /api/admin/uploads.php`. See **`HEALTH_SERVICES_ADMIN_UI_UPGRADE.md`** for full details (includes **visual depth** CSS utilities: emerald gradient, soft grid, card glow — deploy with latest `frontend/dist` assets).
+
+### Verify on production
+
+1. After deploy, confirm folder exists: `public_html/uploads/healthservices/` (copy from repo `uploads/healthservices/` including `.htaccess`).
+2. Set folder permissions to **755** (use **775** only if uploads fail with “Could not create upload folder”).
+3. Upload a test image from **Programs** or **Library** in `/healthservices/admin` — the form should show a preview and a path like `/uploads/healthservices/programs/images/...`.
+4. Open that URL in the browser — it must load the file (not `index.html`).
+
+### Troubleshooting uploads
+
+| Symptom | Fix |
+|---------|-----|
+| 401 / 419 on upload | Sign in again; ensure admin session + CSRF (same origin as API). |
+| 422 file type | Use JPG/PNG/WebP for images or PDF for documents only. |
+| 422 size | Image max 5 MB, PDF max 15 MB; raise `upload_max_filesize` and `post_max_size` in cPanel → PHP if host limit is lower. |
+| 500 folder error | Create `uploads/healthservices` manually; chmod **755** or **775**. |
+| URL 404 after upload | Ensure `uploads/` is not rewritten to the SPA; nginx/Apache must serve static files under `/uploads/`. |
+
+---
+
 ## F. Deployment checklist
 
 - [ ] MySQL database created  
@@ -268,6 +291,7 @@ If your session expires, the admin panel will ask you to sign in again.
 - [ ] `.env.production` values correct before build  
 - [ ] Default admin password changed  
 - [ ] Tested `/healthservices` and `/healthservices/admin`  
+- [ ] `uploads/healthservices/` present with write permission; test image upload in admin  
 - [ ] **Backup:** export database + download `public_html` copy  
 
 ---

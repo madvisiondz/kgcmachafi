@@ -3,6 +3,7 @@ import { useI18n } from '../../../i18n/I18nProvider';
 import { adminFetch } from '../../../services/admin/healthAdminApi';
 import { useHealthAdminAuth } from './HealthAdminAuthContext';
 import { useHealthAdminToast } from './HealthAdminToastContext';
+import * as ui from '../../../components/admin/healthservices/adminUiClasses';
 
 export default function I18nDbPage() {
   const { t } = useI18n();
@@ -80,51 +81,36 @@ export default function I18nDbPage() {
   return (
     <div className="mx-auto max-w-3xl space-y-4">
       <div>
-        <h1 className="text-2xl font-black text-slate-900">{t('admin.hsvc.i18nPageTitle')}</h1>
-        <p className="mt-1 text-sm text-slate-600">{t('admin.hsvc.i18nPageHelp')}</p>
+        <h1 className={ui.pageTitle}>{t('admin.hsvc.i18nPageTitle')}</h1>
+        <p className={ui.pageSub}>{t('admin.hsvc.i18nPageHelp')}</p>
       </div>
 
-      {!isAdmin ? <p className="rounded-xl border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-950">{t('admin.hsvc.i18nEditorReadOnly')}</p> : null}
+      {!isAdmin ? <p className={ui.alertWarn}>{t('admin.hsvc.i18nEditorReadOnly')}</p> : null}
 
       <div className="grid gap-3 sm:grid-cols-3">
-        <label className="block text-sm font-bold text-slate-800">
-          {t('admin.hsvc.i18nEntityType')}
-          <input className="mt-1 w-full rounded-xl border border-slate-200 px-3 py-2 text-sm" value={entityType} onChange={(e) => setEntityType(e.target.value)} />
+        <label className="block space-y-1">
+          <span className={ui.fieldLabel}>{t('admin.hsvc.i18nEntityType')}</span>
+          <input className={ui.input} value={entityType} onChange={(e) => setEntityType(e.target.value)} />
         </label>
-        <label className="block text-sm font-bold text-slate-800">
-          {t('admin.hsvc.i18nEntityId')}
-          <input className="mt-1 w-full rounded-xl border border-slate-200 px-3 py-2 text-sm" value={entityId} onChange={(e) => setEntityId(e.target.value)} />
+        <label className="block space-y-1">
+          <span className={ui.fieldLabel}>{t('admin.hsvc.i18nEntityId')}</span>
+          <input className={ui.input} value={entityId} onChange={(e) => setEntityId(e.target.value)} />
         </label>
-        <label className="block text-sm font-bold text-slate-800">
-          {t('admin.hsvc.i18nLang')}
-          <input className="mt-1 w-full rounded-xl border border-slate-200 px-3 py-2 text-sm" value={lang} onChange={(e) => setLang(e.target.value)} />
+        <label className="block space-y-1">
+          <span className={ui.fieldLabel}>{t('admin.hsvc.i18nLang')}</span>
+          <input className={ui.input} value={lang} onChange={(e) => setLang(e.target.value)} />
         </label>
       </div>
 
-      <p className="text-xs text-slate-500">{t('admin.hsvc.i18nFieldsHint')}</p>
+      <p className={ui.fieldHelper}>{t('admin.hsvc.i18nFieldsHint')}</p>
 
-      <textarea
-        className="min-h-[220px] w-full rounded-2xl border border-slate-200 bg-white p-3 font-mono text-sm"
-        value={jsonText}
-        onChange={(e) => setJsonText(e.target.value)}
-        spellCheck={false}
-      />
+      <textarea className={ui.textareaMono} value={jsonText} onChange={(e) => setJsonText(e.target.value)} spellCheck={false} />
 
       <div className="flex flex-wrap gap-2">
-        <button
-          type="button"
-          disabled={loading}
-          onClick={() => void loadFields()}
-          className="rounded-xl bg-slate-900 px-4 py-2 text-sm font-bold text-white hover:bg-slate-800 disabled:opacity-50"
-        >
+        <button type="button" disabled={loading} onClick={() => void loadFields()} className={ui.btnSecondary}>
           {loading ? t('admin.hsvc.uiLoading') : t('admin.hsvc.i18nLoad')}
         </button>
-        <button
-          type="button"
-          disabled={saving || !isAdmin}
-          onClick={() => void saveFields()}
-          className="rounded-xl bg-emerald-600 px-4 py-2 text-sm font-bold text-white hover:bg-emerald-700 disabled:opacity-50"
-        >
+        <button type="button" disabled={saving || !isAdmin} onClick={() => void saveFields()} className={ui.btnPrimary}>
           {saving ? t('admin.hsvc.uiSaving') : t('admin.hsvc.i18nSave')}
         </button>
       </div>

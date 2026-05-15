@@ -28,7 +28,7 @@ function StatCard({ value, label, tone, enterDelay = 0 }) {
 
   return (
     <div
-      className="bg-slate-50 p-6 rounded-2xl border border-slate-100 flex items-center gap-4 shadow-sm hover:shadow-md transition-shadow motion-safe:animate-kgc-pop"
+      className="bg-slate-50 p-6 rounded-2xl machafi-card-depth machafi-emerald-border flex items-center gap-4 shadow-sm motion-safe:animate-kgc-pop"
       style={enterDelay ? { animationDelay: `${enterDelay}ms` } : undefined}
     >
       <div className={`w-16 h-16 rounded-full flex items-center justify-center ${toneClasses}`}>
@@ -75,7 +75,7 @@ function StaffPill({ value, label, icon, tone, enterDelay = 0 }) {
 function NewsCard({ tag, date, title, desc, cta, enterDelay = 0 }) {
   return (
     <div
-      className="bg-slate-50 rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow border border-slate-100 flex flex-col motion-safe:animate-kgc-pop hover:-translate-y-0.5 duration-300"
+      className="bg-slate-50 rounded-xl p-6 machafi-card-depth machafi-emerald-border flex flex-col shadow-sm motion-safe:animate-kgc-pop"
       style={enterDelay ? { animationDelay: `${enterDelay}ms` } : undefined}
     >
       <div className="flex items-center justify-between mb-4">
@@ -419,7 +419,7 @@ export default function HomePage() {
 
       {/* Health News (static cards) */}
       <section className="container mx-auto px-4">
-        <div className="py-12 bg-white rounded-2xl shadow-sm border border-slate-100 px-6">
+        <div className="py-12 bg-white rounded-2xl machafi-card-depth machafi-emerald-border px-6">
           <div className="flex flex-col md:flex-row justify-between items-end mb-8 gap-4" dir={dir}>
             <div>
               <h2 className="text-3xl font-bold text-slate-900 mb-2 flex items-center gap-2">
@@ -457,7 +457,7 @@ export default function HomePage() {
               className="motion-safe:animate-kgc-pop block h-full"
               style={{ animationDelay: `${i * 48}ms` }}
             >
-              <div className="group h-full rounded-3xl border border-slate-200 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
+              <div className="group h-full rounded-3xl border border-slate-200 bg-white p-6 machafi-card-depth machafi-emerald-border shadow-sm">
                 <div
                   className={`mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br ${c.color} shadow-lg transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3`}
                 >

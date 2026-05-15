@@ -32,6 +32,7 @@ At the repo root (next to **`README.md`**):
 - **`PROJECT-EXPLAINER/GODADDY_CPANEL_DEPLOYMENT_GUIDE.md`** — **beginner cPanel** walkthrough: database import, `api/` upload, `admin-config.php` path, `npm run build` + `dist/` upload, `.htaccess`, admin URL + checklist
 - **`PROJECT-EXPLAINER/API_ENDPOINT_REGISTRY.md`** — **canonical** list of every `api/public/*.php` and `api/admin/*.php` method, envelopes, honeypots, CSRF, and `VITE_*` flags.
 - **`PROJECT-EXPLAINER/HEALTH_SERVICES_BACKEND.md`** — Health Services backend pass: schema path, smoke checks, deploy notes.
+- **`PROJECT-EXPLAINER/HEALTH_SERVICES_ADMIN_UI_UPGRADE.md`** — Health Services admin UI + shared depth utilities (emerald gradient, grid, card glow).
 - **`PROJECT-EXPLAINER/API_STANDARD_GODADDY_MYSQL.md`** — JSON response conventions for PHP on shared hosting
 - **`PROJECT-EXPLAINER/ARCHIVE_LEGACY_*.md`** — archived copies of the former monolith **audit** + **deployment** notes (the `legacy/` tree was removed from the repo on 2026-05-13)
 - **`PROJECT-EXPLAINER/LEGACY_SYSTEM_PROBLEMS_AND_REBUILD_RULES.md`** — why the legacy system blocked UI work + rebuild rules

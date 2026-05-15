@@ -8,7 +8,7 @@ export default function RequireHealthAdmin() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-100 text-slate-600 text-sm font-semibold">
+      <div className="hsvc-admin-root hsvc-admin-bg machafi-subtle-emerald-bg machafi-soft-grid min-h-screen flex items-center justify-center text-slate-300 text-sm font-semibold">
         Loading…
       </div>
     );

@@ -1,5 +1,6 @@
 import React from 'react';
 import AdminModal from './AdminModal';
+import * as ui from './adminUiClasses';
 
 export default function AdminConfirmDialog({ open, title, description, confirmLabel, cancelLabel, danger, onConfirm, onClose, busy }) {
   if (!open) return null;
@@ -9,13 +10,13 @@ export default function AdminConfirmDialog({ open, title, description, confirmLa
       onClose={onClose}
       footer={
         <>
-          <button type="button" className="rounded-xl border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50" onClick={onClose}>
+          <button type="button" className={ui.btnGhost} onClick={onClose}>
             {cancelLabel}
           </button>
           <button
             type="button"
             disabled={busy}
-            className={`rounded-xl px-4 py-2 text-sm font-bold text-white disabled:opacity-50 ${danger ? 'bg-red-600 hover:bg-red-700' : 'bg-emerald-600 hover:bg-emerald-700'}`}
+            className={danger ? ui.btnDanger : ui.btnPrimary}
             onClick={onConfirm}
           >
             {confirmLabel}
@@ -23,7 +24,7 @@ export default function AdminConfirmDialog({ open, title, description, confirmLa
         </>
       }
     >
-      <p className="text-sm text-slate-600 leading-relaxed whitespace-pre-wrap">{description}</p>
+      <p className="text-sm text-slate-300 leading-relaxed whitespace-pre-wrap">{description}</p>
     </AdminModal>
   );
 }

@@ -1,4 +1,5 @@
 import React, { Suspense, lazy } from 'react';
+import '../../styles/healthAdminTheme.css';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import CrudResourcePage from '../../components/admin/healthservices/CrudResourcePage';
 import { HealthAdminAuthProvider } from './healthservices/HealthAdminAuthContext';
@@ -32,7 +33,7 @@ const I18nDbPage = lazy(() => import('./healthservices/I18nDbPage.jsx'));
 
 function AdminFallback() {
   return (
-    <div className="flex min-h-[40vh] items-center justify-center bg-slate-100 text-sm font-semibold text-slate-600">
+    <div className="hsvc-admin-root hsvc-admin-bg machafi-subtle-emerald-bg machafi-soft-grid flex min-h-[40vh] items-center justify-center text-sm font-semibold text-emerald-400/80">
       Loading admin…
     </div>
   );

@@ -12,10 +12,10 @@ export default function HealthAdminToastStack() {
           role="status"
           className={`pointer-events-auto rounded-xl border px-4 py-3 text-sm shadow-lg backdrop-blur ${
             t.type === 'success'
-              ? 'border-emerald-200 bg-emerald-50/95 text-emerald-900'
+              ? 'border-emerald-500/40 bg-emerald-950/90 text-emerald-100'
               : t.type === 'error'
-                ? 'border-red-200 bg-red-50/95 text-red-900'
-                : 'border-slate-200 bg-white/95 text-slate-800'
+                ? 'border-red-500/40 bg-red-950/90 text-red-100'
+                : 'border-emerald-500/20 bg-slate-900/90 text-slate-200'
           }`}
         >
           {t.message}

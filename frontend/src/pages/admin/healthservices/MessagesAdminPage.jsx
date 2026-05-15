@@ -1,10 +1,13 @@
 import React, { useCallback, useEffect, useState } from 'react';
+import { useI18n } from '../../../i18n/I18nProvider';
 import { adminFetch, extractItemsList } from '../../../services/admin/healthAdminApi';
 import { useHealthAdminAuth } from './HealthAdminAuthContext';
 import { useHealthAdminToast } from './HealthAdminToastContext';
 import AdminConfirmDialog from '../../../components/admin/healthservices/AdminConfirmDialog';
+import * as ui from '../../../components/admin/healthservices/adminUiClasses';
 
 export default function MessagesAdminPage() {
+  const { t } = useI18n();
   const { csrfToken } = useHealthAdminAuth();
   const toast = useHealthAdminToast();
   const [items, setItems] = useState([]);
@@ -55,45 +58,45 @@ export default function MessagesAdminPage() {
 
   return (
     <div className="space-y-4">
-      <h1 className="text-2xl font-black text-slate-900">Contact messages</h1>
-      <div className="rounded-2xl border border-slate-200 bg-white overflow-x-auto shadow-sm">
-        <table className="min-w-full text-sm">
-          <thead className="bg-slate-50">
+      <h1 className={ui.pageTitle}>{t('admin.hsvc.navMessages')}</h1>
+      <div className={ui.tableWrap}>
+        <table className={ui.table}>
+          <thead className={ui.tableHead}>
             <tr>
-              <th className="text-start px-3 py-2 font-bold">From</th>
-              <th className="text-start px-3 py-2 font-bold">Subject</th>
-              <th className="text-start px-3 py-2 font-bold">Date</th>
-              <th className="text-end px-3 py-2 font-bold">Actions</th>
+              <th className={ui.tableTh}>From</th>
+              <th className={ui.tableTh}>Subject</th>
+              <th className={ui.tableTh}>Date</th>
+              <th className={`${ui.tableTh} text-end`}>{t('admin.hsvc.uiActions')}</th>
             </tr>
           </thead>
           <tbody>
             {loading ? (
               <tr>
-                <td colSpan={4} className="px-4 py-8 text-center text-slate-500">
-                  Loading…
+                <td colSpan={4} className={ui.loadingState}>
+                  {t('admin.hsvc.uiLoading')}
                 </td>
               </tr>
             ) : (
               items.map((m) => (
-                <tr key={m.id} className="border-t border-slate-100 align-top">
-                  <td className="px-3 py-2">
-                    <div className="font-semibold">{m.name}</div>
-                    <div className="text-xs text-slate-500">{m.email}</div>
+                <tr key={m.id} className={ui.tableRow}>
+                  <td className={ui.tableTd}>
+                    <div className="font-semibold text-white">{m.name}</div>
+                    <div className={ui.mutedXs}>{m.email}</div>
                   </td>
-                  <td className="px-3 py-2 max-w-xs">
-                    <div className="font-semibold">{m.subject}</div>
-                    <div className="text-xs text-slate-600 line-clamp-2">{m.message}</div>
+                  <td className={`${ui.tableTd} max-w-xs`}>
+                    <div className="font-semibold text-slate-100">{m.subject}</div>
+                    <div className={`${ui.mutedXs} line-clamp-2`}>{m.message}</div>
                   </td>
-                  <td className="px-3 py-2 whitespace-nowrap text-xs text-slate-500">{m.created_at}</td>
-                  <td className="px-3 py-2 text-end space-x-2 whitespace-nowrap">
-                    <button type="button" className="text-emerald-700 font-bold" onClick={() => void patchRead(m, true)}>
+                  <td className={`${ui.tableTd} whitespace-nowrap ${ui.mutedXs}`}>{m.created_at}</td>
+                  <td className={`${ui.tableTd} text-end space-x-2 whitespace-nowrap`}>
+                    <button type="button" className={ui.linkAction} onClick={() => void patchRead(m, true)}>
                       Read
                     </button>
-                    <button type="button" className="text-slate-600 font-bold" onClick={() => void patchRead(m, false)}>
+                    <button type="button" className={ui.link} onClick={() => void patchRead(m, false)}>
                       Unread
                     </button>
-                    <button type="button" className="text-red-600 font-bold" onClick={() => setDel(m)}>
-                      Delete
+                    <button type="button" className={ui.linkDanger} onClick={() => setDel(m)}>
+                      {t('admin.hsvc.uiDelete')}
                     </button>
                   </td>
                 </tr>
@@ -104,10 +107,10 @@ export default function MessagesAdminPage() {
       </div>
       <AdminConfirmDialog
         open={Boolean(del)}
-        title="Delete message?"
-        description="Permanently removes this contact message."
-        confirmLabel="Delete"
-        cancelLabel="Cancel"
+        title={t('admin.hsvc.uiDeleteTitle')}
+        description={t('admin.hsvc.uiDeleteDesc')}
+        confirmLabel={t('admin.hsvc.uiDeleteConfirm')}
+        cancelLabel={t('admin.hsvc.uiCancel')}
         danger
         busy={busy}
         onClose={() => !busy && setDel(null)}

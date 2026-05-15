@@ -8,8 +8,11 @@ import AdminConfirmDialog from './AdminConfirmDialog';
 import AdminSearchBar from './AdminSearchBar';
 import AdminPagination from './AdminPagination';
 import AdminField from './AdminField';
+import AdminUploadField from './AdminUploadField';
+import AdminStatusBadge from './AdminStatusBadge';
+import * as ui from './adminUiClasses';
 
-/** @typedef {{ key: string, label: string, type?: string, required?: boolean, helper?: string, options?: { value: string, label: string }[], jsonTarget?: string }} FieldSpec */
+/** @typedef {{ key: string, label: string, labelKey?: string, type?: string, required?: boolean, helper?: string, helperKey?: string, options?: { value: string, label: string }[], jsonTarget?: string, uploadCategory?: string, uploadKind?: 'image' | 'pdf' }} FieldSpec */
 
 function emptyForm(fields) {
   const o = {};
@@ -252,16 +255,30 @@ export default function CrudResourcePage({
       toast.error(res.errorMessage || t('admin.hsvc.uiDeleteFailed'));
       return;
     }
-    toast.success('Deleted.');
+    toast.success(t('admin.hsvc.uiDeleted'));
     await load();
   };
 
+  const fieldLabel = (f) => (f.labelKey ? t(f.labelKey) : f.label);
+  const fieldHelper = (f) => (f.helperKey ? t(f.helperKey) : f.helper);
+
   const renderFieldInput = (f) => {
     const val = form[f.key];
+    if (f.type === 'upload' || f.type === 'uploadPdf') {
+      return (
+        <AdminUploadField
+          value={String(val ?? '')}
+          onChange={(url) => setForm((p) => ({ ...p, [f.key]: url }))}
+          csrfToken={csrfToken}
+          category={f.uploadCategory || 'general'}
+          kind={f.type === 'uploadPdf' || f.uploadKind === 'pdf' ? 'pdf' : 'image'}
+        />
+      );
+    }
     if (f.type === 'textarea' || f.type === 'json') {
       return (
         <textarea
-          className="w-full min-h-[100px] rounded-xl border border-slate-200 px-3 py-2 text-sm text-slate-900 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
+          className={ui.textarea}
           value={String(val ?? '')}
           onChange={(e) => setForm((p) => ({ ...p, [f.key]: e.target.value }))}
         />
@@ -271,7 +288,7 @@ export default function CrudResourcePage({
       return (
         <input
           type="checkbox"
-          className="h-4 w-4 rounded border-slate-300 text-emerald-600"
+          className="h-4 w-4 rounded border-emerald-500/40 bg-slate-900 text-emerald-500"
           checked={Boolean(val)}
           onChange={(e) => setForm((p) => ({ ...p, [f.key]: e.target.checked }))}
         />
@@ -281,7 +298,7 @@ export default function CrudResourcePage({
       return (
         <input
           type="number"
-          className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm text-slate-900 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
+          className={ui.input}
           value={val === '' ? '' : val}
           onChange={(e) => setForm((p) => ({ ...p, [f.key]: e.target.value }))}
         />
@@ -291,7 +308,7 @@ export default function CrudResourcePage({
       return (
         <input
           type="date"
-          className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm text-slate-900 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
+          className={ui.input}
           value={String(val ?? '').slice(0, 10)}
           onChange={(e) => setForm((p) => ({ ...p, [f.key]: e.target.value }))}
         />
@@ -300,7 +317,7 @@ export default function CrudResourcePage({
     if (f.type === 'select' && f.options) {
       return (
         <select
-          className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm text-slate-900 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
+          className={ui.select}
           value={String(val ?? '')}
           onChange={(e) => setForm((p) => ({ ...p, [f.key]: e.target.value }))}
         >
@@ -316,72 +333,84 @@ export default function CrudResourcePage({
     return (
       <input
         type="text"
-        className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm text-slate-900 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
+        className={ui.input}
         value={String(val ?? '')}
         onChange={(e) => setForm((p) => ({ ...p, [f.key]: e.target.value }))}
       />
     );
   };
 
+  const cellValue = (r, c) => {
+    const v = r[c.key];
+    if (c.key === 'is_active' || c.key === 'is_archived' || c.key === 'is_read') {
+      const on = Boolean(Number(v));
+      return (
+        <AdminStatusBadge variant={on ? 'success' : 'neutral'}>
+          {on ? t('admin.hsvc.statusActive') : t('admin.hsvc.statusInactive')}
+        </AdminStatusBadge>
+      );
+    }
+    return String(v ?? '');
+  };
+
   return (
     <div className="space-y-4">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <h1 className="text-xl font-black text-slate-900 tracking-tight">{title}</h1>
+        <div>
+          <h1 className={ui.pageTitle}>{displayTitle}</h1>
+          <p className={ui.pageSub}>{t('admin.hsvc.crudIntro')}</p>
+        </div>
         <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
-          <AdminSearchBar value={search} onChange={setSearch} placeholder="Search…" />
-          <button
-            type="button"
-            onClick={openCreate}
-            className="rounded-xl bg-emerald-600 px-4 py-2 text-sm font-bold text-white shadow hover:bg-emerald-700"
-          >
-            + Add
+          <AdminSearchBar value={search} onChange={setSearch} placeholder={t('admin.hsvc.uiSearchPlaceholder')} />
+          <button type="button" onClick={openCreate} className={ui.btnPrimary}>
+            + {t('admin.hsvc.uiAdd')}
           </button>
         </div>
       </div>
 
-      <div className="rounded-2xl border border-slate-200 bg-white shadow-sm overflow-hidden">
-        <div className="overflow-x-auto">
+      <div className={ui.tableWrap}>
+        <div className="overflow-x-auto hsvc-table-scroll hidden md:block">
           <table className="min-w-full text-sm">
-            <thead className="bg-slate-50 text-slate-600">
+            <thead className={ui.tableHead}>
               <tr>
                 {columns.map((c) => (
-                  <th key={c.key} className="text-start font-bold px-4 py-3 whitespace-nowrap">
+                  <th key={c.key} className={ui.tableTh}>
                     {c.label}
                   </th>
                 ))}
-                <th className="text-end font-bold px-4 py-3 whitespace-nowrap">Actions</th>
+                <th className={`${ui.tableTh} text-end`}>{t('admin.hsvc.uiActions')}</th>
               </tr>
             </thead>
             <tbody>
               {loading ? (
                 <tr>
-                  <td colSpan={columns.length + 1} className="px-4 py-10 text-center text-slate-500">
-                    Loading…
+                  <td colSpan={columns.length + 1} className={ui.loadingState}>
+                    {t('admin.hsvc.uiLoading')}
                   </td>
                 </tr>
               ) : pageItems.length === 0 ? (
                 <tr>
-                  <td colSpan={columns.length + 1} className="px-4 py-10 text-center text-slate-500">
-                    No rows yet. Use “Add” to create the first entry.
+                  <td colSpan={columns.length + 1} className={ui.emptyState}>
+                    {t('admin.hsvc.uiEmptyRows')}
                   </td>
                 </tr>
               ) : (
                 pageItems.map((row) => {
                   const r = /** @type {Record<string, unknown>} */ (row);
                   return (
-                    <tr key={String(r[idKey])} className="border-t border-slate-100 hover:bg-slate-50/80">
+                    <tr key={String(r[idKey])} className={ui.tableRow}>
                       {columns.map((c) => (
-                        <td key={c.key} className="px-4 py-2 align-top max-w-[220px] truncate" title={String(r[c.key] ?? '')}>
-                          {String(r[c.key] ?? '')}
+                        <td key={c.key} className={`${ui.tableTd} max-w-[220px] truncate`} title={String(r[c.key] ?? '')}>
+                          {cellValue(r, c)}
                         </td>
                       ))}
-                      <td className="px-4 py-2 text-end whitespace-nowrap space-x-2">
-                        <button type="button" className="text-emerald-700 font-bold hover:underline" onClick={() => openEdit(row)}>
-                          Edit
+                      <td className={`${ui.tableTd} text-end whitespace-nowrap`}>
+                        <button type="button" className="text-emerald-400 font-bold hover:text-emerald-300 me-3" onClick={() => openEdit(row)}>
+                          {t('admin.hsvc.uiEdit')}
                         </button>
                         {canDelete ? (
-                          <button type="button" className="text-red-600 font-bold hover:underline" onClick={() => setDeleteTarget(row)}>
-                            Delete
+                          <button type="button" className="text-red-400 font-bold hover:text-red-300" onClick={() => setDeleteTarget(row)}>
+                            {t('admin.hsvc.uiDelete')}
                           </button>
                         ) : null}
                       </td>
@@ -392,34 +421,59 @@ export default function CrudResourcePage({
             </tbody>
           </table>
         </div>
-        <div className="border-t border-slate-100 px-4 py-3 bg-slate-50/60">
+        <div className={ui.paginationBar}>
           <AdminPagination page={page} pageSize={pageSize} total={total} onPageChange={setPage} />
+        </div>
+
+        <div className="md:hidden space-y-3 p-3">
+          {loading ? <p className={ui.loadingState}>{t('admin.hsvc.uiLoading')}</p> : null}
+          {!loading && pageItems.length === 0 ? <p className={ui.emptyState}>{t('admin.hsvc.uiEmptyRows')}</p> : null}
+          {!loading
+            ? pageItems.map((row) => {
+                const r = /** @type {Record<string, unknown>} */ (row);
+                return (
+                  <div key={String(r[idKey])} className={`${ui.glassCard} p-4 space-y-2`}>
+                    {columns.slice(0, 4).map((c) => (
+                      <p key={c.key} className="text-sm">
+                        <span className="text-slate-400">{c.label}: </span>
+                        <span className="text-slate-100">{cellValue(r, c)}</span>
+                      </p>
+                    ))}
+                    <div className="flex gap-2 pt-2">
+                      <button type="button" className={ui.btnGhost} onClick={() => openEdit(row)}>
+                        {t('admin.hsvc.uiEdit')}
+                      </button>
+                      {canDelete ? (
+                        <button type="button" className={ui.btnDanger} onClick={() => setDeleteTarget(row)}>
+                          {t('admin.hsvc.uiDelete')}
+                        </button>
+                      ) : null}
+                    </div>
+                  </div>
+                );
+              })
+            : null}
         </div>
       </div>
 
       {modalOpen ? (
         <AdminModal
-          title={editing ? `Edit` : `Add — ${title}`}
+          title={editing ? t('admin.hsvc.uiModalEdit') : `${t('admin.hsvc.uiModalAdd')} — ${displayTitle}`}
           onClose={closeModal}
           footer={
             <>
-              <button type="button" className="rounded-xl border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50" onClick={closeModal}>
-                Cancel
+              <button type="button" className={ui.btnGhost} onClick={closeModal}>
+                {t('admin.hsvc.uiCancel')}
               </button>
-              <button
-                type="button"
-                disabled={saving}
-                onClick={() => void save()}
-                className="rounded-xl bg-emerald-600 px-4 py-2 text-sm font-bold text-white hover:bg-emerald-700 disabled:opacity-50"
-              >
-                {saving ? 'Saving…' : 'Save'}
+              <button type="button" disabled={saving} onClick={() => void save()} className={ui.btnPrimary}>
+                {saving ? t('admin.hsvc.uiSaving') : t('admin.hsvc.uiSave')}
               </button>
             </>
           }
         >
           <div className="space-y-4">
             {fields.map((f) => (
-              <AdminField key={f.key} label={f.label} required={f.required} helper={f.helper} error={formErrors[f.key]}>
+              <AdminField key={f.key} label={fieldLabel(f)} required={f.required} helper={fieldHelper(f)} error={formErrors[f.key]}>
                 {renderFieldInput(f)}
               </AdminField>
             ))}

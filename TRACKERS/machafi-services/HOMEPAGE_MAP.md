@@ -280,4 +280,10 @@ CREATE TABLE home_feed_items (
 
 ---
 
-*Last updated: **2026-05-14** — Gateway + TV branding (Machafi TV logo in shell and gateway strip), Services masthead mint/grid, `frontend/public/branding/`, Vercel https://kgcmachafi.vercel.app ; doc sync.*
+## Visual depth (2026-05-15)
+
+`ServicesLayout` applies `.machafi-subtle-emerald-bg`, `.machafi-soft-grid`, and optional orbs; home stat/news/platform cards use `.machafi-card-depth` + `.machafi-emerald-border` (solid light backgrounds kept). Utilities: `frontend/src/index.css`. Machafi TV unchanged.
+
+---
+
+*Last updated: **2026-05-15** — Health Services visual depth on public shell + home cards; doc sync.*

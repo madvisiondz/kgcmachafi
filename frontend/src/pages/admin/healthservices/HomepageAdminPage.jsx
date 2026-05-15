@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useI18n } from '../../../i18n/I18nProvider';
 import CrudResourcePage from '../../../components/admin/healthservices/CrudResourcePage';
 import { heroStatsCrud, homepageSectionsCrud } from './healthAdminCrudConfigs';
+import * as ui from '../../../components/admin/healthservices/adminUiClasses';
 
 export default function HomepageAdminPage() {
   const { t } = useI18n();
@@ -9,21 +10,13 @@ export default function HomepageAdminPage() {
 
   return (
     <div className="space-y-4">
-      <h1 className="text-2xl font-black text-slate-900">{t('admin.hsvc.navHomepage')}</h1>
+      <h1 className={ui.pageTitle}>{t('admin.hsvc.navHomepage')}</h1>
       <div className="flex flex-wrap gap-2">
-        <button
-          type="button"
-          onClick={() => setTab('sections')}
-          className={`rounded-full px-4 py-2 text-xs font-bold ${tab === 'sections' ? 'bg-emerald-600 text-white' : 'bg-white border border-slate-200'}`}
-        >
-          Sections
+        <button type="button" onClick={() => setTab('sections')} className={tab === 'sections' ? ui.tabActive : ui.tabInactive}>
+          {t('admin.hsvc.crudHomepageSections')}
         </button>
-        <button
-          type="button"
-          onClick={() => setTab('hero')}
-          className={`rounded-full px-4 py-2 text-xs font-bold ${tab === 'hero' ? 'bg-emerald-600 text-white' : 'bg-white border border-slate-200'}`}
-        >
-          Hero numbers
+        <button type="button" onClick={() => setTab('hero')} className={tab === 'hero' ? ui.tabActive : ui.tabInactive}>
+          {t('admin.hsvc.crudHeroStats')}
         </button>
       </div>
       {tab === 'sections' ? <CrudResourcePage {...homepageSectionsCrud} /> : null}

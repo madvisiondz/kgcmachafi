@@ -1,0 +1,161 @@
+/* Health Services admin — dark emerald control center */
+.hsvc-admin-root {
+  --hsvc-bg-0: #020617;
+  --hsvc-bg-1: #042f2e;
+  --hsvc-bg-2: #064e3b;
+  --hsvc-surface: rgba(15, 23, 42, 0.72);
+  --hsvc-surface-solid: #0f172a;
+  --hsvc-border: rgba(52, 211, 153, 0.18);
+  --hsvc-accent: #10b981;
+  --hsvc-accent-hover: #34d399;
+  --hsvc-text: #ecfdf5;
+  --hsvc-muted: #94a3b8;
+  --hsvc-danger: #f87171;
+}
+
+.hsvc-admin-root {
+  color: var(--hsvc-text);
+  background-color: var(--hsvc-bg-0);
+}
+
+.hsvc-admin-bg {
+  background:
+    radial-gradient(ellipse 80% 50% at 20% -10%, rgba(16, 185, 129, 0.22), transparent 55%),
+    radial-gradient(ellipse 60% 40% at 90% 10%, rgba(6, 78, 59, 0.35), transparent 50%),
+    linear-gradient(165deg, var(--hsvc-bg-0) 0%, #031a17 45%, var(--hsvc-bg-1) 100%);
+  animation: hsvc-bg-shift 18s ease-in-out infinite alternate;
+}
+
+/* Admin shell: grid + drift layer from index.css utilities */
+.hsvc-admin-root.machafi-subtle-emerald-bg::after {
+  background:
+    radial-gradient(ellipse 75% 50% at 18% -12%, rgba(16, 185, 129, 0.2), transparent 58%),
+    radial-gradient(ellipse 62% 44% at 94% 8%, rgba(6, 78, 59, 0.28), transparent 54%),
+    radial-gradient(ellipse 48% 36% at 42% 108%, rgba(52, 211, 153, 0.1), transparent 58%);
+}
+
+.hsvc-admin-root.machafi-soft-grid::before {
+  opacity: 0.22;
+  background-image:
+    linear-gradient(rgba(52, 211, 153, 0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(52, 211, 153, 0.07) 1px, transparent 1px);
+  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.65) 0%, transparent 92%);
+}
+
+@keyframes hsvc-bg-shift {
+  0% {
+    filter: hue-rotate(0deg);
+  }
+  100% {
+    filter: hue-rotate(8deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hsvc-admin-bg {
+    animation: none;
+  }
+  .hsvc-kpi-card,
+  .hsvc-sidebar {
+    animation: none !important;
+  }
+  .hsvc-admin-root.machafi-subtle-emerald-bg::after {
+    animation: none;
+  }
+}
+
+.hsvc-glass {
+  background: var(--hsvc-surface);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--hsvc-border);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.35),
+    0 0 0 1px rgba(16, 185, 129, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.hsvc-admin-root .machafi-card-depth.machafi-emerald-border {
+  border-color: rgba(52, 211, 153, 0.2);
+  box-shadow:
+    0 8px 28px rgba(0, 0, 0, 0.32),
+    0 0 0 1px rgba(16, 185, 129, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.hsvc-admin-root .machafi-card-depth.machafi-emerald-border:hover {
+  border-color: rgba(52, 211, 153, 0.38);
+  box-shadow:
+    0 14px 36px rgba(0, 0, 0, 0.38),
+    0 0 28px -10px rgba(16, 185, 129, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.hsvc-sidebar {
+  animation: hsvc-slide-in 0.35s ease-out;
+}
+
+@keyframes hsvc-slide-in {
+  from {
+    opacity: 0;
+    transform: translateX(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+[dir='rtl'] .hsvc-sidebar {
+  animation-name: hsvc-slide-in-rtl;
+}
+
+@keyframes hsvc-slide-in-rtl {
+  from {
+    opacity: 0;
+    transform: translateX(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.hsvc-kpi-card {
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.hsvc-kpi-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(52, 211, 153, 0.45);
+  box-shadow: 0 12px 28px rgba(16, 185, 129, 0.12);
+}
+
+.hsvc-input:focus-visible,
+.hsvc-btn:focus-visible {
+  outline: 2px solid var(--hsvc-accent);
+  outline-offset: 2px;
+}
+
+/* Readable selects/options on dark admin surfaces */
+.hsvc-admin-root select.hsvc-select option {
+  background-color: #0f172a;
+  color: #f1f5f9;
+}
+
+.hsvc-admin-root input::placeholder,
+.hsvc-admin-root textarea::placeholder {
+  color: #94a3b8;
+  opacity: 1;
+}
+
+.hsvc-admin-root input:disabled,
+.hsvc-admin-root textarea:disabled,
+.hsvc-admin-root select:disabled {
+  color: #94a3b8;
+  opacity: 0.85;
+}
+
+.hsvc-table-scroll {
+  scrollbar-color: rgba(16, 185, 129, 0.4) transparent;
+}

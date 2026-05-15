@@ -132,4 +132,10 @@ All **mutating** admin handlers touched in the Health Services pass call `requir
 
 ---
 
-*Last updated: **2026-05-14** — Gateway + TV branding (Machafi TV logo in shell and gateway strip), Services masthead mint/grid, `frontend/public/branding/`, Vercel https://kgcmachafi.vercel.app ; doc sync.*
+## Visual depth (2026-05-15)
+
+Admin shell uses shared CSS utilities from `frontend/src/index.css` (`.machafi-subtle-emerald-bg`, `.machafi-soft-grid`, `.machafi-card-depth`, `.machafi-emerald-border`) via `adminUiClasses.js` — layout and routes unchanged. See **`PROJECT-EXPLAINER/HEALTH_SERVICES_ADMIN_UI_UPGRADE.md`**.
+
+---
+
+*Last updated: **2026-05-15** — Health Services visual depth (emerald gradient + grid + card glow); admin map synced.*

@@ -3,6 +3,7 @@ import { useI18n } from '../../../i18n/I18nProvider';
 import { adminFetch } from '../../../services/admin/healthAdminApi';
 import { useHealthAdminAuth } from './HealthAdminAuthContext';
 import { useHealthAdminToast } from './HealthAdminToastContext';
+import * as ui from '../../../components/admin/healthservices/adminUiClasses';
 
 export default function SettingsPage() {
   const { t } = useI18n();
@@ -79,52 +80,38 @@ export default function SettingsPage() {
 
   return (
     <div className="space-y-8 max-w-3xl">
-      <h1 className="text-2xl font-black text-slate-900">{t('admin.hsvc.navSettings')}</h1>
-      <p className="text-sm text-slate-600">{t('admin.hsvc.settingsIntro')}</p>
+      <h1 className={ui.pageTitle}>{t('admin.hsvc.navSettings')}</h1>
+      <p className={ui.pageSub}>{t('admin.hsvc.settingsIntro')}</p>
 
-      <section className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm space-y-3">
-        <h2 className="text-lg font-bold">{t('admin.hsvc.siteSettingsTitle')}</h2>
-        <p className="text-xs text-slate-500">{t('admin.hsvc.siteSettingsHelp')}</p>
+      <section className={ui.section}>
+        <h2 className={ui.sectionTitle}>{t('admin.hsvc.siteSettingsTitle')}</h2>
+        <p className={ui.fieldHelper}>{t('admin.hsvc.siteSettingsHelp')}</p>
         {loading ? (
-          <p className="text-sm text-slate-500">Loading…</p>
+          <p className={ui.muted}>{t('admin.hsvc.uiLoading')}</p>
         ) : (
-          <textarea
-            className="w-full min-h-[240px] font-mono text-xs rounded-xl border border-slate-200 p-3"
-            value={jsonText}
-            onChange={(e) => setJsonText(e.target.value)}
-          />
+          <textarea className={ui.textareaMono} value={jsonText} onChange={(e) => setJsonText(e.target.value)} />
         )}
-        <button
-          type="button"
-          disabled={saving || loading}
-          onClick={() => void saveSettings()}
-          className="rounded-xl bg-emerald-600 px-4 py-2 text-sm font-bold text-white hover:bg-emerald-700 disabled:opacity-50"
-        >
-          {saving ? '…' : t('admin.hsvc.saveSettings')}
+        <button type="button" disabled={saving || loading} onClick={() => void saveSettings()} className={ui.btnPrimary}>
+          {saving ? t('admin.hsvc.uiSaving') : t('admin.hsvc.saveSettings')}
         </button>
       </section>
 
-      <section className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm space-y-3">
-        <h2 className="text-lg font-bold">{t('admin.hsvc.securityTitle')}</h2>
-        <label className="block text-sm">
-          <span className="font-semibold">{t('admin.hsvc.currentPassword')}</span>
-          <input type="password" className="mt-1 w-full rounded-xl border border-slate-200 px-3 py-2 text-sm" value={pw.current} onChange={(e) => setPw({ ...pw, current: e.target.value })} />
+      <section className={ui.section}>
+        <h2 className={ui.sectionTitle}>{t('admin.hsvc.securityTitle')}</h2>
+        <label className="block space-y-1">
+          <span className={ui.fieldLabel}>{t('admin.hsvc.currentPassword')}</span>
+          <input type="password" className={ui.input} value={pw.current} onChange={(e) => setPw({ ...pw, current: e.target.value })} />
         </label>
-        <label className="block text-sm">
-          <span className="font-semibold">{t('admin.hsvc.newPassword')}</span>
-          <input type="password" className="mt-1 w-full rounded-xl border border-slate-200 px-3 py-2 text-sm" value={pw.next} onChange={(e) => setPw({ ...pw, next: e.target.value })} />
+        <label className="block space-y-1">
+          <span className={ui.fieldLabel}>{t('admin.hsvc.newPassword')}</span>
+          <input type="password" className={ui.input} value={pw.next} onChange={(e) => setPw({ ...pw, next: e.target.value })} />
         </label>
-        <label className="block text-sm">
-          <span className="font-semibold">{t('admin.hsvc.confirmPassword')}</span>
-          <input type="password" className="mt-1 w-full rounded-xl border border-slate-200 px-3 py-2 text-sm" value={pw.confirm} onChange={(e) => setPw({ ...pw, confirm: e.target.value })} />
+        <label className="block space-y-1">
+          <span className={ui.fieldLabel}>{t('admin.hsvc.confirmPassword')}</span>
+          <input type="password" className={ui.input} value={pw.confirm} onChange={(e) => setPw({ ...pw, confirm: e.target.value })} />
         </label>
-        <button
-          type="button"
-          disabled={pwBusy}
-          onClick={() => void savePassword()}
-          className="rounded-xl bg-slate-900 px-4 py-2 text-sm font-bold text-white hover:bg-slate-800 disabled:opacity-50"
-        >
-          {pwBusy ? '…' : t('admin.hsvc.updatePassword')}
+        <button type="button" disabled={pwBusy} onClick={() => void savePassword()} className={ui.btnSecondary}>
+          {pwBusy ? t('admin.hsvc.uiSaving') : t('admin.hsvc.updatePassword')}
         </button>
       </section>
     </div>

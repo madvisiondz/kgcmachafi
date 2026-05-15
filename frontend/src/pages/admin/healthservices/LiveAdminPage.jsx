@@ -4,7 +4,9 @@ import { adminFetch } from '../../../services/admin/healthAdminApi';
 import { useHealthAdminAuth } from './HealthAdminAuthContext';
 import { useHealthAdminToast } from './HealthAdminToastContext';
 import CrudResourcePage from '../../../components/admin/healthservices/CrudResourcePage';
+import AdminUploadField from '../../../components/admin/healthservices/AdminUploadField';
 import { liveRecordedCrud, liveUpNextCrud } from './healthAdminCrudConfigs';
+import * as ui from '../../../components/admin/healthservices/adminUiClasses';
 
 function StreamForm() {
   const { t } = useI18n();
@@ -50,34 +52,39 @@ function StreamForm() {
     toast.success('Saved.');
   };
 
-  if (loading) return <p className="text-sm text-slate-500">Loading…</p>;
+  if (loading) return <p className={ui.muted}>{t('admin.hsvc.uiLoading')}</p>;
 
   return (
-    <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm space-y-3 max-w-xl">
-      <h2 className="text-lg font-bold">{t('admin.hsvc.liveStreamTab')}</h2>
-      <label className="block text-sm">
-        <span className="font-semibold">Stream URL (HLS or page)</span>
-        <input className="mt-1 w-full rounded-xl border border-slate-200 px-3 py-2 text-sm" value={form.stream_url} onChange={(e) => setForm({ ...form, stream_url: e.target.value })} />
+    <div className={`${ui.section} max-w-xl`}>
+      <h2 className={ui.sectionTitle}>{t('admin.hsvc.liveStreamTab')}</h2>
+      <label className="block space-y-1">
+        <span className={ui.fieldLabel}>Stream URL (HLS or page)</span>
+        <input className={ui.input} value={form.stream_url} onChange={(e) => setForm({ ...form, stream_url: e.target.value })} />
       </label>
-      <label className="block text-sm">
-        <span className="font-semibold">Poster image URL</span>
-        <input className="mt-1 w-full rounded-xl border border-slate-200 px-3 py-2 text-sm" value={form.poster_url} onChange={(e) => setForm({ ...form, poster_url: e.target.value })} />
+      <label className="block space-y-1">
+        <span className={ui.fieldLabel}>Poster image</span>
+        <AdminUploadField
+          value={form.poster_url}
+          onChange={(url) => setForm({ ...form, poster_url: url })}
+          csrfToken={csrfToken}
+          category="live"
+        />
       </label>
-      <label className="block text-sm">
-        <span className="font-semibold">Viewer count label</span>
-        <input className="mt-1 w-full rounded-xl border border-slate-200 px-3 py-2 text-sm" value={form.viewer_count_label} onChange={(e) => setForm({ ...form, viewer_count_label: e.target.value })} />
+      <label className="block space-y-1">
+        <span className={ui.fieldLabel}>Viewer count label</span>
+        <input className={ui.input} value={form.viewer_count_label} onChange={(e) => setForm({ ...form, viewer_count_label: e.target.value })} />
       </label>
-      <label className="block text-sm">
-        <span className="font-semibold">Broadcast state</span>
-        <select className="mt-1 w-full rounded-xl border border-slate-200 px-3 py-2 text-sm" value={form.broadcast_state} onChange={(e) => setForm({ ...form, broadcast_state: e.target.value })}>
+      <label className="block space-y-1">
+        <span className={ui.fieldLabel}>Broadcast state</span>
+        <select className={ui.select} value={form.broadcast_state} onChange={(e) => setForm({ ...form, broadcast_state: e.target.value })}>
           <option value="offline">offline</option>
           <option value="live">live</option>
         </select>
       </label>
-      <button type="button" disabled={saving} onClick={() => void save()} className="rounded-xl bg-emerald-600 px-4 py-2 text-sm font-bold text-white">
-        {saving ? '…' : 'Save'}
+      <button type="button" disabled={saving} onClick={() => void save()} className={ui.btnPrimary}>
+        {saving ? t('admin.hsvc.uiSaving') : t('admin.hsvc.uiSave')}
       </button>
-      {!row ? <p className="text-xs text-amber-700">No row yet — saving will create id=1.</p> : null}
+      {!row ? <p className={ui.alertWarn}>No row yet — saving will create id=1.</p> : null}
     </div>
   );
 }
@@ -94,15 +101,10 @@ export default function LiveAdminPage() {
 
   return (
     <div className="space-y-4">
-      <h1 className="text-2xl font-black text-slate-900">{t('admin.hsvc.navLive')}</h1>
+      <h1 className={ui.pageTitle}>{t('admin.hsvc.navLive')}</h1>
       <div className="flex flex-wrap gap-2">
         {tabs.map((x) => (
-          <button
-            key={x.id}
-            type="button"
-            onClick={() => setTab(x.id)}
-            className={`rounded-full px-4 py-2 text-xs font-bold ${tab === x.id ? 'bg-emerald-600 text-white' : 'bg-white border border-slate-200 text-slate-700'}`}
-          >
+          <button key={x.id} type="button" onClick={() => setTab(x.id)} className={tab === x.id ? ui.tabActive : ui.tabInactive}>
             {x.label}
           </button>
         ))}

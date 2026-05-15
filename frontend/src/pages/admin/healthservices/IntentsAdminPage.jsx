@@ -1,11 +1,14 @@
 import React, { useCallback, useEffect, useState } from 'react';
+import { useI18n } from '../../../i18n/I18nProvider';
 import { adminFetch, extractItemsList } from '../../../services/admin/healthAdminApi';
 import { useHealthAdminAuth } from './HealthAdminAuthContext';
 import { useHealthAdminToast } from './HealthAdminToastContext';
 import AdminPagination from '../../../components/admin/healthservices/AdminPagination';
 import AdminSearchBar from '../../../components/admin/healthservices/AdminSearchBar';
+import * as ui from '../../../components/admin/healthservices/adminUiClasses';
 
 export default function IntentsAdminPage() {
+  const { t } = useI18n();
   const { csrfToken } = useHealthAdminAuth();
   const toast = useHealthAdminToast();
   const [qInput, setQInput] = useState('');
@@ -54,12 +57,12 @@ export default function IntentsAdminPage() {
   return (
     <div className="space-y-4">
       <div className="flex flex-col sm:flex-row gap-2 sm:items-center sm:justify-between">
-        <h1 className="text-2xl font-black text-slate-900">Donation intents</h1>
+        <h1 className={ui.pageTitle}>{t('admin.hsvc.navIntents')}</h1>
         <div className="flex flex-col sm:flex-row gap-2">
-          <AdminSearchBar value={qInput} onChange={setQInput} placeholder="Search name, email, id…" />
+          <AdminSearchBar value={qInput} onChange={setQInput} placeholder={t('admin.hsvc.uiSearchPlaceholder')} />
           <button
             type="button"
-            className="rounded-xl bg-slate-900 px-4 py-2 text-sm font-bold text-white"
+            className={ui.btnSecondary}
             onClick={() => {
               setAppliedQ(qInput);
               setOffset(0);
@@ -69,40 +72,40 @@ export default function IntentsAdminPage() {
           </button>
         </div>
       </div>
-      <div className="rounded-2xl border border-slate-200 bg-white overflow-x-auto shadow-sm">
-        <table className="min-w-full text-sm">
-          <thead className="bg-slate-50">
+      <div className={ui.tableWrap}>
+        <table className={ui.table}>
+          <thead className={ui.tableHead}>
             <tr>
-              <th className="text-start px-3 py-2 font-bold">ID</th>
-              <th className="text-start px-3 py-2 font-bold">Donor</th>
-              <th className="text-start px-3 py-2 font-bold">Campaign</th>
-              <th className="text-start px-3 py-2 font-bold">Amount</th>
-              <th className="text-start px-3 py-2 font-bold">Status</th>
-              <th className="text-start px-3 py-2 font-bold">Admin</th>
+              <th className={ui.tableTh}>ID</th>
+              <th className={ui.tableTh}>Donor</th>
+              <th className={ui.tableTh}>Campaign</th>
+              <th className={ui.tableTh}>Amount</th>
+              <th className={ui.tableTh}>Status</th>
+              <th className={ui.tableTh}>Admin</th>
             </tr>
           </thead>
           <tbody>
             {loading ? (
               <tr>
-                <td colSpan={6} className="px-4 py-8 text-center">
-                  Loading…
+                <td colSpan={6} className={ui.loadingState}>
+                  {t('admin.hsvc.uiLoading')}
                 </td>
               </tr>
             ) : (
               items.map((r) => (
-                <tr key={r.id} className="border-t border-slate-100 align-top">
-                  <td className="px-3 py-2 font-mono text-xs">{r.id}</td>
-                  <td className="px-3 py-2">
-                    <div className="font-semibold">{r.donor_name || '—'}</div>
-                    <div className="text-xs text-slate-500">{r.donor_email || ''}</div>
+                <tr key={r.id} className={ui.tableRow}>
+                  <td className={`${ui.tableTd} font-mono text-xs text-slate-300`}>{r.id}</td>
+                  <td className={ui.tableTd}>
+                    <div className="font-semibold text-white">{r.donor_name || '—'}</div>
+                    <div className={ui.mutedXs}>{r.donor_email || ''}</div>
                   </td>
-                  <td className="px-3 py-2">{r.campaign_id}</td>
-                  <td className="px-3 py-2">
+                  <td className={ui.tableTd}>{r.campaign_id}</td>
+                  <td className={ui.tableTd}>
                     {r.amount} {r.currency}
                   </td>
-                  <td className="px-3 py-2">
+                  <td className={ui.tableTd}>
                     <select
-                      className="rounded-lg border px-2 py-1 text-xs max-w-[140px]"
+                      className={`${ui.select} !py-1 !text-xs max-w-[140px]`}
                       value={r.status || 'new'}
                       onChange={(e) => void patch(r, { status: e.target.value })}
                     >
@@ -113,10 +116,10 @@ export default function IntentsAdminPage() {
                       ))}
                     </select>
                   </td>
-                  <td className="px-3 py-2 max-w-xs">
+                  <td className={`${ui.tableTd} max-w-xs`}>
                     <textarea
                       rows={2}
-                      className="w-full rounded-lg border px-2 py-1 text-xs"
+                      className={`${ui.textarea} !min-h-0 !text-xs`}
                       defaultValue={r.admin_note || ''}
                       onBlur={(e) => {
                         const next = e.target.value.trim();
@@ -131,10 +134,11 @@ export default function IntentsAdminPage() {
             )}
           </tbody>
         </table>
-        <div className="border-t border-slate-100 px-3 py-2 bg-slate-50">
+        <div className={ui.paginationBar}>
           <AdminPagination page={page} pageSize={limit} total={total} onPageChange={setPage} />
         </div>
       </div>
     </div>
   );
 }
+
