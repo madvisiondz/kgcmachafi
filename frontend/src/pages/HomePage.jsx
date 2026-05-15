@@ -324,7 +324,7 @@ export default function HomePage() {
       </section>
 
       {/* Stats counter (UI-only mock) */}
-      <section className="py-12 bg-white" dir={dir}>
+      <section className="py-12 bg-white/80 backdrop-blur-sm" dir={dir}>
         <div className="container mx-auto px-4">
           {error ? (
             <div className="mb-6">
@@ -419,7 +419,7 @@ export default function HomePage() {
 
       {/* Health News (static cards) */}
       <section className="container mx-auto px-4">
-        <div className="py-12 bg-white rounded-2xl machafi-card-depth machafi-emerald-border px-6">
+        <div className="py-12 rounded-2xl bg-white/85 backdrop-blur-sm machafi-card-depth machafi-emerald-border px-6">
           <div className="flex flex-col md:flex-row justify-between items-end mb-8 gap-4" dir={dir}>
             <div>
               <h2 className="text-3xl font-bold text-slate-900 mb-2 flex items-center gap-2">

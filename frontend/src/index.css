@@ -182,30 +182,63 @@ body {
   z-index: 0;
   pointer-events: none;
   background:
-    radial-gradient(ellipse 72% 48% at 14% -8%, rgba(16, 185, 129, 0.12), transparent 58%),
-    radial-gradient(ellipse 58% 42% at 92% 6%, rgba(6, 95, 70, 0.09), transparent 52%),
-    radial-gradient(ellipse 50% 38% at 48% 102%, rgba(52, 211, 153, 0.07), transparent 56%);
+    radial-gradient(ellipse 72% 48% at 14% -8%, rgba(16, 185, 129, 0.24), transparent 58%),
+    radial-gradient(ellipse 58% 42% at 92% 6%, rgba(6, 95, 70, 0.18), transparent 52%),
+    radial-gradient(ellipse 50% 38% at 48% 102%, rgba(52, 211, 153, 0.14), transparent 56%);
   animation: machafi-emerald-drift 24s ease-in-out infinite alternate;
 }
 
 /** Light public shell: keep readable slate base under the wash */
 .machafi-subtle-emerald-bg--light {
-  background: linear-gradient(165deg, #f8fafc 0%, #f0fdf4 42%, #f8fafc 100%);
+  background: linear-gradient(165deg, #f1f5f9 0%, #ecfdf5 38%, #d1fae5 72%, #f1f5f9 100%);
 }
 
-/** Futuristic grid overlay (very low contrast) */
+/** Futuristic grid overlay (visible but still soft) */
 .machafi-soft-grid::before {
   content: '';
   position: absolute;
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  opacity: 0.28;
+  opacity: 0.55;
   background-image:
-    linear-gradient(rgba(16, 185, 129, 0.055) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(16, 185, 129, 0.055) 1px, transparent 1px);
-  background-size: 44px 44px;
-  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.55) 0%, transparent 88%);
+    linear-gradient(rgba(16, 185, 129, 0.11) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(16, 185, 129, 0.11) 1px, transparent 1px);
+  background-size: 40px 40px;
+  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.35) 100%);
+}
+
+/** Content column — grid + wash visible between header/footer (pages no longer fully opaque) */
+.machafi-services-main {
+  position: relative;
+  isolation: isolate;
+}
+
+.machafi-services-main::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.5;
+  background-image:
+    linear-gradient(rgba(16, 185, 129, 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(16, 185, 129, 0.1) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+.machafi-services-main::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse 90% 60% at 50% 0%, rgba(16, 185, 129, 0.12), transparent 65%);
+}
+
+.machafi-services-main > * {
+  position: relative;
+  z-index: 1;
 }
 
 .machafi-soft-grid > * {
@@ -223,19 +256,19 @@ body {
 }
 
 .machafi-gradient-orb--a {
-  width: min(42vw, 280px);
-  height: min(42vw, 280px);
-  top: -6%;
-  right: 8%;
-  background: radial-gradient(circle, rgba(16, 185, 129, 0.22) 0%, transparent 68%);
+  width: min(50vw, 360px);
+  height: min(50vw, 360px);
+  top: -4%;
+  right: 4%;
+  background: radial-gradient(circle, rgba(16, 185, 129, 0.38) 0%, transparent 68%);
 }
 
 .machafi-gradient-orb--b {
-  width: min(36vw, 220px);
-  height: min(36vw, 220px);
-  bottom: 4%;
-  left: 6%;
-  background: radial-gradient(circle, rgba(6, 95, 70, 0.16) 0%, transparent 70%);
+  width: min(44vw, 300px);
+  height: min(44vw, 300px);
+  bottom: 8%;
+  left: 4%;
+  background: radial-gradient(circle, rgba(6, 95, 70, 0.28) 0%, transparent 70%);
   animation-delay: -8s;
 }
 
@@ -253,11 +286,11 @@ body {
 }
 
 .machafi-emerald-border {
-  border: 1px solid rgba(16, 185, 129, 0.18);
+  border: 1px solid rgba(16, 185, 129, 0.32);
   box-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.45) inset,
-    0 8px 28px -12px rgba(4, 47, 46, 0.12),
-    0 0 0 1px rgba(16, 185, 129, 0.04);
+    0 1px 0 rgba(255, 255, 255, 0.55) inset,
+    0 10px 32px -12px rgba(4, 120, 87, 0.18),
+    0 0 20px -6px rgba(16, 185, 129, 0.15);
 }
 
 .machafi-card-depth.machafi-emerald-border:hover {

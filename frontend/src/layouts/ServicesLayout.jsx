@@ -12,7 +12,7 @@ export default function ServicesLayout() {
       <span className="machafi-gradient-orb machafi-gradient-orb--b" aria-hidden />
       <Header />
       <div aria-hidden="true" style={{ height: 'var(--app-header-height, 0px)' }} />
-      <main className="flex-1 relative z-[1]">
+      <main className="flex-1 relative z-[1] machafi-services-main">
         <Outlet />
       </main>
       <Footer />
