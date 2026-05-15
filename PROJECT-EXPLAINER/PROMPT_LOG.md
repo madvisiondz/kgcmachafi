@@ -633,8 +633,13 @@ This file is updated after every user prompt.
   - Clarified the intended behavior as: update the **project memory markdown set** every prompt, and create/maintain a **page-specific `.md` tracker** for each page we build.
   - This means Home keeps `HOMEPAGE_MAP.md`, and future pages will get their own equivalent mapping/tracking files when created.
 
+### Git push — Health Services admin hardening + build fix (2026-05-14)
+- **Prompt**: Push all new work to GitHub (`madvisiondz/kgcmachafi`).
+- **What I did**:
+  - `git add -A`, commit `c582cbe3`: admin PHP envelopes/RBAC, schema + optional SQL notes, deploy/ready-to-deploy API sync, `scripts/sync-admin-api.mjs`, admin SPA lazy chunks + `I18nDbPage.jsx`, `admin.hsvc.*` i18n, `translations.ts` fix (missing `hsvc` closing brace in EN), `App.tsx` import cleanup, refreshed `frontend/dist/`.
+  - `git push origin main` (main advanced `8ce113ea` → `c582cbe3`).
 
 
 ---
 
-*Last updated: **2026-05-14** — Doc sync: gateway/TV branding, Vercel production URL, tracker footers.*
+*Last updated: **2026-05-14** — PROMPT_LOG: push entry (`c582cbe3`); gateway/TV branding, Vercel, tracker footers.*
